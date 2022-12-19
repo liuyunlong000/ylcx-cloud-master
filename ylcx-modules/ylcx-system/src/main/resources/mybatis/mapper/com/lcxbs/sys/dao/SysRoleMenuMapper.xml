@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lcxbs.sys.dao.SysRoleMenuMapper">
+    <resultMap id="BaseResultMap" type="com.lcxbs.sys.model.SysRoleMenu">
+  	   <id column="NID" property="nid" jdbcType="NUMERIC" />
+        <result column="ROLE_ID" property="roleId" jdbcType="VARCHAR"/>
+        <result column="MENU_ID" property="menuId" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        A.NID,A.ROLE_ID,A.MENU_ID
+    </sql>
+   
+   <!-- SELECT sql片段 -->  
+    <sql id="select_where">
+	   <if test="nid!=null">
+            and A.NID = #{nid} 
+        </if>
+	   <if test="roleId!=null and roleId!=''">
+            and A.ROLE_ID = #{roleId} 
+        </if>
+	   <if test="menuId!=null and menuId!=''">
+            and A.MENU_ID = #{menuId} 
+        </if>
+    </sql>
+   
+    <!-- 获取信息 -->
+    <select id="getModelByKey" resultMap="BaseResultMap" parameterType="java.lang.Long" useCache="true">
+        SELECT <include refid="Base_Column_List" /> FROM SYS_ROLE_MENU A WHERE A.NID = #{nid}
+    </select>
+  
+    <!-- 删除信息 -->
+    <delete id="delete" parameterType="java.lang.Long" flushCache="true">
+        DELETE FROM SYS_ROLE_MENU WHERE NID = #{nid}
+    </delete>
+  
+    <!-- 插入信息,插入后获取自增主键值(适配mysql) -->
+    <insert id="insert" parameterType="com.lcxbs.sys.model.SysRoleMenu" flushCache="true" databaseId="mysql">
+        <selectKey keyProperty="nid" resultType="java.lang.Long" order="AFTER">
+            SELECT @@IDENTITY
+        </selectKey>
+            INSERT INTO SYS_ROLE_MENU (ROLE_ID,MENU_ID)
+                VALUES (
+                    #{roleId,jdbcType=VARCHAR},
+                    #{menuId,jdbcType=VARCHAR})
+    </insert>
+	
+	 <!-- 插入信息,插入后获取自增主键值(适配oracle) -->
+    <insert id="insert" parameterType="com.lcxbs.sys.model.SysRoleMenu" flushCache="true" databaseId="oracle">
+        <selectKey keyProperty="nid" resultType="java.lang.Long" order="BEFORE">
+            SELECT SEQ_SYS_ROLE_MENU.NEXTVAL from dual
+        </selectKey>
+            INSERT INTO SYS_ROLE_MENU (NID,ROLE_ID,MENU_ID)
+                VALUES (
+                    #{nid,jdbcType=NUMERIC},
+                    #{roleId,jdbcType=VARCHAR},
+                    #{menuId,jdbcType=VARCHAR})
+    </insert>
+  
+    <!-- 精确更新 -->
+    <update id="updateSelective" parameterType="com.lcxbs.sys.model.SysRoleMenu" flushCache="true">
+        UPDATE SYS_ROLE_MENU A
+        <set>
+            <if test="roleId != null" >
+                A.ROLE_ID = #{roleId},
+            </if>
+            <if test="menuId != null" >
+                A.MENU_ID = #{menuId}
+            </if>
+        </set>
+        WHERE A.NID = #{nid}
+    </update>
+  
+    <!-- 更新所有 -->
+    <update id="updateByPrimaryKey" parameterType="com.lcxbs.sys.model.SysRoleMenu" flushCache="true">
+        UPDATE SYS_ROLE_MENU A
+        <set> 
+	        <if test="roleId != null" >
+                  A.ROLE_ID = #{roleId},
+	        </if>
+	        <if test="menuId != null" >
+                  A.MENU_ID = #{menuId}
+	        </if>
+	    </set>
+        WHERE A.NID = #{nid}
+    </update>
+    
+    <!-- 根据Map集合参数选择更新 -->
+    <update id="updateByMap" parameterType="com.lcxbs.sys.model.SysRoleMenu" flushCache="true">
+        UPDATE SYS_ROLE_MENU A
+        <set> 
+	        <if test="roleId != null" >
+                  A.ROLE_ID = #{roleId},
+	        </if>
+	        <if test="menuId != null" >
+                  A.MENU_ID = #{menuId}
+	        </if>
+	    </set>
+        <where> 
+            <if test="map.nid!=null">
+                and A.NID = #{map.nid} 
+            </if>
+            <if test="map.roleId!=null and map.roleId!=''">
+                and A.ROLE_ID = #{map.roleId} 
+            </if>
+            <if test="map.menuId!=null and map.menuId!=''">
+                and A.MENU_ID = #{map.menuId} 
+            </if>
+        </where>
+    </update>
+  
+    <!-- 统计记录 -->
+    <select id="countAll" resultType="java.lang.Long" parameterType="com.lcxbs.sys.model.SysRoleMenu" flushCache="true">
+        SELECT COUNT(NID) FROM SYS_ROLE_MENU A <where> <include refid="select_where"></include> </where>
+    </select>
+  
+    <!-- 查询所有的ID -->
+    <select id="getAllIds" resultType="java.lang.String" parameterType="com.lcxbs.sys.model.SysRoleMenu" flushCache="true">
+        SELECT NID FROM SYS_ROLE_MENU A 
+        <where> <include refid="select_where"></include> </where>
+        <if test="map!=null">
+            <if test="map.groupBy!=null and map.groupBy!=''">
+                ${map.groupBy}
+            </if>
+            <if test="map.orderBy!=null and map.orderBy!=''">
+                ${map.orderBy}
+            </if>
+        </if>
+    </select>
+  
+    <!-- 分页获取数据 -->
+    <select id="getListByPage" resultMap="BaseResultMap" parameterType="com.lcxbs.sys.model.SysRoleMenu" flushCache="true">
+        SELECT <include refid="Base_Column_List" /> FROM SYS_ROLE_MENU A
+        <where> 
+            <include refid="select_where"></include>  
+        </where>
+        <if test="map!=null">
+			<if test="map.groupBy!=null and map.groupBy!=''">
+                ${map.groupBy}
+            </if>
+            <if test="map.orderBy!=null and map.orderBy!=''">
+                ${map.orderBy}
+            </if>
+        </if>
+    </select>
+  
+    <!-- 按条件获取 -->
+    <select id="getListByWhere" resultMap="BaseResultMap" parameterType="com.lcxbs.sys.model.SysRoleMenu" flushCache="true">
+        SELECT <include refid="Base_Column_List" /> FROM SYS_ROLE_MENU A 
+        <where> <include refid="select_where"></include>  </where>
+        <if test="map!=null">
+            <if test="map.groupBy!=null and map.groupBy!=''">
+                ${map.groupBy}
+            </if>
+            <if test="map.orderBy!=null and map.orderBy!=''">
+                ${map.orderBy}
+            </if>
+            <if test="map.orderBy==null or map.orderBy==''">
+            	ORDER BY A.NID ASC
+            </if>
+        </if>
+    </select>
+	
+    <!-- 按条件获取信息 -->
+    <select id="getModelByWhere" resultMap="BaseResultMap" parameterType="com.lcxbs.sys.model.SysRoleMenu" useCache="true">
+        SELECT <include refid="Base_Column_List" /> FROM SYS_ROLE_MENU A
+        <where> <include refid="select_where"></include>  </where>
+        ORDER BY A.NID ASC
+    </select>
+
+    <!-- 按条件删除信息-->
+    <delete id="deleteByWhere" parameterType="com.lcxbs.sys.model.SysRoleMenu" flushCache="true">
+        DELETE FROM SYS_ROLE_MENU 
+        <where>
+            <if test="nid!=null">
+                and NID = #{nid} 
+            </if>
+            <if test="roleId!=null and roleId!=''">
+                and ROLE_ID = #{roleId} 
+            </if>
+            <if test="menuId!=null and menuId!=''">
+                and MENU_ID = #{menuId} 
+            </if>
+        </where>
+    </delete>
+	
+</mapper>

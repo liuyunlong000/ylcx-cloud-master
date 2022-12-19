@@ -1,0 +1,513 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lcxbs.sys.dao.SysDepartmentMapper">
+    <resultMap id="BaseResultMap" type="com.lcxbs.sys.model.SysDepartment">
+  	   <id column="NID" property="nid" jdbcType="NUMERIC" />
+        <result column="DEPT_ID" property="deptId" jdbcType="VARCHAR"/>
+        <result column="PARENT_ID" property="parentId" jdbcType="VARCHAR"/>
+        <result column="DEPT_NAME" property="deptName" jdbcType="VARCHAR"/>
+        <result column="SHORT_NAME" property="shortName" jdbcType="VARCHAR"/>
+        <result column="DEPT_PRINCIPAL" property="deptPrincipal" jdbcType="VARCHAR"/>
+        <result column="SEARCH_STR" property="searchStr" jdbcType="VARCHAR"/>
+        <result column="REMARK" property="remark" jdbcType="VARCHAR"/>
+        <result column="LEVEL_NUM" property="levelNum" jdbcType="NUMERIC"/>
+        <result column="SORT_NUM" property="sortNum" jdbcType="NUMERIC"/>
+        <result column="DISABLE_FLAG" property="disableFlag" jdbcType="NUMERIC"/>
+        <result column="DELETE_FLAG" property="deleteFlag" jdbcType="NUMERIC"/>
+        <result column="REVISION" property="revision" jdbcType="VARCHAR"/>
+        <result column="CREATED_BY" property="createdBy" jdbcType="VARCHAR"/>
+        <result column="CREATED_TIME" property="createdTime" jdbcType="NUMERIC"/>
+        <result column="UPDATED_BY" property="updatedBy" jdbcType="VARCHAR"/>
+        <result column="UPDATED_TIME" property="updatedTime" jdbcType="NUMERIC"/>
+        <result column="TENANT_ID" property="tenantId" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        A.NID,A.DEPT_ID,A.PARENT_ID,A.DEPT_NAME,A.SHORT_NAME,A.DEPT_PRINCIPAL,A.SEARCH_STR,A.REMARK,A.LEVEL_NUM,A.SORT_NUM,A.DISABLE_FLAG,A.DELETE_FLAG,A.REVISION,A.CREATED_BY,A.CREATED_TIME,A.UPDATED_BY,A.UPDATED_TIME,A.TENANT_ID
+    </sql>
+   
+   <!-- SELECT sql片段 -->  
+    <sql id="select_where">
+	   <if test="nid!=null">
+            and A.NID = #{nid} 
+        </if>
+	   <if test="deptId!=null and deptId!=''">
+            and A.DEPT_ID = #{deptId} 
+        </if>
+	   <if test="parentId!=null and parentId!=''">
+            and A.PARENT_ID = #{parentId} 
+        </if>
+	   <if test="deptName!=null and deptName!=''">
+            and A.DEPT_NAME = #{deptName} 
+        </if>
+	   <if test="shortName!=null and shortName!=''">
+            and A.SHORT_NAME = #{shortName} 
+        </if>
+	   <if test="deptPrincipal!=null and deptPrincipal!=''">
+            and A.DEPT_PRINCIPAL = #{deptPrincipal} 
+        </if>
+	   <if test="searchStr!=null and searchStr!=''">
+            and A.SEARCH_STR = #{searchStr} 
+        </if>
+	   <if test="remark!=null and remark!=''">
+            and A.REMARK = #{remark} 
+        </if>
+	   <if test="levelNum!=null">
+            and A.LEVEL_NUM = #{levelNum} 
+        </if>
+	   <if test="sortNum!=null">
+            and A.SORT_NUM = #{sortNum} 
+        </if>
+	   <if test="disableFlag!=null">
+            and A.DISABLE_FLAG = #{disableFlag} 
+        </if>
+	   <if test="deleteFlag!=null">
+            and A.DELETE_FLAG = #{deleteFlag} 
+        </if>
+	   <if test="revision!=null and revision!=''">
+            and A.REVISION = #{revision} 
+        </if>
+	   <if test="createdBy!=null and createdBy!=''">
+            and A.CREATED_BY = #{createdBy} 
+        </if>
+	   <if test="createdTime!=null">
+            and A.CREATED_TIME = #{createdTime} 
+        </if>
+        <if test="map.createdTimeStart!=null and map.createdTimeStart!=''">
+            and A.CREATED_TIME &gt;= #{map.createdTimeStart} 
+        </if>
+        <if test="map.createdTimeEnd!=null and map.createdTimeEnd!=''">
+            and A.CREATED_TIME &lt;= #{map.createdTimeEnd} 
+        </if>
+	   <if test="updatedBy!=null and updatedBy!=''">
+            and A.UPDATED_BY = #{updatedBy} 
+        </if>
+	   <if test="updatedTime!=null">
+            and A.UPDATED_TIME = #{updatedTime} 
+        </if>
+        <if test="map.updatedTimeStart!=null and map.updatedTimeStart!=''">
+            and A.UPDATED_TIME &gt;= #{map.updatedTimeStart} 
+        </if>
+        <if test="map.updatedTimeEnd!=null and map.updatedTimeEnd!=''">
+            and A.UPDATED_TIME &lt;= #{map.updatedTimeEnd} 
+        </if>
+	   <if test="tenantId!=null and tenantId!=''">
+            and A.TENANT_ID = #{tenantId} 
+        </if>
+    </sql>
+   
+    <!-- 获取信息 -->
+    <select id="getModelByKey" resultMap="BaseResultMap" parameterType="java.lang.Long" useCache="true">
+        SELECT <include refid="Base_Column_List" /> FROM SYS_DEPARTMENT A WHERE A.NID = #{nid}
+    </select>
+  
+    <!-- 删除信息 -->
+    <delete id="delete" parameterType="java.lang.Long" flushCache="true">
+        DELETE FROM SYS_DEPARTMENT WHERE NID = #{nid}
+    </delete>
+  
+    <!-- 插入信息,插入后获取自增主键值(适配mysql) -->
+    <insert id="insert" parameterType="com.lcxbs.sys.model.SysDepartment" flushCache="true" databaseId="mysql">
+        <selectKey keyProperty="nid" resultType="java.lang.Long" order="AFTER">
+            SELECT @@IDENTITY
+        </selectKey>
+            INSERT INTO SYS_DEPARTMENT (DEPT_ID,PARENT_ID,DEPT_NAME,SHORT_NAME,DEPT_PRINCIPAL,SEARCH_STR,REMARK,LEVEL_NUM,SORT_NUM,DISABLE_FLAG,DELETE_FLAG,REVISION,CREATED_BY,CREATED_TIME,UPDATED_BY,UPDATED_TIME,TENANT_ID)
+                VALUES (
+                    #{deptId,jdbcType=VARCHAR},
+                    #{parentId,jdbcType=VARCHAR},
+                    #{deptName,jdbcType=VARCHAR},
+                    #{shortName,jdbcType=VARCHAR},
+                    #{deptPrincipal,jdbcType=VARCHAR},
+                    #{searchStr,jdbcType=VARCHAR},
+                    #{remark,jdbcType=VARCHAR},
+                    #{levelNum,jdbcType=NUMERIC},
+                    #{sortNum,jdbcType=NUMERIC},
+                    #{disableFlag,jdbcType=NUMERIC},
+                    #{deleteFlag,jdbcType=NUMERIC},
+                    #{revision,jdbcType=VARCHAR},
+                    #{createdBy,jdbcType=VARCHAR},
+                    #{createdTime,jdbcType=NUMERIC},
+                    #{updatedBy,jdbcType=VARCHAR},
+                    #{updatedTime,jdbcType=NUMERIC},
+                    #{tenantId,jdbcType=VARCHAR})
+    </insert>
+	
+	 <!-- 插入信息,插入后获取自增主键值(适配oracle) -->
+    <insert id="insert" parameterType="com.lcxbs.sys.model.SysDepartment" flushCache="true" databaseId="oracle">
+        <selectKey keyProperty="nid" resultType="java.lang.Long" order="BEFORE">
+            SELECT SEQ_SYS_DEPARTMENT.NEXTVAL from dual
+        </selectKey>
+            INSERT INTO SYS_DEPARTMENT (NID,DEPT_ID,PARENT_ID,DEPT_NAME,SHORT_NAME,DEPT_PRINCIPAL,SEARCH_STR,REMARK,LEVEL_NUM,SORT_NUM,DISABLE_FLAG,DELETE_FLAG,REVISION,CREATED_BY,CREATED_TIME,UPDATED_BY,UPDATED_TIME,TENANT_ID)
+                VALUES (
+                    #{nid,jdbcType=NUMERIC},
+                    #{deptId,jdbcType=VARCHAR},
+                    #{parentId,jdbcType=VARCHAR},
+                    #{deptName,jdbcType=VARCHAR},
+                    #{shortName,jdbcType=VARCHAR},
+                    #{deptPrincipal,jdbcType=VARCHAR},
+                    #{searchStr,jdbcType=VARCHAR},
+                    #{remark,jdbcType=VARCHAR},
+                    #{levelNum,jdbcType=NUMERIC},
+                    #{sortNum,jdbcType=NUMERIC},
+                    #{disableFlag,jdbcType=NUMERIC},
+                    #{deleteFlag,jdbcType=NUMERIC},
+                    #{revision,jdbcType=VARCHAR},
+                    #{createdBy,jdbcType=VARCHAR},
+                    #{createdTime,jdbcType=NUMERIC},
+                    #{updatedBy,jdbcType=VARCHAR},
+                    #{updatedTime,jdbcType=NUMERIC},
+                    #{tenantId,jdbcType=VARCHAR})
+    </insert>
+  
+    <!-- 精确更新 -->
+    <update id="updateSelective" parameterType="com.lcxbs.sys.model.SysDepartment" flushCache="true">
+        UPDATE SYS_DEPARTMENT A
+        <set>
+            <if test="deptId != null" >
+                A.DEPT_ID = #{deptId},
+            </if>
+            <if test="parentId != null" >
+                A.PARENT_ID = #{parentId},
+            </if>
+            <if test="deptName != null" >
+                A.DEPT_NAME = #{deptName},
+            </if>
+            <if test="shortName != null" >
+                A.SHORT_NAME = #{shortName},
+            </if>
+            <if test="deptPrincipal != null" >
+                A.DEPT_PRINCIPAL = #{deptPrincipal},
+            </if>
+            <if test="searchStr != null" >
+                A.SEARCH_STR = #{searchStr},
+            </if>
+            <if test="remark != null" >
+                A.REMARK = #{remark},
+            </if>
+            <if test="levelNum != null" >
+                A.LEVEL_NUM = #{levelNum},
+            </if>
+            <if test="sortNum != null" >
+                A.SORT_NUM = #{sortNum},
+            </if>
+            <if test="disableFlag != null" >
+                A.DISABLE_FLAG = #{disableFlag},
+            </if>
+            <if test="deleteFlag != null" >
+                A.DELETE_FLAG = #{deleteFlag},
+            </if>
+            <if test="revision != null" >
+                A.REVISION = #{revision},
+            </if>
+            <if test="createdBy != null" >
+                A.CREATED_BY = #{createdBy},
+            </if>
+            <if test="createdTime != null" >
+                A.CREATED_TIME = #{createdTime},
+            </if>
+            <if test="updatedBy != null" >
+                A.UPDATED_BY = #{updatedBy},
+            </if>
+            <if test="updatedTime != null" >
+                A.UPDATED_TIME = #{updatedTime},
+            </if>
+            <if test="tenantId != null" >
+                A.TENANT_ID = #{tenantId}
+            </if>
+        </set>
+        WHERE A.NID = #{nid}
+    </update>
+  
+    <!-- 更新所有 -->
+    <update id="updateByPrimaryKey" parameterType="com.lcxbs.sys.model.SysDepartment" flushCache="true">
+        UPDATE SYS_DEPARTMENT A
+        <set> 
+	        <if test="deptId != null" >
+                  A.DEPT_ID = #{deptId},
+	        </if>
+	        <if test="parentId != null" >
+                  A.PARENT_ID = #{parentId},
+	        </if>
+	        <if test="deptName != null" >
+                  A.DEPT_NAME = #{deptName},
+	        </if>
+	        <if test="shortName != null" >
+                  A.SHORT_NAME = #{shortName},
+	        </if>
+	        <if test="deptPrincipal != null" >
+                  A.DEPT_PRINCIPAL = #{deptPrincipal},
+	        </if>
+	        <if test="searchStr != null" >
+                  A.SEARCH_STR = #{searchStr},
+	        </if>
+	        <if test="remark != null" >
+                  A.REMARK = #{remark},
+	        </if>
+	        <if test="levelNum != null" >
+                  A.LEVEL_NUM = #{levelNum},
+	        </if>
+	        <if test="sortNum != null" >
+                  A.SORT_NUM = #{sortNum},
+	        </if>
+	        <if test="disableFlag != null" >
+                  A.DISABLE_FLAG = #{disableFlag},
+	        </if>
+	        <if test="deleteFlag != null" >
+                  A.DELETE_FLAG = #{deleteFlag},
+	        </if>
+	        <if test="revision != null" >
+                  A.REVISION = #{revision},
+	        </if>
+	        <if test="createdBy != null" >
+                  A.CREATED_BY = #{createdBy},
+	        </if>
+	        <if test="createdTime != null" >
+                  A.CREATED_TIME = #{createdTime},
+	        </if>
+	        <if test="updatedBy != null" >
+                  A.UPDATED_BY = #{updatedBy},
+	        </if>
+	        <if test="updatedTime != null" >
+                  A.UPDATED_TIME = #{updatedTime},
+	        </if>
+	        <if test="tenantId != null" >
+                  A.TENANT_ID = #{tenantId}
+	        </if>
+	    </set>
+        WHERE A.NID = #{nid}
+    </update>
+    
+    <!-- 根据Map集合参数选择更新 -->
+    <update id="updateByMap" parameterType="com.lcxbs.sys.model.SysDepartment" flushCache="true">
+        UPDATE SYS_DEPARTMENT A
+        <set> 
+	        <if test="deptId != null" >
+                  A.DEPT_ID = #{deptId},
+	        </if>
+	        <if test="parentId != null" >
+                  A.PARENT_ID = #{parentId},
+	        </if>
+	        <if test="deptName != null" >
+                  A.DEPT_NAME = #{deptName},
+	        </if>
+	        <if test="shortName != null" >
+                  A.SHORT_NAME = #{shortName},
+	        </if>
+	        <if test="deptPrincipal != null" >
+                  A.DEPT_PRINCIPAL = #{deptPrincipal},
+	        </if>
+	        <if test="searchStr != null" >
+                  A.SEARCH_STR = #{searchStr},
+	        </if>
+	        <if test="remark != null" >
+                  A.REMARK = #{remark},
+	        </if>
+	        <if test="levelNum != null" >
+                  A.LEVEL_NUM = #{levelNum},
+	        </if>
+	        <if test="sortNum != null" >
+                  A.SORT_NUM = #{sortNum},
+	        </if>
+	        <if test="disableFlag != null" >
+                  A.DISABLE_FLAG = #{disableFlag},
+	        </if>
+	        <if test="deleteFlag != null" >
+                  A.DELETE_FLAG = #{deleteFlag},
+	        </if>
+	        <if test="revision != null" >
+                  A.REVISION = #{revision},
+	        </if>
+	        <if test="createdBy != null" >
+                  A.CREATED_BY = #{createdBy},
+	        </if>
+	        <if test="createdTime != null" >
+                  A.CREATED_TIME = #{createdTime},
+	        </if>
+	        <if test="updatedBy != null" >
+                  A.UPDATED_BY = #{updatedBy},
+	        </if>
+	        <if test="updatedTime != null" >
+                  A.UPDATED_TIME = #{updatedTime},
+	        </if>
+	        <if test="tenantId != null" >
+                  A.TENANT_ID = #{tenantId}
+	        </if>
+	    </set>
+        <where> 
+            <if test="map.nid!=null">
+                and A.NID = #{map.nid} 
+            </if>
+            <if test="map.deptId!=null and map.deptId!=''">
+                and A.DEPT_ID = #{map.deptId} 
+            </if>
+            <if test="map.parentId!=null and map.parentId!=''">
+                and A.PARENT_ID = #{map.parentId} 
+            </if>
+            <if test="map.deptName!=null and map.deptName!=''">
+                and A.DEPT_NAME = #{map.deptName} 
+            </if>
+            <if test="map.shortName!=null and map.shortName!=''">
+                and A.SHORT_NAME = #{map.shortName} 
+            </if>
+            <if test="map.deptPrincipal!=null and map.deptPrincipal!=''">
+                and A.DEPT_PRINCIPAL = #{map.deptPrincipal} 
+            </if>
+            <if test="map.searchStr!=null and map.searchStr!=''">
+                and A.SEARCH_STR = #{map.searchStr} 
+            </if>
+            <if test="map.remark!=null and map.remark!=''">
+                and A.REMARK = #{map.remark} 
+            </if>
+            <if test="map.levelNum!=null">
+                and A.LEVEL_NUM = #{map.levelNum} 
+            </if>
+            <if test="map.sortNum!=null">
+                and A.SORT_NUM = #{map.sortNum} 
+            </if>
+            <if test="map.disableFlag!=null">
+                and A.DISABLE_FLAG = #{map.disableFlag} 
+            </if>
+            <if test="map.deleteFlag!=null">
+                and A.DELETE_FLAG = #{map.deleteFlag} 
+            </if>
+            <if test="map.revision!=null and map.revision!=''">
+                and A.REVISION = #{map.revision} 
+            </if>
+            <if test="map.createdBy!=null and map.createdBy!=''">
+                and A.CREATED_BY = #{map.createdBy} 
+            </if>
+            <if test="map.createdTime!=null">
+                and A.CREATED_TIME = #{map.createdTime} 
+            </if>
+            <if test="map.updatedBy!=null and map.updatedBy!=''">
+                and A.UPDATED_BY = #{map.updatedBy} 
+            </if>
+            <if test="map.updatedTime!=null">
+                and A.UPDATED_TIME = #{map.updatedTime} 
+            </if>
+            <if test="map.tenantId!=null and map.tenantId!=''">
+                and A.TENANT_ID = #{map.tenantId} 
+            </if>
+        </where>
+    </update>
+  
+    <!-- 统计记录 -->
+    <select id="countAll" resultType="java.lang.Long" parameterType="com.lcxbs.sys.model.SysDepartment" flushCache="true">
+        SELECT COUNT(NID) FROM SYS_DEPARTMENT A <where> <include refid="select_where"></include> </where>
+    </select>
+  
+    <!-- 查询所有的ID -->
+    <select id="getAllIds" resultType="java.lang.String" parameterType="com.lcxbs.sys.model.SysDepartment" flushCache="true">
+        SELECT NID FROM SYS_DEPARTMENT A 
+        <where> <include refid="select_where"></include> </where>
+        <if test="map!=null">
+            <if test="map.groupBy!=null and map.groupBy!=''">
+                ${map.groupBy}
+            </if>
+            <if test="map.orderBy!=null and map.orderBy!=''">
+                ${map.orderBy}
+            </if>
+        </if>
+    </select>
+  
+    <!-- 分页获取数据 -->
+    <select id="getListByPage" resultMap="BaseResultMap" parameterType="com.lcxbs.sys.model.SysDepartment" flushCache="true">
+        SELECT <include refid="Base_Column_List" /> FROM SYS_DEPARTMENT A
+        <where> 
+            <include refid="select_where"></include>  
+        </where>
+        <if test="map!=null">
+			<if test="map.groupBy!=null and map.groupBy!=''">
+                ${map.groupBy}
+            </if>
+            <if test="map.orderBy!=null and map.orderBy!=''">
+                ${map.orderBy}
+            </if>
+        </if>
+    </select>
+  
+    <!-- 按条件获取 -->
+    <select id="getListByWhere" resultMap="BaseResultMap" parameterType="com.lcxbs.sys.model.SysDepartment" flushCache="true">
+        SELECT <include refid="Base_Column_List" /> FROM SYS_DEPARTMENT A 
+        <where> <include refid="select_where"></include>  </where>
+        <if test="map!=null">
+            <if test="map.groupBy!=null and map.groupBy!=''">
+                ${map.groupBy}
+            </if>
+            <if test="map.orderBy!=null and map.orderBy!=''">
+                ${map.orderBy}
+            </if>
+            <if test="map.orderBy==null or map.orderBy==''">
+            	ORDER BY A.NID ASC
+            </if>
+        </if>
+    </select>
+	
+    <!-- 按条件获取信息 -->
+    <select id="getModelByWhere" resultMap="BaseResultMap" parameterType="com.lcxbs.sys.model.SysDepartment" useCache="true">
+        SELECT <include refid="Base_Column_List" /> FROM SYS_DEPARTMENT A
+        <where> <include refid="select_where"></include>  </where>
+        ORDER BY A.NID ASC
+    </select>
+
+    <!-- 按条件删除信息-->
+    <delete id="deleteByWhere" parameterType="com.lcxbs.sys.model.SysDepartment" flushCache="true">
+        DELETE FROM SYS_DEPARTMENT 
+        <where>
+            <if test="nid!=null">
+                and NID = #{nid} 
+            </if>
+            <if test="deptId!=null and deptId!=''">
+                and DEPT_ID = #{deptId} 
+            </if>
+            <if test="parentId!=null and parentId!=''">
+                and PARENT_ID = #{parentId} 
+            </if>
+            <if test="deptName!=null and deptName!=''">
+                and DEPT_NAME = #{deptName} 
+            </if>
+            <if test="shortName!=null and shortName!=''">
+                and SHORT_NAME = #{shortName} 
+            </if>
+            <if test="deptPrincipal!=null and deptPrincipal!=''">
+                and DEPT_PRINCIPAL = #{deptPrincipal} 
+            </if>
+            <if test="searchStr!=null and searchStr!=''">
+                and SEARCH_STR = #{searchStr} 
+            </if>
+            <if test="remark!=null and remark!=''">
+                and REMARK = #{remark} 
+            </if>
+            <if test="levelNum!=null">
+                and LEVEL_NUM = #{levelNum} 
+            </if>
+            <if test="sortNum!=null">
+                and SORT_NUM = #{sortNum} 
+            </if>
+            <if test="disableFlag!=null">
+                and DISABLE_FLAG = #{disableFlag} 
+            </if>
+            <if test="deleteFlag!=null">
+                and DELETE_FLAG = #{deleteFlag} 
+            </if>
+            <if test="revision!=null and revision!=''">
+                and REVISION = #{revision} 
+            </if>
+            <if test="createdBy!=null and createdBy!=''">
+                and CREATED_BY = #{createdBy} 
+            </if>
+            <if test="createdTime!=null">
+                and CREATED_TIME = #{createdTime} 
+            </if>
+            <if test="updatedBy!=null and updatedBy!=''">
+                and UPDATED_BY = #{updatedBy} 
+            </if>
+            <if test="updatedTime!=null">
+                and UPDATED_TIME = #{updatedTime} 
+            </if>
+            <if test="tenantId!=null and tenantId!=''">
+                and TENANT_ID = #{tenantId} 
+            </if>
+        </where>
+    </delete>
+	
+</mapper>

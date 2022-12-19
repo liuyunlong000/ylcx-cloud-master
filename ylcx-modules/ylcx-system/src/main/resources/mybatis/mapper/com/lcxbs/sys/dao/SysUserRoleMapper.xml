@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lcxbs.sys.dao.SysUserRoleMapper">
+    <resultMap id="BaseResultMap" type="com.lcxbs.sys.model.SysUserRole">
+  	   <id column="NID" property="nid" jdbcType="NUMERIC" />
+        <result column="USER_ID" property="userId" jdbcType="VARCHAR"/>
+        <result column="ROLE_ID" property="roleId" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        A.NID,A.USER_ID,A.ROLE_ID
+    </sql>
+   
+   <!-- SELECT sql片段 -->  
+    <sql id="select_where">
+	   <if test="nid!=null">
+            and A.NID = #{nid} 
+        </if>
+	   <if test="userId!=null and userId!=''">
+            and A.USER_ID = #{userId} 
+        </if>
+	   <if test="roleId!=null and roleId!=''">
+            and A.ROLE_ID = #{roleId} 
+        </if>
+    </sql>
+   
+    <!-- 获取信息 -->
+    <select id="getModelByKey" resultMap="BaseResultMap" parameterType="java.lang.Long" useCache="true">
+        SELECT <include refid="Base_Column_List" /> FROM SYS_USER_ROLE A WHERE A.NID = #{nid}
+    </select>
+  
+    <!-- 删除信息 -->
+    <delete id="delete" parameterType="java.lang.Long" flushCache="true">
+        DELETE FROM SYS_USER_ROLE WHERE NID = #{nid}
+    </delete>
+  
+    <!-- 插入信息,插入后获取自增主键值(适配mysql) -->
+    <insert id="insert" parameterType="com.lcxbs.sys.model.SysUserRole" flushCache="true" databaseId="mysql">
+        <selectKey keyProperty="nid" resultType="java.lang.Long" order="AFTER">
+            SELECT @@IDENTITY
+        </selectKey>
+            INSERT INTO SYS_USER_ROLE (USER_ID,ROLE_ID)
+                VALUES (
+                    #{userId,jdbcType=VARCHAR},
+                    #{roleId,jdbcType=VARCHAR})
+    </insert>
+	
+	 <!-- 插入信息,插入后获取自增主键值(适配oracle) -->
+    <insert id="insert" parameterType="com.lcxbs.sys.model.SysUserRole" flushCache="true" databaseId="oracle">
+        <selectKey keyProperty="nid" resultType="java.lang.Long" order="BEFORE">
+            SELECT SEQ_SYS_USER_ROLE.NEXTVAL from dual
+        </selectKey>
+            INSERT INTO SYS_USER_ROLE (NID,USER_ID,ROLE_ID)
+                VALUES (
+                    #{nid,jdbcType=NUMERIC},
+                    #{userId,jdbcType=VARCHAR},
+                    #{roleId,jdbcType=VARCHAR})
+    </insert>
+  
+    <!-- 精确更新 -->
+    <update id="updateSelective" parameterType="com.lcxbs.sys.model.SysUserRole" flushCache="true">
+        UPDATE SYS_USER_ROLE A
+        <set>
+            <if test="userId != null" >
+                A.USER_ID = #{userId},
+            </if>
+            <if test="roleId != null" >
+                A.ROLE_ID = #{roleId}
+            </if>
+        </set>
+        WHERE A.NID = #{nid}
+    </update>
+  
+    <!-- 更新所有 -->
+    <update id="updateByPrimaryKey" parameterType="com.lcxbs.sys.model.SysUserRole" flushCache="true">
+        UPDATE SYS_USER_ROLE A
+        <set> 
+	        <if test="userId != null" >
+                  A.USER_ID = #{userId},
+	        </if>
+	        <if test="roleId != null" >
+                  A.ROLE_ID = #{roleId}
+	        </if>
+	    </set>
+        WHERE A.NID = #{nid}
+    </update>
+    
+    <!-- 根据Map集合参数选择更新 -->
+    <update id="updateByMap" parameterType="com.lcxbs.sys.model.SysUserRole" flushCache="true">
+        UPDATE SYS_USER_ROLE A
+        <set> 
+	        <if test="userId != null" >
+                  A.USER_ID = #{userId},
+	        </if>
+	        <if test="roleId != null" >
+                  A.ROLE_ID = #{roleId}
+	        </if>
+	    </set>
+        <where> 
+            <if test="map.nid!=null">
+                and A.NID = #{map.nid} 
+            </if>
+            <if test="map.userId!=null and map.userId!=''">
+                and A.USER_ID = #{map.userId} 
+            </if>
+            <if test="map.roleId!=null and map.roleId!=''">
+                and A.ROLE_ID = #{map.roleId} 
+            </if>
+        </where>
+    </update>
+  
+    <!-- 统计记录 -->
+    <select id="countAll" resultType="java.lang.Long" parameterType="com.lcxbs.sys.model.SysUserRole" flushCache="true">
+        SELECT COUNT(NID) FROM SYS_USER_ROLE A <where> <include refid="select_where"></include> </where>
+    </select>
+  
+    <!-- 查询所有的ID -->
+    <select id="getAllIds" resultType="java.lang.String" parameterType="com.lcxbs.sys.model.SysUserRole" flushCache="true">
+        SELECT NID FROM SYS_USER_ROLE A 
+        <where> <include refid="select_where"></include> </where>
+        <if test="map!=null">
+            <if test="map.groupBy!=null and map.groupBy!=''">
+                ${map.groupBy}
+            </if>
+            <if test="map.orderBy!=null and map.orderBy!=''">
+                ${map.orderBy}
+            </if>
+        </if>
+    </select>
+  
+    <!-- 分页获取数据 -->
+    <select id="getListByPage" resultMap="BaseResultMap" parameterType="com.lcxbs.sys.model.SysUserRole" flushCache="true">
+        SELECT <include refid="Base_Column_List" /> FROM SYS_USER_ROLE A
+        <where> 
+            <include refid="select_where"></include>  
+        </where>
+        <if test="map!=null">
+			<if test="map.groupBy!=null and map.groupBy!=''">
+                ${map.groupBy}
+            </if>
+            <if test="map.orderBy!=null and map.orderBy!=''">
+                ${map.orderBy}
+            </if>
+        </if>
+    </select>
+  
+    <!-- 按条件获取 -->
+    <select id="getListByWhere" resultMap="BaseResultMap" parameterType="com.lcxbs.sys.model.SysUserRole" flushCache="true">
+        SELECT <include refid="Base_Column_List" /> FROM SYS_USER_ROLE A 
+        <where> <include refid="select_where"></include>  </where>
+        <if test="map!=null">
+            <if test="map.groupBy!=null and map.groupBy!=''">
+                ${map.groupBy}
+            </if>
+            <if test="map.orderBy!=null and map.orderBy!=''">
+                ${map.orderBy}
+            </if>
+            <if test="map.orderBy==null or map.orderBy==''">
+            	ORDER BY A.NID ASC
+            </if>
+        </if>
+    </select>
+	
+    <!-- 按条件获取信息 -->
+    <select id="getModelByWhere" resultMap="BaseResultMap" parameterType="com.lcxbs.sys.model.SysUserRole" useCache="true">
+        SELECT <include refid="Base_Column_List" /> FROM SYS_USER_ROLE A
+        <where> <include refid="select_where"></include>  </where>
+        ORDER BY A.NID ASC
+    </select>
+
+    <!-- 按条件删除信息-->
+    <delete id="deleteByWhere" parameterType="com.lcxbs.sys.model.SysUserRole" flushCache="true">
+        DELETE FROM SYS_USER_ROLE 
+        <where>
+            <if test="nid!=null">
+                and NID = #{nid} 
+            </if>
+            <if test="userId!=null and userId!=''">
+                and USER_ID = #{userId} 
+            </if>
+            <if test="roleId!=null and roleId!=''">
+                and ROLE_ID = #{roleId} 
+            </if>
+        </where>
+    </delete>
+	
+</mapper>

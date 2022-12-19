@@ -1,0 +1,38 @@
+# Tomcat
+server:
+  port: 16666
+  servlet:
+    context-path: /common
+# Spring
+spring:
+  application:
+    # 应用名称
+    name: system
+  profiles:
+    # 环境配置
+    active: dev
+  main:
+    allow-bean-definition-overriding: true
+  cloud:
+    nacos:
+      discovery:
+        # 服务注册地址http://10.8.0.6/
+        server-addr: 127.0.0.1:8848 #远程公共服务地址，自己调试可自己安装nacos.rar并修改ip即可
+        #配置命名空间ID,默认命名空间ID为空
+        namespace: wz
+      config:
+        # 配置中心地址
+        server-addr: 127.0.0.1:8848 #远程公共服务地址，自己调试可自己安装nacos.rar并修改ip即可
+        #配置命名空间ID,默认命名空间ID为空
+        namespace: ${spring.cloud.nacos.discovery.namespace}
+        #配置分组
+        group: DEFAULT_GROUP
+        # 配置文件格式
+        file-extension: yml
+        # 共享配置
+        shared-configs[0]:
+          data-id: application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension} # 配置文件名-Data Id
+          group: DEFAULT_GROUP   # 默认为DEFAULT_GROUP
+          refresh: true   # 是否动态刷新，默认为false
+
+

@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lcxbs.sys.dao.SysUserCompanyMapper">
+    <resultMap id="BaseResultMap" type="com.lcxbs.sys.model.SysUserCompany">
+  	   <id column="NID" property="nid" jdbcType="NUMERIC" />
+        <result column="USER_ID" property="userId" jdbcType="VARCHAR"/>
+        <result column="COMPANY_ID" property="companyId" jdbcType="VARCHAR"/>
+        <result column="MAIN_FLAG" property="mainFlag" jdbcType="NUMERIC"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        A.NID,A.USER_ID,A.COMPANY_ID,A.MAIN_FLAG
+    </sql>
+   
+   <!-- SELECT sql片段 -->  
+    <sql id="select_where">
+	   <if test="nid!=null">
+            and A.NID = #{nid} 
+        </if>
+	   <if test="userId!=null and userId!=''">
+            and A.USER_ID = #{userId} 
+        </if>
+	   <if test="companyId!=null and companyId!=''">
+            and A.COMPANY_ID = #{companyId} 
+        </if>
+	   <if test="mainFlag!=null">
+            and A.MAIN_FLAG = #{mainFlag} 
+        </if>
+    </sql>
+   
+    <!-- 获取信息 -->
+    <select id="getModelByKey" resultMap="BaseResultMap" parameterType="java.lang.Long" useCache="true">
+        SELECT <include refid="Base_Column_List" /> FROM SYS_USER_COMPANY A WHERE A.NID = #{nid}
+    </select>
+  
+    <!-- 删除信息 -->
+    <delete id="delete" parameterType="java.lang.Long" flushCache="true">
+        DELETE FROM SYS_USER_COMPANY WHERE NID = #{nid}
+    </delete>
+  
+    <!-- 插入信息,插入后获取自增主键值(适配mysql) -->
+    <insert id="insert" parameterType="com.lcxbs.sys.model.SysUserCompany" flushCache="true" databaseId="mysql">
+        <selectKey keyProperty="nid" resultType="java.lang.Long" order="AFTER">
+            SELECT @@IDENTITY
+        </selectKey>
+            INSERT INTO SYS_USER_COMPANY (USER_ID,COMPANY_ID,MAIN_FLAG)
+                VALUES (
+                    #{userId,jdbcType=VARCHAR},
+                    #{companyId,jdbcType=VARCHAR},
+                    #{mainFlag,jdbcType=NUMERIC})
+    </insert>
+	
+	 <!-- 插入信息,插入后获取自增主键值(适配oracle) -->
+    <insert id="insert" parameterType="com.lcxbs.sys.model.SysUserCompany" flushCache="true" databaseId="oracle">
+        <selectKey keyProperty="nid" resultType="java.lang.Long" order="BEFORE">
+            SELECT SEQ_SYS_USER_COMPANY.NEXTVAL from dual
+        </selectKey>
+            INSERT INTO SYS_USER_COMPANY (NID,USER_ID,COMPANY_ID,MAIN_FLAG)
+                VALUES (
+                    #{nid,jdbcType=NUMERIC},
+                    #{userId,jdbcType=VARCHAR},
+                    #{companyId,jdbcType=VARCHAR},
+                    #{mainFlag,jdbcType=NUMERIC})
+    </insert>
+  
+    <!-- 精确更新 -->
+    <update id="updateSelective" parameterType="com.lcxbs.sys.model.SysUserCompany" flushCache="true">
+        UPDATE SYS_USER_COMPANY A
+        <set>
+            <if test="userId != null" >
+                A.USER_ID = #{userId},
+            </if>
+            <if test="companyId != null" >
+                A.COMPANY_ID = #{companyId},
+            </if>
+            <if test="mainFlag != null" >
+                A.MAIN_FLAG = #{mainFlag}
+            </if>
+        </set>
+        WHERE A.NID = #{nid}
+    </update>
+  
+    <!-- 更新所有 -->
+    <update id="updateByPrimaryKey" parameterType="com.lcxbs.sys.model.SysUserCompany" flushCache="true">
+        UPDATE SYS_USER_COMPANY A
+        <set> 
+	        <if test="userId != null" >
+                  A.USER_ID = #{userId},
+	        </if>
+	        <if test="companyId != null" >
+                  A.COMPANY_ID = #{companyId},
+	        </if>
+	        <if test="mainFlag != null" >
+                  A.MAIN_FLAG = #{mainFlag}
+	        </if>
+	    </set>
+        WHERE A.NID = #{nid}
+    </update>
+    
+    <!-- 根据Map集合参数选择更新 -->
+    <update id="updateByMap" parameterType="com.lcxbs.sys.model.SysUserCompany" flushCache="true">
+        UPDATE SYS_USER_COMPANY A
+        <set> 
+	        <if test="userId != null" >
+                  A.USER_ID = #{userId},
+	        </if>
+	        <if test="companyId != null" >
+                  A.COMPANY_ID = #{companyId},
+	        </if>
+	        <if test="mainFlag != null" >
+                  A.MAIN_FLAG = #{mainFlag}
+	        </if>
+	    </set>
+        <where> 
+            <if test="map.nid!=null">
+                and A.NID = #{map.nid} 
+            </if>
+            <if test="map.userId!=null and map.userId!=''">
+                and A.USER_ID = #{map.userId} 
+            </if>
+            <if test="map.companyId!=null and map.companyId!=''">
+                and A.COMPANY_ID = #{map.companyId} 
+            </if>
+            <if test="map.mainFlag!=null">
+                and A.MAIN_FLAG = #{map.mainFlag} 
+            </if>
+        </where>
+    </update>
+  
+    <!-- 统计记录 -->
+    <select id="countAll" resultType="java.lang.Long" parameterType="com.lcxbs.sys.model.SysUserCompany" flushCache="true">
+        SELECT COUNT(NID) FROM SYS_USER_COMPANY A <where> <include refid="select_where"></include> </where>
+    </select>
+  
+    <!-- 查询所有的ID -->
+    <select id="getAllIds" resultType="java.lang.String" parameterType="com.lcxbs.sys.model.SysUserCompany" flushCache="true">
+        SELECT NID FROM SYS_USER_COMPANY A 
+        <where> <include refid="select_where"></include> </where>
+        <if test="map!=null">
+            <if test="map.groupBy!=null and map.groupBy!=''">
+                ${map.groupBy}
+            </if>
+            <if test="map.orderBy!=null and map.orderBy!=''">
+                ${map.orderBy}
+            </if>
+        </if>
+    </select>
+  
+    <!-- 分页获取数据 -->
+    <select id="getListByPage" resultMap="BaseResultMap" parameterType="com.lcxbs.sys.model.SysUserCompany" flushCache="true">
+        SELECT <include refid="Base_Column_List" /> FROM SYS_USER_COMPANY A
+        <where> 
+            <include refid="select_where"></include>  
+        </where>
+        <if test="map!=null">
+			<if test="map.groupBy!=null and map.groupBy!=''">
+                ${map.groupBy}
+            </if>
+            <if test="map.orderBy!=null and map.orderBy!=''">
+                ${map.orderBy}
+            </if>
+        </if>
+    </select>
+  
+    <!-- 按条件获取 -->
+    <select id="getListByWhere" resultMap="BaseResultMap" parameterType="com.lcxbs.sys.model.SysUserCompany" flushCache="true">
+        SELECT <include refid="Base_Column_List" /> FROM SYS_USER_COMPANY A 
+        <where> <include refid="select_where"></include>  </where>
+        <if test="map!=null">
+            <if test="map.groupBy!=null and map.groupBy!=''">
+                ${map.groupBy}
+            </if>
+            <if test="map.orderBy!=null and map.orderBy!=''">
+                ${map.orderBy}
+            </if>
+            <if test="map.orderBy==null or map.orderBy==''">
+            	ORDER BY A.NID ASC
+            </if>
+        </if>
+    </select>
+	
+    <!-- 按条件获取信息 -->
+    <select id="getModelByWhere" resultMap="BaseResultMap" parameterType="com.lcxbs.sys.model.SysUserCompany" useCache="true">
+        SELECT <include refid="Base_Column_List" /> FROM SYS_USER_COMPANY A
+        <where> <include refid="select_where"></include>  </where>
+        ORDER BY A.NID ASC
+    </select>
+
+    <!-- 按条件删除信息-->
+    <delete id="deleteByWhere" parameterType="com.lcxbs.sys.model.SysUserCompany" flushCache="true">
+        DELETE FROM SYS_USER_COMPANY 
+        <where>
+            <if test="nid!=null">
+                and NID = #{nid} 
+            </if>
+            <if test="userId!=null and userId!=''">
+                and USER_ID = #{userId} 
+            </if>
+            <if test="companyId!=null and companyId!=''">
+                and COMPANY_ID = #{companyId} 
+            </if>
+            <if test="mainFlag!=null">
+                and MAIN_FLAG = #{mainFlag} 
+            </if>
+        </where>
+    </delete>
+	
+</mapper>

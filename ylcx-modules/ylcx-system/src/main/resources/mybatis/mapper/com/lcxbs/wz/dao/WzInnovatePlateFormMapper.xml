@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lcxbs.wz.dao.WzInnovatePlateFormMapper">
+    <resultMap id="BaseResultMap" type="com.lcxbs.wz.model.WzInnovatePlateForm">
+  	   <id column="NID" property="nid" jdbcType="NUMERIC" />
+        <result column="NAME" property="name" jdbcType="VARCHAR"/>
+        <result column="LINK" property="link" jdbcType="VARCHAR"/>
+        <result column="CONTENT" property="content" jdbcType="VARCHAR"/>
+        <result column="SORT_NUM" property="sortNum" jdbcType="NUMERIC"/>
+        <result column="DISABLE_FLAG" property="disableFlag" jdbcType="NUMERIC"/>
+        <result column="DELETE_FLAG" property="deleteFlag" jdbcType="NUMERIC"/>
+        <result column="CREATED_BY" property="createdBy" jdbcType="VARCHAR"/>
+        <result column="CREATED_TIME" property="createdTime" jdbcType="TIMESTAMP"/>
+        <result column="UPDATED_BY" property="updatedBy" jdbcType="VARCHAR"/>
+        <result column="UPDATED_TIME" property="updatedTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        A.NID,A.NAME,A.LINK,A.CONTENT,A.SORT_NUM,A.DISABLE_FLAG,A.DELETE_FLAG,A.CREATED_BY,A.CREATED_TIME,A.UPDATED_BY,A.UPDATED_TIME
+    </sql>
+   
+   <!-- SELECT sql片段 -->
+    <sql id="select_where">
+	   <if test="nid!=null">
+            and A.NID = #{nid} 
+        </if>
+       <if test="name!=null">
+            and A.NAME = #{name}
+        </if>
+        <if test="link!=null">
+            and A.LINK = #{link}
+        </if>
+       <if test="content!=null">
+            and A.CONTENT = #{content}
+        </if>
+	   <if test="sortNum!=null">
+            and A.SORT_NUM = #{sortNum} 
+        </if>
+	   <if test="disableFlag!=null">
+            and A.DISABLE_FLAG = #{disableFlag} 
+        </if>
+	   <if test="deleteFlag!=null">
+            and A.DELETE_FLAG = #{deleteFlag} 
+        </if>
+	   <if test="createdBy!=null and createdBy!=''">
+            and A.CREATED_BY = #{createdBy} 
+        </if>
+	   <if test="createdTime!=null">
+            and A.CREATED_TIME = #{createdTime} 
+        </if>
+        <if test="map.createdTimeStart!=null and map.createdTimeStart!=''">
+            and A.CREATED_TIME &gt;= #{map.createdTimeStart} 
+        </if>
+        <if test="map.createdTimeEnd!=null and map.createdTimeEnd!=''">
+            and A.CREATED_TIME &lt;= #{map.createdTimeEnd} 
+        </if>
+	   <if test="updatedBy!=null and updatedBy!=''">
+            and A.UPDATED_BY = #{updatedBy} 
+        </if>
+	   <if test="updatedTime!=null">
+            and A.UPDATED_TIME = #{updatedTime} 
+        </if>
+        <if test="map.updatedTimeStart!=null and map.updatedTimeStart!=''">
+            and A.UPDATED_TIME &gt;= #{map.updatedTimeStart} 
+        </if>
+        <if test="map.updatedTimeEnd!=null and map.updatedTimeEnd!=''">
+            and A.UPDATED_TIME &lt;= #{map.updatedTimeEnd} 
+        </if>
+        <if test="sortField!=null">
+            order by ${sortField}
+        </if>
+        <if test="sortOrder!=null">
+            ${sortOrder}
+        </if>
+    </sql>
+   
+    <!-- 获取信息 -->
+    <select id="getModelByKey" resultMap="BaseResultMap" parameterType="java.lang.Long" useCache="true">
+        SELECT <include refid="Base_Column_List" /> FROM WZ_INNOVATE_PLATFORM A WHERE A.NID = #{nid}
+    </select>
+  
+    <!-- 删除信息 -->
+    <delete id="delete" parameterType="java.lang.Long" flushCache="true">
+        DELETE FROM WZ_INNOVATE_PLATFORM WHERE NID = #{nid}
+    </delete>
+  
+    <!-- 插入信息,插入后获取自增主键值(适配mysql) -->
+    <insert id="insert" parameterType="com.lcxbs.wz.model.WzInnovatePlateForm" flushCache="true" databaseId="mysql">
+        <selectKey keyProperty="nid" resultType="java.lang.Long" order="AFTER">
+            SELECT @@IDENTITY
+        </selectKey>
+            INSERT INTO WZ_INNOVATE_PLATFORM (NAME,CONTENT,SORT_NUM,DISABLE_FLAG,DELETE_FLAG,CREATED_BY,CREATED_TIME,UPDATED_BY,UPDATED_TIME)
+                VALUES (
+                    #{name,jdbcType=VARCHAR},
+                    #{content,jdbcType=VARCHAR},
+                    #{sortNum,jdbcType=NUMERIC},
+                    #{disableFlag,jdbcType=NUMERIC},
+                    #{deleteFlag,jdbcType=NUMERIC},
+                    #{createdBy,jdbcType=VARCHAR},
+                    #{createdTime,jdbcType=NUMERIC},
+                    #{updatedBy,jdbcType=VARCHAR},
+                    #{updatedTime,jdbcType=NUMERIC})
+    </insert>
+	
+	 <!-- 插入信息,插入后获取自增主键值(适配oracle) -->
+    <insert id="insert" parameterType="com.lcxbs.wz.model.WzInnovatePlateForm" flushCache="true" databaseId="oracle">
+        <selectKey keyProperty="nid" resultType="java.lang.Long" order="BEFORE">
+            SELECT SEQ_WZ_INNOVATE_PLATEFORM.NEXTVAL from dual
+        </selectKey>
+            INSERT INTO WZ_INNOVATE_PLATFORM (NID,NAME,CONTENT,SORT_NUM,DISABLE_FLAG,DELETE_FLAG,CREATED_BY,CREATED_TIME,UPDATED_BY,UPDATED_TIME)
+                VALUES (
+                    #{nid,jdbcType=NUMERIC},
+                    #{name,jdbcType=VARCHAR},
+                    #{content,jdbcType=VARCHAR},
+                    #{sortNum,jdbcType=NUMERIC},
+                    #{disableFlag,jdbcType=NUMERIC},
+                    #{deleteFlag,jdbcType=NUMERIC},
+                    #{createdBy,jdbcType=VARCHAR},
+                    #{createdTime,jdbcType=NUMERIC},
+                    #{updatedBy,jdbcType=VARCHAR},
+                    #{updatedTime,jdbcType=NUMERIC})
+    </insert>
+  
+    <!-- 精确更新 -->
+    <update id="updateSelective" parameterType="com.lcxbs.wz.model.WzInnovatePlateForm" flushCache="true">
+        UPDATE WZ_INNOVATE_PLATFORM A
+        <set>
+            <if test="name != null" >
+                A.NAME = #{name},
+            </if>
+            <if test="content != null" >
+                A.CONTENT = #{content},
+            </if>
+            <if test="sortNum != null" >
+                A.SORT_NUM = #{sortNum},
+            </if>
+            <if test="disableFlag != null" >
+                A.DISABLE_FLAG = #{disableFlag},
+            </if>
+            <if test="deleteFlag != null" >
+                A.DELETE_FLAG = #{deleteFlag},
+            </if>
+            <if test="createdBy != null" >
+                A.CREATED_BY = #{createdBy},
+            </if>
+            <if test="createdTime != null" >
+                A.CREATED_TIME = #{createdTime},
+            </if>
+            <if test="updatedBy != null" >
+                A.UPDATED_BY = #{updatedBy},
+            </if>
+            <if test="updatedTime != null" >
+                A.UPDATED_TIME = #{updatedTime}
+            </if>
+        </set>
+        WHERE A.NID = #{nid}
+    </update>
+  
+    <!-- 更新所有 -->
+    <update id="updateByPrimaryKey" parameterType="com.lcxbs.wz.model.WzInnovatePlateForm" flushCache="true">
+        UPDATE WZ_INNOVATE_PLATFORM A
+        <set>
+            <if test="name != null" >
+                A.NAME = #{name},
+            </if>
+            <if test="content != null" >
+                A.CONTENT = #{content},
+            </if>
+	        <if test="sortNum != null" >
+                  A.SORT_NUM = #{sortNum},
+	        </if>
+	        <if test="disableFlag != null" >
+                  A.DISABLE_FLAG = #{disableFlag},
+	        </if>
+	        <if test="deleteFlag != null" >
+                  A.DELETE_FLAG = #{deleteFlag},
+	        </if>
+	        <if test="createdBy != null" >
+                  A.CREATED_BY = #{createdBy},
+	        </if>
+	        <if test="createdTime != null" >
+                  A.CREATED_TIME = #{createdTime},
+	        </if>
+	        <if test="updatedBy != null" >
+                  A.UPDATED_BY = #{updatedBy},
+	        </if>
+	        <if test="updatedTime != null" >
+                  A.UPDATED_TIME = #{updatedTime}
+	        </if>
+	    </set>
+        WHERE A.NID = #{nid}
+    </update>
+    
+    <!-- 根据Map集合参数选择更新 -->
+    <update id="updateByMap" parameterType="com.lcxbs.wz.model.WzInnovatePlateForm" flushCache="true">
+        UPDATE WZ_INNOVATE_PLATFORM A
+        <set>
+            <if test="name != null" >
+                A.NAME = #{name},
+            </if>
+            <if test="content != null" >
+                A.CONTENT = #{content},
+            </if>
+	        <if test="sortNum != null" >
+                  A.SORT_NUM = #{sortNum},
+	        </if>
+	        <if test="disableFlag != null" >
+                  A.DISABLE_FLAG = #{disableFlag},
+	        </if>
+	        <if test="deleteFlag != null" >
+                  A.DELETE_FLAG = #{deleteFlag},
+	        </if>
+	        <if test="createdBy != null" >
+                  A.CREATED_BY = #{createdBy},
+	        </if>
+	        <if test="createdTime != null" >
+                  A.CREATED_TIME = #{createdTime},
+	        </if>
+	        <if test="updatedBy != null" >
+                  A.UPDATED_BY = #{updatedBy},
+	        </if>
+	        <if test="updatedTime != null" >
+                  A.UPDATED_TIME = #{updatedTime}
+	        </if>
+	    </set>
+        <where> 
+            <if test="map.nid!=null">
+                and A.NID = #{map.nid} 
+            </if>
+            <if test="map.name != null" >
+                and A.NAME = #{map.name}
+            </if>
+            <if test="map.content != null" >
+                and A.CONTENT = #{map.content}
+            </if>
+            <if test="map.sortNum!=null">
+                and A.SORT_NUM = #{map.sortNum} 
+            </if>
+            <if test="map.disableFlag!=null">
+                and A.DISABLE_FLAG = #{map.disableFlag} 
+            </if>
+            <if test="map.deleteFlag!=null">
+                and A.DELETE_FLAG = #{map.deleteFlag} 
+            </if>
+            <if test="map.createdBy!=null and map.createdBy!=''">
+                and A.CREATED_BY = #{map.createdBy} 
+            </if>
+            <if test="map.createdTime!=null">
+                and A.CREATED_TIME = #{map.createdTime} 
+            </if>
+            <if test="map.updatedBy!=null and map.updatedBy!=''">
+                and A.UPDATED_BY = #{map.updatedBy} 
+            </if>
+            <if test="map.updatedTime!=null">
+                and A.UPDATED_TIME = #{map.updatedTime} 
+            </if>
+        </where>
+    </update>
+  
+    <!-- 统计记录 -->
+    <select id="countAll" resultType="java.lang.Long" parameterType="com.lcxbs.wz.model.WzInnovatePlateForm" flushCache="true">
+        SELECT COUNT(NID) FROM WZ_INNOVATE_PLATFORM A <where> <include refid="select_where"></include> </where>
+    </select>
+  
+    <!-- 查询所有的ID -->
+    <select id="getAllIds" resultType="java.lang.String" parameterType="com.lcxbs.wz.model.WzInnovatePlateForm" flushCache="true">
+        SELECT NID FROM WZ_INNOVATE_PLATFORM A
+        <where> <include refid="select_where"></include> </where>
+        <if test="map!=null">
+            <if test="map.groupBy!=null and map.groupBy!=''">
+                ${map.groupBy}
+            </if>
+            <if test="map.orderBy!=null and map.orderBy!=''">
+                ${map.orderBy}
+            </if>
+        </if>
+    </select>
+  
+    <!-- 分页获取数据 -->
+    <select id="getListByPage" resultMap="BaseResultMap" parameterType="com.lcxbs.wz.model.WzInnovatePlateForm" flushCache="true">
+        SELECT <include refid="Base_Column_List" /> FROM WZ_INNOVATE_PLATFORM A
+        <where> 
+            <include refid="select_where"></include>  
+        </where>
+        <if test="map!=null">
+			<if test="map.groupBy!=null and map.groupBy!=''">
+                ${map.groupBy}
+            </if>
+            <if test="map.orderBy!=null and map.orderBy!=''">
+                ${map.orderBy}
+            </if>
+        </if>
+    </select>
+  
+    <!-- 按条件获取 -->
+    <select id="getListByWhere" resultMap="BaseResultMap" parameterType="com.lcxbs.wz.model.WzInnovatePlateForm" flushCache="true">
+        SELECT <include refid="Base_Column_List" /> FROM WZ_INNOVATE_PLATFORM A
+        <where> <include refid="select_where"></include>  </where>
+    </select>
+	
+    <!-- 按条件获取信息 -->
+    <select id="getModelByWhere" resultMap="BaseResultMap" parameterType="com.lcxbs.wz.model.WzInnovatePlateForm" useCache="true">
+        SELECT <include refid="Base_Column_List" /> FROM WZ_INNOVATE_PLATFORM A
+        <where> <include refid="select_where"></include>  </where>
+    </select>
+
+    <!-- 按条件删除信息-->
+    <delete id="deleteByWhere" parameterType="com.lcxbs.wz.model.WzInnovatePlateForm" flushCache="true">
+        DELETE FROM WZ_INNOVATE_PLATFORM
+        <where>
+            <if test="nid!=null">
+                and NID = #{nid} 
+            </if>
+            <if test="name != null" >
+                and A.NAME = #{name}
+            </if>
+            <if test="content != null" >
+                and A.CONTENT = #{content}
+            </if>
+            <if test="sortNum!=null">
+                and SORT_NUM = #{sortNum} 
+            </if>
+            <if test="disableFlag!=null">
+                and DISABLE_FLAG = #{disableFlag} 
+            </if>
+            <if test="deleteFlag!=null">
+                and DELETE_FLAG = #{deleteFlag} 
+            </if>
+            <if test="createdBy!=null and createdBy!=''">
+                and CREATED_BY = #{createdBy} 
+            </if>
+            <if test="createdTime!=null">
+                and CREATED_TIME = #{createdTime} 
+            </if>
+            <if test="updatedBy!=null and updatedBy!=''">
+                and UPDATED_BY = #{updatedBy} 
+            </if>
+            <if test="updatedTime!=null">
+                and UPDATED_TIME = #{updatedTime} 
+            </if>
+        </where>
+    </delete>
+	
+</mapper>

@@ -1,0 +1,604 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lcxbs.sys.dao.SysCommonDictMapper">
+    <resultMap id="BaseResultMap" type="com.lcxbs.sys.model.SysCommonDict">
+  	   <id column="NID" property="nid" jdbcType="NUMERIC" />
+        <result column="DICT_NAME" property="dictName" jdbcType="VARCHAR"/>
+        <result column="DICT_CODE" property="dictCode" jdbcType="VARCHAR"/>
+        <result column="DICT_VALUE" property="dictValue" jdbcType="VARCHAR"/>
+        <result column="PARENT_ID" property="parentId" jdbcType="NUMERIC"/>
+        <result column="LEAF_FLAG" property="leafFlag" jdbcType="NUMERIC"/>
+        <result column="DICT_LEVEL" property="dictLevel" jdbcType="NUMERIC"/>
+        <result column="DICT_TYPE" property="dictType" jdbcType="NUMERIC"/>
+        <result column="FILE_ID" property="fileId" jdbcType="NUMERIC"/>
+        <result column="DICT_JSON" property="dictJson" jdbcType="VARCHAR"/>
+        <result column="DICT_REMARK" property="dictRemark" jdbcType="VARCHAR"/>
+        <result column="CSS_CLASS" property="cssClass" jdbcType="VARCHAR"/>
+        <result column="LIST_CLASS" property="listClass" jdbcType="VARCHAR"/>
+        <result column="DISABLE_FLAG" property="disableFlag" jdbcType="NUMERIC"/>
+        <result column="DELETE_FLAG" property="deleteFlag" jdbcType="NUMERIC"/>
+        <result column="SORT_NUM" property="sortNum" jdbcType="NUMERIC"/>
+        <result column="REVISION" property="revision" jdbcType="VARCHAR"/>
+        <result column="CREATED_BY" property="createdBy" jdbcType="VARCHAR"/>
+        <result column="CREATED_TIME" property="createdTime" jdbcType="NUMERIC"/>
+        <result column="UPDATED_BY" property="updatedBy" jdbcType="VARCHAR"/>
+        <result column="UPDATED_TIME" property="updatedTime" jdbcType="NUMERIC"/>
+        <result column="TENANT_ID" property="tenantId" jdbcType="VARCHAR"/>
+        <!-- 扩展属性 -->
+        <result column="DATA_COUNT" property="dataCount" jdbcType="NUMERIC"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        A.NID,A.DICT_NAME,A.DICT_CODE,A.DICT_VALUE,A.PARENT_ID,A.LEAF_FLAG,A.DICT_LEVEL,A.DICT_TYPE,A.FILE_ID,A.DICT_JSON,A.DICT_REMARK,A.CSS_CLASS,A.LIST_CLASS,A.DISABLE_FLAG,A.DELETE_FLAG,A.SORT_NUM,A.REVISION,A.CREATED_BY,A.CREATED_TIME,A.UPDATED_BY,A.UPDATED_TIME,A.TENANT_ID
+    </sql>
+   
+   <!-- SELECT sql片段 -->  
+    <sql id="select_where">
+	   <if test="nid!=null">
+            and A.NID = #{nid} 
+        </if>
+	   <if test="dictName!=null and dictName!=''">
+            and A.DICT_NAME = #{dictName} 
+        </if>
+	   <if test="dictCode!=null and dictCode!=''">
+            and A.DICT_CODE = #{dictCode} 
+        </if>
+	   <if test="dictValue!=null and dictValue!=''">
+            and A.DICT_VALUE = #{dictValue} 
+        </if>
+	   <if test="parentId!=null">
+            and A.PARENT_ID = #{parentId} 
+        </if>
+	   <if test="leafFlag!=null">
+            and A.LEAF_FLAG = #{leafFlag} 
+        </if>
+	   <if test="dictLevel!=null">
+            and A.DICT_LEVEL = #{dictLevel} 
+        </if>
+	   <if test="dictType!=null">
+            and A.DICT_TYPE = #{dictType} 
+        </if>
+	   <if test="fileId!=null">
+            and A.FILE_ID = #{fileId} 
+        </if>
+	   <if test="dictJson!=null and dictJson!=''">
+            and A.DICT_JSON = #{dictJson} 
+        </if>
+	   <if test="dictRemark!=null and dictRemark!=''">
+            and A.DICT_REMARK = #{dictRemark} 
+        </if>
+	   <if test="cssClass!=null and cssClass!=''">
+            and A.CSS_CLASS = #{cssClass} 
+        </if>
+	   <if test="listClass!=null and listClass!=''">
+            and A.LIST_CLASS = #{listClass} 
+        </if>
+	   <if test="disableFlag!=null">
+            and A.DISABLE_FLAG = #{disableFlag} 
+        </if>
+	   <if test="deleteFlag!=null">
+            and A.DELETE_FLAG = #{deleteFlag} 
+        </if>
+	   <if test="sortNum!=null">
+            and A.SORT_NUM = #{sortNum} 
+        </if>
+	   <if test="revision!=null and revision!=''">
+            and A.REVISION = #{revision} 
+        </if>
+	   <if test="createdBy!=null and createdBy!=''">
+            and A.CREATED_BY = #{createdBy} 
+        </if>
+	   <if test="createdTime!=null">
+            and A.CREATED_TIME = #{createdTime} 
+        </if>
+        <if test="map.createdTimeStart!=null and map.createdTimeStart!=''">
+            and A.CREATED_TIME &gt;= #{map.createdTimeStart} 
+        </if>
+        <if test="map.createdTimeEnd!=null and map.createdTimeEnd!=''">
+            and A.CREATED_TIME &lt;= #{map.createdTimeEnd} 
+        </if>
+	   <if test="updatedBy!=null and updatedBy!=''">
+            and A.UPDATED_BY = #{updatedBy} 
+        </if>
+	   <if test="updatedTime!=null">
+            and A.UPDATED_TIME = #{updatedTime} 
+        </if>
+        <if test="map.updatedTimeStart!=null and map.updatedTimeStart!=''">
+            and A.UPDATED_TIME &gt;= #{map.updatedTimeStart} 
+        </if>
+        <if test="map.updatedTimeEnd!=null and map.updatedTimeEnd!=''">
+            and A.UPDATED_TIME &lt;= #{map.updatedTimeEnd} 
+        </if>
+	   <if test="tenantId!=null and tenantId!=''">
+            and A.TENANT_ID = #{tenantId} 
+        </if>
+    </sql>
+   
+    <!-- 获取信息 -->
+    <select id="getModelByKey" resultMap="BaseResultMap" parameterType="java.lang.Long" useCache="true">
+        SELECT <include refid="Base_Column_List" /> FROM SYS_COMMON_DICT A WHERE A.NID = #{nid}
+    </select>
+  
+    <!-- 删除信息 -->
+    <delete id="delete" parameterType="java.lang.Long" flushCache="true">
+        DELETE FROM SYS_COMMON_DICT WHERE NID = #{nid}
+    </delete>
+  
+    <!-- 插入信息,插入后获取自增主键值(适配mysql) -->
+    <insert id="insert" parameterType="com.lcxbs.sys.model.SysCommonDict" flushCache="true" databaseId="mysql">
+        <selectKey keyProperty="nid" resultType="java.lang.Long" order="AFTER">
+            SELECT @@IDENTITY
+        </selectKey>
+            INSERT INTO SYS_COMMON_DICT (DICT_NAME,DICT_CODE,DICT_VALUE,PARENT_ID,LEAF_FLAG,DICT_LEVEL,DICT_TYPE,FILE_ID,DICT_JSON,DICT_REMARK,CSS_CLASS,LIST_CLASS,DISABLE_FLAG,DELETE_FLAG,SORT_NUM,REVISION,CREATED_BY,CREATED_TIME,UPDATED_BY,UPDATED_TIME,TENANT_ID)
+                VALUES (
+                    #{dictName,jdbcType=VARCHAR},
+                    #{dictCode,jdbcType=VARCHAR},
+                    #{dictValue,jdbcType=VARCHAR},
+                    #{parentId,jdbcType=NUMERIC},
+                    #{leafFlag,jdbcType=NUMERIC},
+                    #{dictLevel,jdbcType=NUMERIC},
+                    #{dictType,jdbcType=NUMERIC},
+                    #{fileId,jdbcType=NUMERIC},
+                    #{dictJson,jdbcType=VARCHAR},
+                    #{dictRemark,jdbcType=VARCHAR},
+                    #{cssClass,jdbcType=VARCHAR},
+                    #{listClass,jdbcType=VARCHAR},
+                    #{disableFlag,jdbcType=NUMERIC},
+                    #{deleteFlag,jdbcType=NUMERIC},
+                    #{sortNum,jdbcType=NUMERIC},
+                    #{revision,jdbcType=VARCHAR},
+                    #{createdBy,jdbcType=VARCHAR},
+                    #{createdTime,jdbcType=NUMERIC},
+                    #{updatedBy,jdbcType=VARCHAR},
+                    #{updatedTime,jdbcType=NUMERIC},
+                    #{tenantId,jdbcType=VARCHAR})
+    </insert>
+	
+	 <!-- 插入信息,插入后获取自增主键值(适配oracle) -->
+    <insert id="insert" parameterType="com.lcxbs.sys.model.SysCommonDict" flushCache="true" databaseId="oracle">
+        <selectKey keyProperty="nid" resultType="java.lang.Long" order="BEFORE">
+            SELECT SEQ_SYS_COMMON_DICT.NEXTVAL from dual
+        </selectKey>
+            INSERT INTO SYS_COMMON_DICT (NID,DICT_NAME,DICT_CODE,DICT_VALUE,PARENT_ID,LEAF_FLAG,DICT_LEVEL,DICT_TYPE,FILE_ID,DICT_JSON,DICT_REMARK,CSS_CLASS,LIST_CLASS,DISABLE_FLAG,DELETE_FLAG,SORT_NUM,REVISION,CREATED_BY,CREATED_TIME,UPDATED_BY,UPDATED_TIME,TENANT_ID)
+                VALUES (
+                    #{nid,jdbcType=NUMERIC},
+                    #{dictName,jdbcType=VARCHAR},
+                    #{dictCode,jdbcType=VARCHAR},
+                    #{dictValue,jdbcType=VARCHAR},
+                    #{parentId,jdbcType=NUMERIC},
+                    #{leafFlag,jdbcType=NUMERIC},
+                    #{dictLevel,jdbcType=NUMERIC},
+                    #{dictType,jdbcType=NUMERIC},
+                    #{fileId,jdbcType=NUMERIC},
+                    #{dictJson,jdbcType=VARCHAR},
+                    #{dictRemark,jdbcType=VARCHAR},
+                    #{cssClass,jdbcType=VARCHAR},
+                    #{listClass,jdbcType=VARCHAR},
+                    #{disableFlag,jdbcType=NUMERIC},
+                    #{deleteFlag,jdbcType=NUMERIC},
+                    #{sortNum,jdbcType=NUMERIC},
+                    #{revision,jdbcType=VARCHAR},
+                    #{createdBy,jdbcType=VARCHAR},
+                    #{createdTime,jdbcType=NUMERIC},
+                    #{updatedBy,jdbcType=VARCHAR},
+                    #{updatedTime,jdbcType=NUMERIC},
+                    #{tenantId,jdbcType=VARCHAR})
+    </insert>
+  
+    <!-- 精确更新 -->
+    <update id="updateSelective" parameterType="com.lcxbs.sys.model.SysCommonDict" flushCache="true">
+        UPDATE SYS_COMMON_DICT A
+        <set>
+            <if test="dictName != null" >
+                A.DICT_NAME = #{dictName},
+            </if>
+            <if test="dictCode != null" >
+                A.DICT_CODE = #{dictCode},
+            </if>
+            <if test="dictValue != null" >
+                A.DICT_VALUE = #{dictValue},
+            </if>
+            <if test="parentId != null" >
+                A.PARENT_ID = #{parentId},
+            </if>
+            <if test="leafFlag != null" >
+                A.LEAF_FLAG = #{leafFlag},
+            </if>
+            <if test="dictLevel != null" >
+                A.DICT_LEVEL = #{dictLevel},
+            </if>
+            <if test="dictType != null" >
+                A.DICT_TYPE = #{dictType},
+            </if>
+            <if test="fileId != null" >
+                A.FILE_ID = #{fileId},
+            </if>
+            <if test="dictJson != null" >
+                A.DICT_JSON = #{dictJson},
+            </if>
+            <if test="dictRemark != null" >
+                A.DICT_REMARK = #{dictRemark},
+            </if>
+            <if test="cssClass != null" >
+                A.CSS_CLASS = #{cssClass},
+            </if>
+            <if test="listClass != null" >
+                A.LIST_CLASS = #{listClass},
+            </if>
+            <if test="disableFlag != null" >
+                A.DISABLE_FLAG = #{disableFlag},
+            </if>
+            <if test="deleteFlag != null" >
+                A.DELETE_FLAG = #{deleteFlag},
+            </if>
+            <if test="sortNum != null" >
+                A.SORT_NUM = #{sortNum},
+            </if>
+            <if test="revision != null" >
+                A.REVISION = #{revision},
+            </if>
+            <if test="createdBy != null" >
+                A.CREATED_BY = #{createdBy},
+            </if>
+            <if test="createdTime != null" >
+                A.CREATED_TIME = #{createdTime},
+            </if>
+            <if test="updatedBy != null" >
+                A.UPDATED_BY = #{updatedBy},
+            </if>
+            <if test="updatedTime != null" >
+                A.UPDATED_TIME = #{updatedTime},
+            </if>
+            <if test="tenantId != null" >
+                A.TENANT_ID = #{tenantId}
+            </if>
+        </set>
+        WHERE A.NID = #{nid}
+    </update>
+  
+    <!-- 更新所有 -->
+    <update id="updateByPrimaryKey" parameterType="com.lcxbs.sys.model.SysCommonDict" flushCache="true">
+        UPDATE SYS_COMMON_DICT A
+        <set> 
+	        <if test="dictName != null" >
+                  A.DICT_NAME = #{dictName},
+	        </if>
+	        <if test="dictCode != null" >
+                  A.DICT_CODE = #{dictCode},
+	        </if>
+	        <if test="dictValue != null" >
+                  A.DICT_VALUE = #{dictValue},
+	        </if>
+	        <if test="parentId != null" >
+                  A.PARENT_ID = #{parentId},
+	        </if>
+	        <if test="leafFlag != null" >
+                  A.LEAF_FLAG = #{leafFlag},
+	        </if>
+	        <if test="dictLevel != null" >
+                  A.DICT_LEVEL = #{dictLevel},
+	        </if>
+	        <if test="dictType != null" >
+                  A.DICT_TYPE = #{dictType},
+	        </if>
+	        <if test="fileId != null" >
+                  A.FILE_ID = #{fileId},
+	        </if>
+	        <if test="dictJson != null" >
+                  A.DICT_JSON = #{dictJson},
+	        </if>
+	        <if test="dictRemark != null" >
+                  A.DICT_REMARK = #{dictRemark},
+	        </if>
+	        <if test="cssClass != null" >
+                  A.CSS_CLASS = #{cssClass},
+	        </if>
+	        <if test="listClass != null" >
+                  A.LIST_CLASS = #{listClass},
+	        </if>
+	        <if test="disableFlag != null" >
+                  A.DISABLE_FLAG = #{disableFlag},
+	        </if>
+	        <if test="deleteFlag != null" >
+                  A.DELETE_FLAG = #{deleteFlag},
+	        </if>
+	        <if test="sortNum != null" >
+                  A.SORT_NUM = #{sortNum},
+	        </if>
+	        <if test="revision != null" >
+                  A.REVISION = #{revision},
+	        </if>
+	        <if test="createdBy != null" >
+                  A.CREATED_BY = #{createdBy},
+	        </if>
+	        <if test="createdTime != null" >
+                  A.CREATED_TIME = #{createdTime},
+	        </if>
+	        <if test="updatedBy != null" >
+                  A.UPDATED_BY = #{updatedBy},
+	        </if>
+	        <if test="updatedTime != null" >
+                  A.UPDATED_TIME = #{updatedTime},
+	        </if>
+	        <if test="tenantId != null" >
+                  A.TENANT_ID = #{tenantId}
+	        </if>
+	    </set>
+        WHERE A.NID = #{nid}
+    </update>
+    
+    <!-- 根据Map集合参数选择更新 -->
+    <update id="updateByMap" parameterType="com.lcxbs.sys.model.SysCommonDict" flushCache="true">
+        UPDATE SYS_COMMON_DICT A
+        <set> 
+	        <if test="dictName != null" >
+                  A.DICT_NAME = #{dictName},
+	        </if>
+	        <if test="dictCode != null" >
+                  A.DICT_CODE = #{dictCode},
+	        </if>
+	        <if test="dictValue != null" >
+                  A.DICT_VALUE = #{dictValue},
+	        </if>
+	        <if test="parentId != null" >
+                  A.PARENT_ID = #{parentId},
+	        </if>
+	        <if test="leafFlag != null" >
+                  A.LEAF_FLAG = #{leafFlag},
+	        </if>
+	        <if test="dictLevel != null" >
+                  A.DICT_LEVEL = #{dictLevel},
+	        </if>
+	        <if test="dictType != null" >
+                  A.DICT_TYPE = #{dictType},
+	        </if>
+	        <if test="fileId != null" >
+                  A.FILE_ID = #{fileId},
+	        </if>
+	        <if test="dictJson != null" >
+                  A.DICT_JSON = #{dictJson},
+	        </if>
+	        <if test="dictRemark != null" >
+                  A.DICT_REMARK = #{dictRemark},
+	        </if>
+	        <if test="cssClass != null" >
+                  A.CSS_CLASS = #{cssClass},
+	        </if>
+	        <if test="listClass != null" >
+                  A.LIST_CLASS = #{listClass},
+	        </if>
+	        <if test="disableFlag != null" >
+                  A.DISABLE_FLAG = #{disableFlag},
+	        </if>
+	        <if test="deleteFlag != null" >
+                  A.DELETE_FLAG = #{deleteFlag},
+	        </if>
+	        <if test="sortNum != null" >
+                  A.SORT_NUM = #{sortNum},
+	        </if>
+	        <if test="revision != null" >
+                  A.REVISION = #{revision},
+	        </if>
+	        <if test="createdBy != null" >
+                  A.CREATED_BY = #{createdBy},
+	        </if>
+	        <if test="createdTime != null" >
+                  A.CREATED_TIME = #{createdTime},
+	        </if>
+	        <if test="updatedBy != null" >
+                  A.UPDATED_BY = #{updatedBy},
+	        </if>
+	        <if test="updatedTime != null" >
+                  A.UPDATED_TIME = #{updatedTime},
+	        </if>
+	        <if test="tenantId != null" >
+                  A.TENANT_ID = #{tenantId}
+	        </if>
+	    </set>
+        <where> 
+            <if test="map.nid!=null">
+                and A.NID = #{map.nid} 
+            </if>
+            <if test="map.dictName!=null and map.dictName!=''">
+                and A.DICT_NAME = #{map.dictName} 
+            </if>
+            <if test="map.dictCode!=null and map.dictCode!=''">
+                and A.DICT_CODE = #{map.dictCode} 
+            </if>
+            <if test="map.dictValue!=null and map.dictValue!=''">
+                and A.DICT_VALUE = #{map.dictValue} 
+            </if>
+            <if test="map.parentId!=null">
+                and A.PARENT_ID = #{map.parentId} 
+            </if>
+            <if test="map.leafFlag!=null">
+                and A.LEAF_FLAG = #{map.leafFlag} 
+            </if>
+            <if test="map.dictLevel!=null">
+                and A.DICT_LEVEL = #{map.dictLevel} 
+            </if>
+            <if test="map.dictType!=null">
+                and A.DICT_TYPE = #{map.dictType} 
+            </if>
+            <if test="map.fileId!=null">
+                and A.FILE_ID = #{map.fileId} 
+            </if>
+            <if test="map.dictJson!=null and map.dictJson!=''">
+                and A.DICT_JSON = #{map.dictJson} 
+            </if>
+            <if test="map.dictRemark!=null and map.dictRemark!=''">
+                and A.DICT_REMARK = #{map.dictRemark} 
+            </if>
+            <if test="map.cssClass!=null and map.cssClass!=''">
+                and A.CSS_CLASS = #{map.cssClass} 
+            </if>
+            <if test="map.listClass!=null and map.listClass!=''">
+                and A.LIST_CLASS = #{map.listClass} 
+            </if>
+            <if test="map.disableFlag!=null">
+                and A.DISABLE_FLAG = #{map.disableFlag} 
+            </if>
+            <if test="map.deleteFlag!=null">
+                and A.DELETE_FLAG = #{map.deleteFlag} 
+            </if>
+            <if test="map.sortNum!=null">
+                and A.SORT_NUM = #{map.sortNum} 
+            </if>
+            <if test="map.revision!=null and map.revision!=''">
+                and A.REVISION = #{map.revision} 
+            </if>
+            <if test="map.createdBy!=null and map.createdBy!=''">
+                and A.CREATED_BY = #{map.createdBy} 
+            </if>
+            <if test="map.createdTime!=null">
+                and A.CREATED_TIME = #{map.createdTime} 
+            </if>
+            <if test="map.updatedBy!=null and map.updatedBy!=''">
+                and A.UPDATED_BY = #{map.updatedBy} 
+            </if>
+            <if test="map.updatedTime!=null">
+                and A.UPDATED_TIME = #{map.updatedTime} 
+            </if>
+            <if test="map.tenantId!=null and map.tenantId!=''">
+                and A.TENANT_ID = #{map.tenantId} 
+            </if>
+        </where>
+    </update>
+  
+    <!-- 统计记录 -->
+    <select id="countAll" resultType="java.lang.Long" parameterType="com.lcxbs.sys.model.SysCommonDict" flushCache="true">
+        SELECT COUNT(NID) FROM SYS_COMMON_DICT A <where> <include refid="select_where"></include> </where>
+    </select>
+  
+    <!-- 查询所有的ID -->
+    <select id="getAllIds" resultType="java.lang.String" parameterType="com.lcxbs.sys.model.SysCommonDict" flushCache="true">
+        SELECT NID FROM SYS_COMMON_DICT A 
+        <where> <include refid="select_where"></include> </where>
+        <if test="map!=null">
+            <if test="map.groupBy!=null and map.groupBy!=''">
+                ${map.groupBy}
+            </if>
+            <if test="map.orderBy!=null and map.orderBy!=''">
+                ${map.orderBy}
+            </if>
+        </if>
+    </select>
+  
+    <!-- 分页获取数据 -->
+    <select id="getListByPage" resultMap="BaseResultMap" parameterType="com.lcxbs.sys.model.SysCommonDict" flushCache="true">
+        SELECT
+        <include refid="Base_Column_List" />
+        ,b.DATA_COUNT
+        FROM SYS_COMMON_DICT A
+        left join (select DICT_CODE,count(nid) DATA_COUNT from SYS_COMMON_DICT where DICT_TYPE=3 and DELETE_FLAG=0 group by DICT_CODE) B on
+        A.DICT_CODE=B.DICT_CODE
+        <where> 
+            <include refid="select_where"></include>  
+        </where>
+        <if test="map!=null">
+			<if test="map.groupBy!=null and map.groupBy!=''">
+                ${map.groupBy}
+            </if>
+            <if test="map.orderBy!=null and map.orderBy!=''">
+                ${map.orderBy}
+            </if>
+        </if>
+    </select>
+  
+    <!-- 按条件获取 -->
+    <select id="getListByWhere" resultMap="BaseResultMap" parameterType="com.lcxbs.sys.model.SysCommonDict" flushCache="true">
+        SELECT <include refid="Base_Column_List" /> FROM SYS_COMMON_DICT A 
+        <where> <include refid="select_where"></include>  </where>
+        <if test="map!=null">
+            <if test="map.groupBy!=null and map.groupBy!=''">
+                ${map.groupBy}
+            </if>
+            <if test="map.orderBy!=null and map.orderBy!=''">
+                ${map.orderBy}
+            </if>
+            <if test="map.orderBy==null or map.orderBy==''">
+            	ORDER BY A.NID ASC
+            </if>
+        </if>
+    </select>
+	
+    <!-- 按条件获取信息 -->
+    <select id="getModelByWhere" resultMap="BaseResultMap" parameterType="com.lcxbs.sys.model.SysCommonDict" useCache="true">
+        SELECT <include refid="Base_Column_List" /> FROM SYS_COMMON_DICT A
+        <where> <include refid="select_where"></include>  </where>
+        ORDER BY A.NID ASC
+    </select>
+
+    <!-- 按条件删除信息-->
+    <delete id="deleteByWhere" parameterType="com.lcxbs.sys.model.SysCommonDict" flushCache="true">
+        DELETE FROM SYS_COMMON_DICT 
+        <where>
+            <if test="nid!=null">
+                and NID = #{nid} 
+            </if>
+            <if test="dictName!=null and dictName!=''">
+                and DICT_NAME = #{dictName} 
+            </if>
+            <if test="dictCode!=null and dictCode!=''">
+                and DICT_CODE = #{dictCode} 
+            </if>
+            <if test="dictValue!=null and dictValue!=''">
+                and DICT_VALUE = #{dictValue} 
+            </if>
+            <if test="parentId!=null">
+                and PARENT_ID = #{parentId} 
+            </if>
+            <if test="leafFlag!=null">
+                and LEAF_FLAG = #{leafFlag} 
+            </if>
+            <if test="dictLevel!=null">
+                and DICT_LEVEL = #{dictLevel} 
+            </if>
+            <if test="dictType!=null">
+                and DICT_TYPE = #{dictType} 
+            </if>
+            <if test="fileId!=null">
+                and FILE_ID = #{fileId} 
+            </if>
+            <if test="dictJson!=null and dictJson!=''">
+                and DICT_JSON = #{dictJson} 
+            </if>
+            <if test="dictRemark!=null and dictRemark!=''">
+                and DICT_REMARK = #{dictRemark} 
+            </if>
+            <if test="cssClass!=null and cssClass!=''">
+                and CSS_CLASS = #{cssClass} 
+            </if>
+            <if test="listClass!=null and listClass!=''">
+                and LIST_CLASS = #{listClass} 
+            </if>
+            <if test="disableFlag!=null">
+                and DISABLE_FLAG = #{disableFlag} 
+            </if>
+            <if test="deleteFlag!=null">
+                and DELETE_FLAG = #{deleteFlag} 
+            </if>
+            <if test="sortNum!=null">
+                and SORT_NUM = #{sortNum} 
+            </if>
+            <if test="revision!=null and revision!=''">
+                and REVISION = #{revision} 
+            </if>
+            <if test="createdBy!=null and createdBy!=''">
+                and CREATED_BY = #{createdBy} 
+            </if>
+            <if test="createdTime!=null">
+                and CREATED_TIME = #{createdTime} 
+            </if>
+            <if test="updatedBy!=null and updatedBy!=''">
+                and UPDATED_BY = #{updatedBy} 
+            </if>
+            <if test="updatedTime!=null">
+                and UPDATED_TIME = #{updatedTime} 
+            </if>
+            <if test="tenantId!=null and tenantId!=''">
+                and TENANT_ID = #{tenantId} 
+            </if>
+        </where>
+    </delete>
+	
+</mapper>

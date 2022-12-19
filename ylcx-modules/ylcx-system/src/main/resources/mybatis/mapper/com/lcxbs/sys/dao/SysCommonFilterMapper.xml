@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lcxbs.sys.dao.SysCommonFilterMapper">
+    <resultMap id="BaseResultMap" type="com.lcxbs.sys.model.SysCommonFilter">
+        <id column="NID" property="nid" jdbcType="NUMERIC" />
+        <result column="MODULE_NAME" property="moduleName" jdbcType="VARCHAR"/>
+        <result column="MODULE_CODE" property="moduleCode" jdbcType="VARCHAR"/>
+        <result column="REQUEST_METHOD" property="requestMethod" jdbcType="VARCHAR"/>
+        <result column="REQUEST_STATUS" property="requestStatus" jdbcType="NUMERIC"/>
+        <result column="CONSUME_TIME" property="consumeTime" jdbcType="NUMERIC"/>
+        <result column="ERROR_MSG" property="errorMsg" jdbcType="VARCHAR"/>
+        <result column="INFO_ID" property="infoId" jdbcType="VARCHAR"/>
+        <result column="LOG_IP" property="logIp" jdbcType="VARCHAR"/>
+        <result column="CALL_URL" property="callUrl" jdbcType="VARCHAR"/>
+        <result column="CALL_PARAMS" property="callParams" jdbcType="VARCHAR"/>
+        <result column="CREATED_BY" property="createdBy" jdbcType="VARCHAR"/>
+        <result column="CREATED_TIME" property="createdTime" jdbcType="NUMERIC"/>
+        <result column="TENANT_ID" property="tenantId" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        A.NID,A.MODULE_NAME,A.MODULE_CODE,A.REQUEST_METHOD,A.REQUEST_STATUS,A.CONSUME_TIME,A.ERROR_MSG,A.INFO_ID,A.LOG_IP,A.CALL_URL,A.CALL_PARAMS,A.CREATED_BY,A.CREATED_TIME,A.TENANT_ID
+    </sql>
+
+    <!-- SELECT sql片段 -->
+    <sql id="select_where">
+        <if test="nid!=null">
+            and A.NID = #{nid}
+        </if>
+        <if test="moduleName!=null and moduleName!=''">
+            and A.MODULE_NAME = #{moduleName}
+        </if>
+        <if test="moduleCode!=null and moduleCode!=''">
+            and A.MODULE_CODE = #{moduleCode}
+        </if>
+        <if test="requestMethod!=null and requestMethod!=''">
+            and A.REQUEST_METHOD = #{requestMethod}
+        </if>
+        <if test="requestStatus!=null">
+            and A.REQUEST_STATUS = #{requestStatus}
+        </if>
+        <if test="consumeTime!=null">
+            and A.CONSUME_TIME = #{consumeTime}
+        </if>
+        <if test="map.consumeTimeStart!=null and map.consumeTimeStart!=''">
+            and A.CONSUME_TIME &gt;= #{map.consumeTimeStart}
+        </if>
+        <if test="map.consumeTimeEnd!=null and map.consumeTimeEnd!=''">
+            and A.CONSUME_TIME &lt;= #{map.consumeTimeEnd}
+        </if>
+        <if test="errorMsg!=null and errorMsg!=''">
+            and A.ERROR_MSG = #{errorMsg}
+        </if>
+        <if test="infoId!=null and infoId!=''">
+            and A.INFO_ID = #{infoId}
+        </if>
+        <if test="logIp!=null and logIp!=''">
+            and A.LOG_IP = #{logIp}
+        </if>
+        <if test="callUrl!=null and callUrl!=''">
+            and A.CALL_URL = #{callUrl}
+        </if>
+        <if test="callParams!=null and callParams!=''">
+            and A.CALL_PARAMS = #{callParams}
+        </if>
+        <if test="createdBy!=null and createdBy!=''">
+            and A.CREATED_BY = #{createdBy}
+        </if>
+        <if test="createdTime!=null">
+            and A.CREATED_TIME = #{createdTime}
+        </if>
+        <if test="map.createdTimeStart!=null and map.createdTimeStart!=''">
+            and A.CREATED_TIME &gt;= #{map.createdTimeStart}
+        </if>
+        <if test="map.createdTimeEnd!=null and map.createdTimeEnd!=''">
+            and A.CREATED_TIME &lt;= #{map.createdTimeEnd}
+        </if>
+        <if test="tenantId!=null and tenantId!=''">
+            and A.TENANT_ID = #{tenantId}
+        </if>
+    </sql>
+
+    <!-- 获取信息 -->
+    <select id="getModelByKey" resultMap="BaseResultMap" parameterType="java.lang.Long" useCache="true">
+        SELECT <include refid="Base_Column_List" /> FROM SYS_COMMON_FILTER A WHERE A.NID = #{nid}
+    </select>
+
+    <!-- 删除信息 -->
+    <delete id="delete" parameterType="java.lang.Long" flushCache="true">
+        DELETE FROM SYS_COMMON_FILTER WHERE NID = #{nid}
+    </delete>
+
+    <!-- 插入信息,插入后获取自增主键值(适配mysql) -->
+    <insert id="insert" parameterType="com.lcxbs.sys.model.SysCommonFilter" flushCache="true" databaseId="mysql">
+        <selectKey keyProperty="nid" resultType="java.lang.Long" order="AFTER">
+            SELECT @@IDENTITY
+        </selectKey>
+        INSERT INTO SYS_COMMON_FILTER (MODULE_NAME,MODULE_CODE,REQUEST_METHOD,REQUEST_STATUS,CONSUME_TIME,ERROR_MSG,INFO_ID,LOG_IP,CALL_URL,CALL_PARAMS,CREATED_BY,CREATED_TIME,TENANT_ID)
+        VALUES (
+        #{moduleName,jdbcType=VARCHAR},
+        #{moduleCode,jdbcType=VARCHAR},
+        #{requestMethod,jdbcType=VARCHAR},
+        #{requestStatus,jdbcType=NUMERIC},
+        #{consumeTime,jdbcType=NUMERIC},
+        #{errorMsg,jdbcType=VARCHAR},
+        #{infoId,jdbcType=VARCHAR},
+        #{logIp,jdbcType=VARCHAR},
+        #{callUrl,jdbcType=VARCHAR},
+        #{callParams,jdbcType=VARCHAR},
+        #{createdBy,jdbcType=VARCHAR},
+        #{createdTime,jdbcType=NUMERIC},
+        #{tenantId,jdbcType=VARCHAR})
+    </insert>
+
+    <!-- 插入信息,插入后获取自增主键值(适配oracle) -->
+    <insert id="insert" parameterType="com.lcxbs.sys.model.SysCommonFilter" flushCache="true" databaseId="oracle">
+        <selectKey keyProperty="nid" resultType="java.lang.Long" order="BEFORE">
+            SELECT SEQ_SYS_COMMON_FILTER.NEXTVAL from dual
+        </selectKey>
+        INSERT INTO SYS_COMMON_FILTER (NID,MODULE_NAME,MODULE_CODE,REQUEST_METHOD,REQUEST_STATUS,CONSUME_TIME,ERROR_MSG,INFO_ID,LOG_IP,CALL_URL,CALL_PARAMS,CREATED_BY,CREATED_TIME,TENANT_ID)
+        VALUES (
+        #{nid,jdbcType=NUMERIC},
+        #{moduleName,jdbcType=VARCHAR},
+        #{moduleCode,jdbcType=VARCHAR},
+        #{requestMethod,jdbcType=VARCHAR},
+        #{requestStatus,jdbcType=NUMERIC},
+        #{consumeTime,jdbcType=NUMERIC},
+        #{errorMsg,jdbcType=VARCHAR},
+        #{infoId,jdbcType=VARCHAR},
+        #{logIp,jdbcType=VARCHAR},
+        #{callUrl,jdbcType=VARCHAR},
+        #{callParams,jdbcType=VARCHAR},
+        #{createdBy,jdbcType=VARCHAR},
+        #{createdTime,jdbcType=NUMERIC},
+        #{tenantId,jdbcType=VARCHAR})
+    </insert>
+
+    <!-- 精确更新 -->
+    <update id="updateSelective" parameterType="com.lcxbs.sys.model.SysCommonFilter" flushCache="true">
+        UPDATE SYS_COMMON_FILTER A
+        <set>
+            <if test="moduleName != null" >
+                A.MODULE_NAME = #{moduleName},
+            </if>
+            <if test="moduleCode != null" >
+                A.MODULE_CODE = #{moduleCode},
+            </if>
+            <if test="requestMethod != null" >
+                A.REQUEST_METHOD = #{requestMethod},
+            </if>
+            <if test="requestStatus != null" >
+                A.REQUEST_STATUS = #{requestStatus},
+            </if>
+            <if test="consumeTime != null" >
+                A.CONSUME_TIME = #{consumeTime},
+            </if>
+            <if test="errorMsg != null" >
+                A.ERROR_MSG = #{errorMsg},
+            </if>
+            <if test="infoId != null" >
+                A.INFO_ID = #{infoId},
+            </if>
+            <if test="logIp != null" >
+                A.LOG_IP = #{logIp},
+            </if>
+            <if test="callUrl != null" >
+                A.CALL_URL = #{callUrl},
+            </if>
+            <if test="callParams != null" >
+                A.CALL_PARAMS = #{callParams},
+            </if>
+            <if test="createdBy != null" >
+                A.CREATED_BY = #{createdBy},
+            </if>
+            <if test="createdTime != null" >
+                A.CREATED_TIME = #{createdTime},
+            </if>
+            <if test="tenantId != null" >
+                A.TENANT_ID = #{tenantId}
+            </if>
+        </set>
+        WHERE A.NID = #{nid}
+    </update>
+
+    <!-- 更新所有 -->
+    <update id="updateByPrimaryKey" parameterType="com.lcxbs.sys.model.SysCommonFilter" flushCache="true">
+        UPDATE SYS_COMMON_FILTER A
+        <set>
+            <if test="moduleName != null" >
+                A.MODULE_NAME = #{moduleName},
+            </if>
+            <if test="moduleCode != null" >
+                A.MODULE_CODE = #{moduleCode},
+            </if>
+            <if test="requestMethod != null" >
+                A.REQUEST_METHOD = #{requestMethod},
+            </if>
+            <if test="requestStatus != null" >
+                A.REQUEST_STATUS = #{requestStatus},
+            </if>
+            <if test="consumeTime != null" >
+                A.CONSUME_TIME = #{consumeTime},
+            </if>
+            <if test="errorMsg != null" >
+                A.ERROR_MSG = #{errorMsg},
+            </if>
+            <if test="infoId != null" >
+                A.INFO_ID = #{infoId},
+            </if>
+            <if test="logIp != null" >
+                A.LOG_IP = #{logIp},
+            </if>
+            <if test="callUrl != null" >
+                A.CALL_URL = #{callUrl},
+            </if>
+            <if test="callParams != null" >
+                A.CALL_PARAMS = #{callParams},
+            </if>
+            <if test="createdBy != null" >
+                A.CREATED_BY = #{createdBy},
+            </if>
+            <if test="createdTime != null" >
+                A.CREATED_TIME = #{createdTime},
+            </if>
+            <if test="tenantId != null" >
+                A.TENANT_ID = #{tenantId}
+            </if>
+        </set>
+        WHERE A.NID = #{nid}
+    </update>
+
+    <!-- 根据Map集合参数选择更新 -->
+    <update id="updateByMap" parameterType="com.lcxbs.sys.model.SysCommonFilter" flushCache="true">
+        UPDATE SYS_COMMON_FILTER A
+        <set>
+            <if test="moduleName != null" >
+                A.MODULE_NAME = #{moduleName},
+            </if>
+            <if test="moduleCode != null" >
+                A.MODULE_CODE = #{moduleCode},
+            </if>
+            <if test="requestMethod != null" >
+                A.REQUEST_METHOD = #{requestMethod},
+            </if>
+            <if test="requestStatus != null" >
+                A.REQUEST_STATUS = #{requestStatus},
+            </if>
+            <if test="consumeTime != null" >
+                A.CONSUME_TIME = #{consumeTime},
+            </if>
+            <if test="errorMsg != null" >
+                A.ERROR_MSG = #{errorMsg},
+            </if>
+            <if test="infoId != null" >
+                A.INFO_ID = #{infoId},
+            </if>
+            <if test="logIp != null" >
+                A.LOG_IP = #{logIp},
+            </if>
+            <if test="callUrl != null" >
+                A.CALL_URL = #{callUrl},
+            </if>
+            <if test="callParams != null" >
+                A.CALL_PARAMS = #{callParams},
+            </if>
+            <if test="createdBy != null" >
+                A.CREATED_BY = #{createdBy},
+            </if>
+            <if test="createdTime != null" >
+                A.CREATED_TIME = #{createdTime},
+            </if>
+            <if test="tenantId != null" >
+                A.TENANT_ID = #{tenantId}
+            </if>
+        </set>
+        <where>
+            <if test="map.nid!=null">
+                and A.NID = #{map.nid}
+            </if>
+            <if test="map.moduleName!=null and map.moduleName!=''">
+                and A.MODULE_NAME = #{map.moduleName}
+            </if>
+            <if test="map.moduleCode!=null and map.moduleCode!=''">
+                and A.MODULE_CODE = #{map.moduleCode}
+            </if>
+            <if test="map.requestMethod!=null and map.requestMethod!=''">
+                and A.REQUEST_METHOD = #{map.requestMethod}
+            </if>
+            <if test="map.requestStatus!=null">
+                and A.REQUEST_STATUS = #{map.requestStatus}
+            </if>
+            <if test="map.consumeTime!=null">
+                and A.CONSUME_TIME = #{map.consumeTime}
+            </if>
+            <if test="map.errorMsg!=null and map.errorMsg!=''">
+                and A.ERROR_MSG = #{map.errorMsg}
+            </if>
+            <if test="map.infoId!=null and map.infoId!=''">
+                and A.INFO_ID = #{map.infoId}
+            </if>
+            <if test="map.logIp!=null and map.logIp!=''">
+                and A.LOG_IP = #{map.logIp}
+            </if>
+            <if test="map.callUrl!=null and map.callUrl!=''">
+                and A.CALL_URL = #{map.callUrl}
+            </if>
+            <if test="map.callParams!=null and map.callParams!=''">
+                and A.CALL_PARAMS = #{map.callParams}
+            </if>
+            <if test="map.createdBy!=null and map.createdBy!=''">
+                and A.CREATED_BY = #{map.createdBy}
+            </if>
+            <if test="map.createdTime!=null">
+                and A.CREATED_TIME = #{map.createdTime}
+            </if>
+            <if test="map.tenantId!=null and map.tenantId!=''">
+                and A.TENANT_ID = #{map.tenantId}
+            </if>
+        </where>
+    </update>
+
+    <!-- 统计记录 -->
+    <select id="countAll" resultType="java.lang.Long" parameterType="com.lcxbs.sys.model.SysCommonFilter" flushCache="true">
+        SELECT COUNT(NID) FROM SYS_COMMON_FILTER A <where> <include refid="select_where"></include> </where>
+    </select>
+
+    <!-- 查询所有的ID -->
+    <select id="getAllIds" resultType="java.lang.String" parameterType="com.lcxbs.sys.model.SysCommonFilter" flushCache="true">
+        SELECT NID FROM SYS_COMMON_FILTER A
+        <where> <include refid="select_where"></include> </where>
+        <if test="map!=null">
+            <if test="map.groupBy!=null and map.groupBy!=''">
+                ${map.groupBy}
+            </if>
+            <if test="map.orderBy!=null and map.orderBy!=''">
+                ${map.orderBy}
+            </if>
+        </if>
+    </select>
+
+    <!-- 分页获取数据 -->
+    <select id="getListByPage" resultMap="BaseResultMap" parameterType="com.lcxbs.sys.model.SysCommonFilter" flushCache="true">
+        SELECT <include refid="Base_Column_List" /> FROM SYS_COMMON_FILTER A
+        <where>
+            <include refid="select_where"></include>
+        </where>
+        <if test="map!=null">
+            <if test="map.groupBy!=null and map.groupBy!=''">
+                ${map.groupBy}
+            </if>
+            <if test="map.orderBy!=null and map.orderBy!=''">
+                ${map.orderBy}
+            </if>
+        </if>
+    </select>
+
+    <!-- 按条件获取 -->
+    <select id="getListByWhere" resultMap="BaseResultMap" parameterType="com.lcxbs.sys.model.SysCommonFilter" flushCache="true">
+        SELECT <include refid="Base_Column_List" /> FROM SYS_COMMON_FILTER A
+        <where> <include refid="select_where"></include>  </where>
+        <if test="map!=null">
+            <if test="map.groupBy!=null and map.groupBy!=''">
+                ${map.groupBy}
+            </if>
+            <if test="map.orderBy!=null and map.orderBy!=''">
+                ${map.orderBy}
+            </if>
+            <if test="map.orderBy==null or map.orderBy==''">
+                ORDER BY A.NID ASC
+            </if>
+        </if>
+    </select>
+
+    <!-- 按条件获取信息 -->
+    <select id="getModelByWhere" resultMap="BaseResultMap" parameterType="com.lcxbs.sys.model.SysCommonFilter" useCache="true">
+        SELECT <include refid="Base_Column_List" /> FROM SYS_COMMON_FILTER A
+        <where> <include refid="select_where"></include>  </where>
+        ORDER BY A.NID ASC
+    </select>
+
+    <!-- 按条件删除信息-->
+    <delete id="deleteByWhere" parameterType="com.lcxbs.sys.model.SysCommonFilter" flushCache="true">
+        DELETE FROM SYS_COMMON_FILTER
+        <where>
+            <if test="nid!=null">
+                and NID = #{nid}
+            </if>
+            <if test="moduleName!=null and moduleName!=''">
+                and MODULE_NAME = #{moduleName}
+            </if>
+            <if test="moduleCode!=null and moduleCode!=''">
+                and MODULE_CODE = #{moduleCode}
+            </if>
+            <if test="requestMethod!=null and requestMethod!=''">
+                and REQUEST_METHOD = #{requestMethod}
+            </if>
+            <if test="requestStatus!=null">
+                and REQUEST_STATUS = #{requestStatus}
+            </if>
+            <if test="consumeTime!=null">
+                and CONSUME_TIME = #{consumeTime}
+            </if>
+            <if test="errorMsg!=null and errorMsg!=''">
+                and ERROR_MSG = #{errorMsg}
+            </if>
+            <if test="infoId!=null and infoId!=''">
+                and INFO_ID = #{infoId}
+            </if>
+            <if test="logIp!=null and logIp!=''">
+                and LOG_IP = #{logIp}
+            </if>
+            <if test="callUrl!=null and callUrl!=''">
+                and CALL_URL = #{callUrl}
+            </if>
+            <if test="callParams!=null and callParams!=''">
+                and CALL_PARAMS = #{callParams}
+            </if>
+            <if test="createdBy!=null and createdBy!=''">
+                and CREATED_BY = #{createdBy}
+            </if>
+            <if test="createdTime!=null">
+                and CREATED_TIME = #{createdTime}
+            </if>
+            <if test="tenantId!=null and tenantId!=''">
+                and TENANT_ID = #{tenantId}
+            </if>
+        </where>
+    </delete>
+
+</mapper>

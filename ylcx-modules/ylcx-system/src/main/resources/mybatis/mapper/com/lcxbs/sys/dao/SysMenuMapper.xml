@@ -1,0 +1,763 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lcxbs.sys.dao.SysMenuMapper">
+    <resultMap id="BaseResultMap" type="com.lcxbs.sys.model.SysMenu">
+        <id column="NID" property="nid" jdbcType="NUMERIC" />
+        <result column="MENU_ID" property="menuId" jdbcType="VARCHAR"/>
+        <result column="PARENT_ID" property="parentId" jdbcType="VARCHAR"/>
+        <result column="MENU_NAME" property="menuName" jdbcType="VARCHAR"/>
+        <result column="MENU_TYPE" property="menuType" jdbcType="NUMERIC"/>
+        <result column="MENU_URL" property="menuUrl" jdbcType="VARCHAR"/>
+        <result column="COMPONENT_NAME" property="componentName" jdbcType="VARCHAR"/>
+        <result column="COMPONENT_PATH" property="componentPath" jdbcType="VARCHAR"/>
+        <result column="IS_IFRAME" property="isIframe" jdbcType="NUMERIC"/>
+        <result column="IS_LINK" property="isLink" jdbcType="VARCHAR"/>
+        <result column="IS_HIDE" property="isHide" jdbcType="NUMERIC"/>
+        <result column="IS_KEEP_ALIVE" property="isKeepAlive" jdbcType="NUMERIC"/>
+        <result column="IS_AFFIX" property="isAffix" jdbcType="NUMERIC"/>
+        <result column="IS_AUTH" property="isAuth" jdbcType="NUMERIC"/>
+        <result column="IS_INHERIT" property="isInherit" jdbcType="NUMERIC"/>
+        <result column="MENU_ICON" property="menuIcon" jdbcType="VARCHAR"/>
+        <result column="MENU_PARAMS" property="menuParams" jdbcType="VARCHAR"/>
+        <result column="PERM_CODE" property="permCode" jdbcType="VARCHAR"/>
+        <result column="MENU_LEVEL" property="menuLevel" jdbcType="NUMERIC"/>
+        <result column="SORT_NUM" property="sortNum" jdbcType="NUMERIC"/>
+        <result column="DISABLE_FLAG" property="disableFlag" jdbcType="NUMERIC"/>
+        <result column="DELETE_FLAG" property="deleteFlag" jdbcType="NUMERIC"/>
+        <result column="REVISION" property="revision" jdbcType="VARCHAR"/>
+        <result column="CREATED_BY" property="createdBy" jdbcType="VARCHAR"/>
+        <result column="CREATED_TIME" property="createdTime" jdbcType="NUMERIC"/>
+        <result column="UPDATED_BY" property="updatedBy" jdbcType="VARCHAR"/>
+        <result column="UPDATED_TIME" property="updatedTime" jdbcType="NUMERIC"/>
+        <result column="TENANT_ID" property="tenantId" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        A.NID,A.MENU_ID,A.PARENT_ID,A.MENU_NAME,A.MENU_TYPE,A.MENU_URL,A.COMPONENT_NAME,A.COMPONENT_PATH,A.IS_IFRAME,A.IS_LINK,A.IS_HIDE,A.IS_KEEP_ALIVE,A.IS_AFFIX,A.IS_AUTH,A.IS_INHERIT,A.MENU_ICON,A.MENU_PARAMS,A.PERM_CODE,A.MENU_LEVEL,A.SORT_NUM,A.DISABLE_FLAG,A.DELETE_FLAG,A.REVISION,A.CREATED_BY,A.CREATED_TIME,A.UPDATED_BY,A.UPDATED_TIME,A.TENANT_ID
+    </sql>
+
+    <!-- SELECT sql片段 -->
+    <sql id="select_where">
+        <if test="nid!=null">
+            and A.NID = #{nid}
+        </if>
+        <if test="menuId!=null and menuId!=''">
+            and A.MENU_ID = #{menuId}
+        </if>
+        <if test="parentId!=null and parentId!=''">
+            and A.PARENT_ID = #{parentId}
+        </if>
+        <if test="menuName!=null and menuName!=''">
+            and A.MENU_NAME = #{menuName}
+        </if>
+        <if test="menuType!=null">
+            and A.MENU_TYPE = #{menuType}
+        </if>
+        <if test="menuUrl!=null and menuUrl!=''">
+            and A.MENU_URL = #{menuUrl}
+        </if>
+        <if test="componentName!=null and componentName!=''">
+            and A.COMPONENT_NAME = #{componentName}
+        </if>
+        <if test="componentPath!=null and componentPath!=''">
+            and A.COMPONENT_PATH = #{componentPath}
+        </if>
+        <if test="isIframe!=null">
+            and A.IS_IFRAME = #{isIframe}
+        </if>
+        <if test="isLink!=null and isLink!=''">
+            and A.IS_LINK = #{isLink}
+        </if>
+        <if test="isHide!=null">
+            and A.IS_HIDE = #{isHide}
+        </if>
+        <if test="isKeepAlive!=null">
+            and A.IS_KEEP_ALIVE = #{isKeepAlive}
+        </if>
+        <if test="isAffix!=null">
+            and A.IS_AFFIX = #{isAffix}
+        </if>
+        <if test="isAuth!=null">
+            and A.IS_AUTH = #{isAuth}
+        </if>
+        <if test="isInherit!=null">
+            and A.IS_INHERIT = #{isInherit}
+        </if>
+        <if test="menuIcon!=null and menuIcon!=''">
+            and A.MENU_ICON = #{menuIcon}
+        </if>
+        <if test="menuParams!=null and menuParams!=''">
+            and A.MENU_PARAMS = #{menuParams}
+        </if>
+        <if test="permCode!=null and permCode!=''">
+            and A.PERM_CODE = #{permCode}
+        </if>
+        <if test="menuLevel!=null">
+            and A.MENU_LEVEL = #{menuLevel}
+        </if>
+        <if test="sortNum!=null">
+            and A.SORT_NUM = #{sortNum}
+        </if>
+        <if test="disableFlag!=null">
+            and A.DISABLE_FLAG = #{disableFlag}
+        </if>
+        <if test="deleteFlag!=null">
+            and A.DELETE_FLAG = #{deleteFlag}
+        </if>
+        <if test="revision!=null and revision!=''">
+            and A.REVISION = #{revision}
+        </if>
+        <if test="createdBy!=null and createdBy!=''">
+            and A.CREATED_BY = #{createdBy}
+        </if>
+        <if test="createdTime!=null">
+            and A.CREATED_TIME = #{createdTime}
+        </if>
+        <if test="map.createdTimeStart!=null and map.createdTimeStart!=''">
+            and A.CREATED_TIME &gt;= #{map.createdTimeStart}
+        </if>
+        <if test="map.createdTimeEnd!=null and map.createdTimeEnd!=''">
+            and A.CREATED_TIME &lt;= #{map.createdTimeEnd}
+        </if>
+        <if test="updatedBy!=null and updatedBy!=''">
+            and A.UPDATED_BY = #{updatedBy}
+        </if>
+        <if test="updatedTime!=null">
+            and A.UPDATED_TIME = #{updatedTime}
+        </if>
+        <if test="map.updatedTimeStart!=null and map.updatedTimeStart!=''">
+            and A.UPDATED_TIME &gt;= #{map.updatedTimeStart}
+        </if>
+        <if test="map.updatedTimeEnd!=null and map.updatedTimeEnd!=''">
+            and A.UPDATED_TIME &lt;= #{map.updatedTimeEnd}
+        </if>
+        <if test="tenantId!=null and tenantId!=''">
+            and A.TENANT_ID = #{tenantId}
+        </if>
+    </sql>
+
+    <!-- 获取信息 -->
+    <select id="getModelByKey" resultMap="BaseResultMap" parameterType="java.lang.Long" useCache="true">
+        SELECT <include refid="Base_Column_List" /> FROM SYS_MENU A WHERE A.NID = #{nid}
+    </select>
+
+    <!-- 删除信息 -->
+    <delete id="delete" parameterType="java.lang.Long" flushCache="true">
+        DELETE FROM SYS_MENU WHERE NID = #{nid}
+    </delete>
+
+    <!-- 插入信息,插入后获取自增主键值(适配mysql) -->
+    <insert id="insert" parameterType="com.lcxbs.sys.model.SysMenu" flushCache="true" databaseId="mysql">
+        <selectKey keyProperty="nid" resultType="java.lang.Long" order="AFTER">
+            SELECT @@IDENTITY
+        </selectKey>
+        INSERT INTO SYS_MENU (MENU_ID,PARENT_ID,MENU_NAME,MENU_TYPE,MENU_URL,COMPONENT_NAME,COMPONENT_PATH,IS_IFRAME,IS_LINK,IS_HIDE,IS_KEEP_ALIVE,IS_AFFIX,IS_AUTH,IS_INHERIT,MENU_ICON,MENU_PARAMS,PERM_CODE,MENU_LEVEL,SORT_NUM,DISABLE_FLAG,DELETE_FLAG,REVISION,CREATED_BY,CREATED_TIME,UPDATED_BY,UPDATED_TIME,TENANT_ID)
+        VALUES (
+        #{menuId,jdbcType=VARCHAR},
+        #{parentId,jdbcType=VARCHAR},
+        #{menuName,jdbcType=VARCHAR},
+        #{menuType,jdbcType=NUMERIC},
+        #{menuUrl,jdbcType=VARCHAR},
+        #{componentName,jdbcType=VARCHAR},
+        #{componentPath,jdbcType=VARCHAR},
+        #{isIframe,jdbcType=NUMERIC},
+        #{isLink,jdbcType=VARCHAR},
+        #{isHide,jdbcType=NUMERIC},
+        #{isKeepAlive,jdbcType=NUMERIC},
+        #{isAffix,jdbcType=NUMERIC},
+        #{isAuth,jdbcType=NUMERIC},
+        #{isInherit,jdbcType=NUMERIC},
+        #{menuIcon,jdbcType=VARCHAR},
+        #{menuParams,jdbcType=VARCHAR},
+        #{permCode,jdbcType=VARCHAR},
+        #{menuLevel,jdbcType=NUMERIC},
+        #{sortNum,jdbcType=NUMERIC},
+        #{disableFlag,jdbcType=NUMERIC},
+        #{deleteFlag,jdbcType=NUMERIC},
+        #{revision,jdbcType=VARCHAR},
+        #{createdBy,jdbcType=VARCHAR},
+        #{createdTime,jdbcType=NUMERIC},
+        #{updatedBy,jdbcType=VARCHAR},
+        #{updatedTime,jdbcType=NUMERIC},
+        #{tenantId,jdbcType=VARCHAR})
+    </insert>
+
+    <!-- 插入信息,插入后获取自增主键值(适配oracle) -->
+    <insert id="insert" parameterType="com.lcxbs.sys.model.SysMenu" flushCache="true" databaseId="oracle">
+        <selectKey keyProperty="nid" resultType="java.lang.Long" order="BEFORE">
+            SELECT SEQ_SYS_MENU.NEXTVAL from dual
+        </selectKey>
+        INSERT INTO SYS_MENU (NID,MENU_ID,PARENT_ID,MENU_NAME,MENU_TYPE,MENU_URL,COMPONENT_NAME,COMPONENT_PATH,IS_IFRAME,IS_LINK,IS_HIDE,IS_KEEP_ALIVE,IS_AFFIX,IS_AUTH,IS_INHERIT,MENU_ICON,MENU_PARAMS,PERM_CODE,MENU_LEVEL,SORT_NUM,DISABLE_FLAG,DELETE_FLAG,REVISION,CREATED_BY,CREATED_TIME,UPDATED_BY,UPDATED_TIME,TENANT_ID)
+        VALUES (
+        #{nid,jdbcType=NUMERIC},
+        #{menuId,jdbcType=VARCHAR},
+        #{parentId,jdbcType=VARCHAR},
+        #{menuName,jdbcType=VARCHAR},
+        #{menuType,jdbcType=NUMERIC},
+        #{menuUrl,jdbcType=VARCHAR},
+        #{componentName,jdbcType=VARCHAR},
+        #{componentPath,jdbcType=VARCHAR},
+        #{isIframe,jdbcType=NUMERIC},
+        #{isLink,jdbcType=VARCHAR},
+        #{isHide,jdbcType=NUMERIC},
+        #{isKeepAlive,jdbcType=NUMERIC},
+        #{isAffix,jdbcType=NUMERIC},
+        #{isAuth,jdbcType=NUMERIC},
+        #{isInherit,jdbcType=NUMERIC},
+        #{menuIcon,jdbcType=VARCHAR},
+        #{menuParams,jdbcType=VARCHAR},
+        #{permCode,jdbcType=VARCHAR},
+        #{menuLevel,jdbcType=NUMERIC},
+        #{sortNum,jdbcType=NUMERIC},
+        #{disableFlag,jdbcType=NUMERIC},
+        #{deleteFlag,jdbcType=NUMERIC},
+        #{revision,jdbcType=VARCHAR},
+        #{createdBy,jdbcType=VARCHAR},
+        #{createdTime,jdbcType=NUMERIC},
+        #{updatedBy,jdbcType=VARCHAR},
+        #{updatedTime,jdbcType=NUMERIC},
+        #{tenantId,jdbcType=VARCHAR})
+    </insert>
+
+    <!-- 精确更新 -->
+    <update id="updateSelective" parameterType="com.lcxbs.sys.model.SysMenu" flushCache="true">
+        UPDATE SYS_MENU A
+        <set>
+            <if test="menuId != null" >
+                A.MENU_ID = #{menuId},
+            </if>
+            <if test="parentId != null" >
+                A.PARENT_ID = #{parentId},
+            </if>
+            <if test="menuName != null" >
+                A.MENU_NAME = #{menuName},
+            </if>
+            <if test="menuType != null" >
+                A.MENU_TYPE = #{menuType},
+            </if>
+            <if test="menuUrl != null" >
+                A.MENU_URL = #{menuUrl},
+            </if>
+            <if test="componentName != null" >
+                A.COMPONENT_NAME = #{componentName},
+            </if>
+            <if test="componentPath != null" >
+                A.COMPONENT_PATH = #{componentPath},
+            </if>
+            <if test="isIframe != null" >
+                A.IS_IFRAME = #{isIframe},
+            </if>
+            <if test="isLink != null" >
+                A.IS_LINK = #{isLink},
+            </if>
+            <if test="isHide != null" >
+                A.IS_HIDE = #{isHide},
+            </if>
+            <if test="isKeepAlive != null" >
+                A.IS_KEEP_ALIVE = #{isKeepAlive},
+            </if>
+            <if test="isAffix != null" >
+                A.IS_AFFIX = #{isAffix},
+            </if>
+            <if test="isAuth != null" >
+                A.IS_AUTH = #{isAuth},
+            </if>
+            <if test="isInherit != null" >
+                A.IS_INHERIT = #{isInherit},
+            </if>
+            <if test="menuIcon != null" >
+                A.MENU_ICON = #{menuIcon},
+            </if>
+            <if test="menuParams != null" >
+                A.MENU_PARAMS = #{menuParams},
+            </if>
+            <if test="permCode != null" >
+                A.PERM_CODE = #{permCode},
+            </if>
+            <if test="menuLevel != null" >
+                A.MENU_LEVEL = #{menuLevel},
+            </if>
+            <if test="sortNum != null" >
+                A.SORT_NUM = #{sortNum},
+            </if>
+            <if test="disableFlag != null" >
+                A.DISABLE_FLAG = #{disableFlag},
+            </if>
+            <if test="deleteFlag != null" >
+                A.DELETE_FLAG = #{deleteFlag},
+            </if>
+            <if test="revision != null" >
+                A.REVISION = #{revision},
+            </if>
+            <if test="createdBy != null" >
+                A.CREATED_BY = #{createdBy},
+            </if>
+            <if test="createdTime != null" >
+                A.CREATED_TIME = #{createdTime},
+            </if>
+            <if test="updatedBy != null" >
+                A.UPDATED_BY = #{updatedBy},
+            </if>
+            <if test="updatedTime != null" >
+                A.UPDATED_TIME = #{updatedTime},
+            </if>
+            <if test="tenantId != null" >
+                A.TENANT_ID = #{tenantId}
+            </if>
+        </set>
+        WHERE A.NID = #{nid}
+    </update>
+
+    <!-- 更新所有 -->
+    <update id="updateByPrimaryKey" parameterType="com.lcxbs.sys.model.SysMenu" flushCache="true">
+        UPDATE SYS_MENU A
+        <set>
+            <if test="menuId != null" >
+                A.MENU_ID = #{menuId},
+            </if>
+            <if test="parentId != null" >
+                A.PARENT_ID = #{parentId},
+            </if>
+            <if test="menuName != null" >
+                A.MENU_NAME = #{menuName},
+            </if>
+            <if test="menuType != null" >
+                A.MENU_TYPE = #{menuType},
+            </if>
+            <if test="menuUrl != null" >
+                A.MENU_URL = #{menuUrl},
+            </if>
+            <if test="componentName != null" >
+                A.COMPONENT_NAME = #{componentName},
+            </if>
+            <if test="componentPath != null" >
+                A.COMPONENT_PATH = #{componentPath},
+            </if>
+            <if test="isIframe != null" >
+                A.IS_IFRAME = #{isIframe},
+            </if>
+            <if test="isLink != null" >
+                A.IS_LINK = #{isLink},
+            </if>
+            <if test="isHide != null" >
+                A.IS_HIDE = #{isHide},
+            </if>
+            <if test="isKeepAlive != null" >
+                A.IS_KEEP_ALIVE = #{isKeepAlive},
+            </if>
+            <if test="isAffix != null" >
+                A.IS_AFFIX = #{isAffix},
+            </if>
+            <if test="isAuth != null" >
+                A.IS_AUTH = #{isAuth},
+            </if>
+            <if test="isInherit != null" >
+                A.IS_INHERIT = #{isInherit},
+            </if>
+            <if test="menuIcon != null" >
+                A.MENU_ICON = #{menuIcon},
+            </if>
+            <if test="menuParams != null" >
+                A.MENU_PARAMS = #{menuParams},
+            </if>
+            <if test="permCode != null" >
+                A.PERM_CODE = #{permCode},
+            </if>
+            <if test="menuLevel != null" >
+                A.MENU_LEVEL = #{menuLevel},
+            </if>
+            <if test="sortNum != null" >
+                A.SORT_NUM = #{sortNum},
+            </if>
+            <if test="disableFlag != null" >
+                A.DISABLE_FLAG = #{disableFlag},
+            </if>
+            <if test="deleteFlag != null" >
+                A.DELETE_FLAG = #{deleteFlag},
+            </if>
+            <if test="revision != null" >
+                A.REVISION = #{revision},
+            </if>
+            <if test="createdBy != null" >
+                A.CREATED_BY = #{createdBy},
+            </if>
+            <if test="createdTime != null" >
+                A.CREATED_TIME = #{createdTime},
+            </if>
+            <if test="updatedBy != null" >
+                A.UPDATED_BY = #{updatedBy},
+            </if>
+            <if test="updatedTime != null" >
+                A.UPDATED_TIME = #{updatedTime},
+            </if>
+            <if test="tenantId != null" >
+                A.TENANT_ID = #{tenantId}
+            </if>
+        </set>
+        WHERE A.NID = #{nid}
+    </update>
+
+    <!-- 根据Map集合参数选择更新 -->
+    <update id="updateByMap" parameterType="com.lcxbs.sys.model.SysMenu" flushCache="true">
+        UPDATE SYS_MENU A
+        <set>
+            <if test="menuId != null" >
+                A.MENU_ID = #{menuId},
+            </if>
+            <if test="parentId != null" >
+                A.PARENT_ID = #{parentId},
+            </if>
+            <if test="menuName != null" >
+                A.MENU_NAME = #{menuName},
+            </if>
+            <if test="menuType != null" >
+                A.MENU_TYPE = #{menuType},
+            </if>
+            <if test="menuUrl != null" >
+                A.MENU_URL = #{menuUrl},
+            </if>
+            <if test="componentName != null" >
+                A.COMPONENT_NAME = #{componentName},
+            </if>
+            <if test="componentPath != null" >
+                A.COMPONENT_PATH = #{componentPath},
+            </if>
+            <if test="isIframe != null" >
+                A.IS_IFRAME = #{isIframe},
+            </if>
+            <if test="isLink != null" >
+                A.IS_LINK = #{isLink},
+            </if>
+            <if test="isHide != null" >
+                A.IS_HIDE = #{isHide},
+            </if>
+            <if test="isKeepAlive != null" >
+                A.IS_KEEP_ALIVE = #{isKeepAlive},
+            </if>
+            <if test="isAffix != null" >
+                A.IS_AFFIX = #{isAffix},
+            </if>
+            <if test="isAuth != null" >
+                A.IS_AUTH = #{isAuth},
+            </if>
+            <if test="isInherit != null" >
+                A.IS_INHERIT = #{isInherit},
+            </if>
+            <if test="menuIcon != null" >
+                A.MENU_ICON = #{menuIcon},
+            </if>
+            <if test="menuParams != null" >
+                A.MENU_PARAMS = #{menuParams},
+            </if>
+            <if test="permCode != null" >
+                A.PERM_CODE = #{permCode},
+            </if>
+            <if test="menuLevel != null" >
+                A.MENU_LEVEL = #{menuLevel},
+            </if>
+            <if test="sortNum != null" >
+                A.SORT_NUM = #{sortNum},
+            </if>
+            <if test="disableFlag != null" >
+                A.DISABLE_FLAG = #{disableFlag},
+            </if>
+            <if test="deleteFlag != null" >
+                A.DELETE_FLAG = #{deleteFlag},
+            </if>
+            <if test="revision != null" >
+                A.REVISION = #{revision},
+            </if>
+            <if test="createdBy != null" >
+                A.CREATED_BY = #{createdBy},
+            </if>
+            <if test="createdTime != null" >
+                A.CREATED_TIME = #{createdTime},
+            </if>
+            <if test="updatedBy != null" >
+                A.UPDATED_BY = #{updatedBy},
+            </if>
+            <if test="updatedTime != null" >
+                A.UPDATED_TIME = #{updatedTime},
+            </if>
+            <if test="tenantId != null" >
+                A.TENANT_ID = #{tenantId}
+            </if>
+        </set>
+        <where>
+            <if test="map.nid!=null">
+                and A.NID = #{map.nid}
+            </if>
+            <if test="map.menuId!=null and map.menuId!=''">
+                and A.MENU_ID = #{map.menuId}
+            </if>
+            <if test="map.parentId!=null and map.parentId!=''">
+                and A.PARENT_ID = #{map.parentId}
+            </if>
+            <if test="map.menuName!=null and map.menuName!=''">
+                and A.MENU_NAME = #{map.menuName}
+            </if>
+            <if test="map.menuType!=null">
+                and A.MENU_TYPE = #{map.menuType}
+            </if>
+            <if test="map.menuUrl!=null and map.menuUrl!=''">
+                and A.MENU_URL = #{map.menuUrl}
+            </if>
+            <if test="map.componentName!=null and map.componentName!=''">
+                and A.COMPONENT_NAME = #{map.componentName}
+            </if>
+            <if test="map.componentPath!=null and map.componentPath!=''">
+                and A.COMPONENT_PATH = #{map.componentPath}
+            </if>
+            <if test="map.isIframe!=null">
+                and A.IS_IFRAME = #{map.isIframe}
+            </if>
+            <if test="map.isLink!=null and map.isLink!=''">
+                and A.IS_LINK = #{map.isLink}
+            </if>
+            <if test="map.isHide!=null">
+                and A.IS_HIDE = #{map.isHide}
+            </if>
+            <if test="map.isKeepAlive!=null">
+                and A.IS_KEEP_ALIVE = #{map.isKeepAlive}
+            </if>
+            <if test="map.isAffix!=null">
+                and A.IS_AFFIX = #{map.isAffix}
+            </if>
+            <if test="map.isAuth!=null">
+                and A.IS_AUTH = #{map.isAuth}
+            </if>
+            <if test="map.isInherit!=null">
+                and A.IS_INHERIT = #{map.isInherit}
+            </if>
+            <if test="map.menuIcon!=null and map.menuIcon!=''">
+                and A.MENU_ICON = #{map.menuIcon}
+            </if>
+            <if test="map.menuParams!=null and map.menuParams!=''">
+                and A.MENU_PARAMS = #{map.menuParams}
+            </if>
+            <if test="map.permCode!=null and map.permCode!=''">
+                and A.PERM_CODE = #{map.permCode}
+            </if>
+            <if test="map.menuLevel!=null">
+                and A.MENU_LEVEL = #{map.menuLevel}
+            </if>
+            <if test="map.sortNum!=null">
+                and A.SORT_NUM = #{map.sortNum}
+            </if>
+            <if test="map.disableFlag!=null">
+                and A.DISABLE_FLAG = #{map.disableFlag}
+            </if>
+            <if test="map.deleteFlag!=null">
+                and A.DELETE_FLAG = #{map.deleteFlag}
+            </if>
+            <if test="map.revision!=null and map.revision!=''">
+                and A.REVISION = #{map.revision}
+            </if>
+            <if test="map.createdBy!=null and map.createdBy!=''">
+                and A.CREATED_BY = #{map.createdBy}
+            </if>
+            <if test="map.createdTime!=null">
+                and A.CREATED_TIME = #{map.createdTime}
+            </if>
+            <if test="map.updatedBy!=null and map.updatedBy!=''">
+                and A.UPDATED_BY = #{map.updatedBy}
+            </if>
+            <if test="map.updatedTime!=null">
+                and A.UPDATED_TIME = #{map.updatedTime}
+            </if>
+            <if test="map.tenantId!=null and map.tenantId!=''">
+                and A.TENANT_ID = #{map.tenantId}
+            </if>
+        </where>
+    </update>
+
+    <!-- 统计记录 -->
+    <select id="countAll" resultType="java.lang.Long" parameterType="com.lcxbs.sys.model.SysMenu" flushCache="true">
+        SELECT COUNT(NID) FROM SYS_MENU A <where> <include refid="select_where"></include> </where>
+    </select>
+
+    <!-- 查询所有的ID -->
+    <select id="getAllIds" resultType="java.lang.String" parameterType="com.lcxbs.sys.model.SysMenu" flushCache="true">
+        SELECT NID FROM SYS_MENU A
+        <where> <include refid="select_where"></include> </where>
+        <if test="map!=null">
+            <if test="map.groupBy!=null and map.groupBy!=''">
+                ${map.groupBy}
+            </if>
+            <if test="map.orderBy!=null and map.orderBy!=''">
+                ${map.orderBy}
+            </if>
+        </if>
+    </select>
+
+    <!-- 分页获取数据 -->
+    <select id="getListByPage" resultMap="BaseResultMap" parameterType="com.lcxbs.sys.model.SysMenu" flushCache="true">
+        SELECT <include refid="Base_Column_List" /> FROM SYS_MENU A
+        <where>
+            <include refid="select_where"></include>
+        </where>
+        <if test="map!=null">
+            <if test="map.groupBy!=null and map.groupBy!=''">
+                ${map.groupBy}
+            </if>
+            <if test="map.orderBy!=null and map.orderBy!=''">
+                ${map.orderBy}
+            </if>
+        </if>
+    </select>
+
+    <!-- 按条件获取 -->
+    <select id="getListByWhere" resultMap="BaseResultMap" parameterType="com.lcxbs.sys.model.SysMenu" flushCache="true">
+        SELECT <include refid="Base_Column_List" /> FROM SYS_MENU A
+        <where> <include refid="select_where"></include>  </where>
+        <if test="map!=null">
+            <if test="map.menuTypes!=null">
+                and A.MENU_TYPE in
+                <foreach item="item" index="index" collection="map.menuTypes" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="map.groupBy!=null and map.groupBy!=''">
+                ${map.groupBy}
+            </if>
+            <if test="map.orderBy!=null and map.orderBy!=''">
+                ${map.orderBy}
+            </if>
+            <if test="map.orderBy==null or map.orderBy==''">
+                ORDER BY A.SORT_NUM ASC
+            </if>
+        </if>
+    </select>
+
+    <!-- 按条件获取信息 -->
+    <select id="getModelByWhere" resultMap="BaseResultMap" parameterType="com.lcxbs.sys.model.SysMenu" useCache="true">
+        SELECT <include refid="Base_Column_List" /> FROM SYS_MENU A
+        <where> <include refid="select_where"></include>  </where>
+        ORDER BY A.NID ASC
+    </select>
+
+    <!-- 按条件删除信息-->
+    <delete id="deleteByWhere" parameterType="com.lcxbs.sys.model.SysMenu" flushCache="true">
+        DELETE FROM SYS_MENU
+        <where>
+            <if test="nid!=null">
+                and NID = #{nid}
+            </if>
+            <if test="menuId!=null and menuId!=''">
+                and MENU_ID = #{menuId}
+            </if>
+            <if test="parentId!=null and parentId!=''">
+                and PARENT_ID = #{parentId}
+            </if>
+            <if test="menuName!=null and menuName!=''">
+                and MENU_NAME = #{menuName}
+            </if>
+            <if test="menuType!=null">
+                and MENU_TYPE = #{menuType}
+            </if>
+            <if test="menuUrl!=null and menuUrl!=''">
+                and MENU_URL = #{menuUrl}
+            </if>
+            <if test="componentName!=null and componentName!=''">
+                and COMPONENT_NAME = #{componentName}
+            </if>
+            <if test="componentPath!=null and componentPath!=''">
+                and COMPONENT_PATH = #{componentPath}
+            </if>
+            <if test="isIframe!=null">
+                and IS_IFRAME = #{isIframe}
+            </if>
+            <if test="isLink!=null and isLink!=''">
+                and IS_LINK = #{isLink}
+            </if>
+            <if test="isHide!=null">
+                and IS_HIDE = #{isHide}
+            </if>
+            <if test="isKeepAlive!=null">
+                and IS_KEEP_ALIVE = #{isKeepAlive}
+            </if>
+            <if test="isAffix!=null">
+                and IS_AFFIX = #{isAffix}
+            </if>
+            <if test="isAuth!=null">
+                and IS_AUTH = #{isAuth}
+            </if>
+            <if test="isInherit!=null">
+                and IS_INHERIT = #{isInherit}
+            </if>
+            <if test="menuIcon!=null and menuIcon!=''">
+                and MENU_ICON = #{menuIcon}
+            </if>
+            <if test="menuParams!=null and menuParams!=''">
+                and MENU_PARAMS = #{menuParams}
+            </if>
+            <if test="permCode!=null and permCode!=''">
+                and PERM_CODE = #{permCode}
+            </if>
+            <if test="menuLevel!=null">
+                and MENU_LEVEL = #{menuLevel}
+            </if>
+            <if test="sortNum!=null">
+                and SORT_NUM = #{sortNum}
+            </if>
+            <if test="disableFlag!=null">
+                and DISABLE_FLAG = #{disableFlag}
+            </if>
+            <if test="deleteFlag!=null">
+                and DELETE_FLAG = #{deleteFlag}
+            </if>
+            <if test="revision!=null and revision!=''">
+                and REVISION = #{revision}
+            </if>
+            <if test="createdBy!=null and createdBy!=''">
+                and CREATED_BY = #{createdBy}
+            </if>
+            <if test="createdTime!=null">
+                and CREATED_TIME = #{createdTime}
+            </if>
+            <if test="updatedBy!=null and updatedBy!=''">
+                and UPDATED_BY = #{updatedBy}
+            </if>
+            <if test="updatedTime!=null">
+                and UPDATED_TIME = #{updatedTime}
+            </if>
+            <if test="tenantId!=null and tenantId!=''">
+                and TENANT_ID = #{tenantId}
+            </if>
+        </where>
+    </delete>
+
+        <!-- 按条件获取 -->
+    <select id="getListByUserId" resultMap="BaseResultMap" parameterType="com.lcxbs.sys.model.SysMenu"
+            flushCache="true">
+        SELECT
+        distinct
+        <include refid="Base_Column_List"/>
+        FROM
+        SYS_USER su
+        JOIN sys_user_role ur ON su.user_id = ur.user_id
+        JOIN sys_role r ON ur.role_id = r.role_id
+        JOIN sys_role_menu rm ON rm.role_id = r.role_id
+        JOIN sys_menu A ON A.menu_id = rm.menu_id
+        AND su.user_id ='${map.userId}'
+        <if test="menuType!=null">
+            and A.MENU_TYPE = #{menuType}
+        </if>
+        <if test="map!=null">
+            <if test="map.menuTypes!=null">
+                and A.MENU_TYPE in
+                <foreach item="item" index="index" collection="map.menuTypes" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </if>
+        <if test="disableFlag!=null">
+            and A.DISABLE_FLAG = #{disableFlag}
+        </if>
+        <if test="deleteFlag!=null">
+            and A.DELETE_FLAG = #{deleteFlag}
+        </if>
+        <if test="map.orderBy!=null and map.orderBy!=''">
+            ${map.orderBy}
+        </if>
+    </select>
+</mapper>

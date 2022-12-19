@@ -1,0 +1,618 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lcxbs.sys.dao.SysCommonFileMapper">
+    <resultMap id="BaseResultMap" type="com.lcxbs.sys.model.SysCommonFile">
+  	   <id column="NID" property="nid" jdbcType="NUMERIC" />
+        <result column="FILE_CODE" property="fileCode" jdbcType="VARCHAR"/>
+        <result column="FILE_NAME" property="fileName" jdbcType="VARCHAR"/>
+        <result column="FILE_TYPE" property="fileType" jdbcType="VARCHAR"/>
+        <result column="FILE_SUFFIX" property="fileSuffix" jdbcType="VARCHAR"/>
+        <result column="FILE_SIZE" property="fileSize" jdbcType="NUMERIC"/>
+        <result column="FJ_STORED_MODE" property="fjStoredMode" jdbcType="NUMERIC"/>
+        <result column="FILE_ADDRESS" property="fileAddress" jdbcType="VARCHAR"/>
+        <result column="THUMB_URL" property="thumbUrl" jdbcType="VARCHAR"/>
+        <result column="IMAGE_WIDTH" property="imageWidth" jdbcType="NUMERIC"/>
+        <result column="IMAGE_HEIGHT" property="imageHeight" jdbcType="NUMERIC"/>
+        <result column="FILE_TIME" property="fileTime" jdbcType="NUMERIC"/>
+        <result column="FTABLE" property="ftable" jdbcType="VARCHAR"/>
+        <result column="FID" property="fid" jdbcType="VARCHAR"/>
+        <result column="DISABLE_FLAG" property="disableFlag" jdbcType="NUMERIC"/>
+        <result column="DELETE_FLAG" property="deleteFlag" jdbcType="NUMERIC"/>
+        <result column="SORT_NUM" property="sortNum" jdbcType="NUMERIC"/>
+        <result column="REVISION" property="revision" jdbcType="VARCHAR"/>
+        <result column="CREATED_BY" property="createdBy" jdbcType="VARCHAR"/>
+        <result column="CREATED_TIME" property="createdTime" jdbcType="NUMERIC"/>
+        <result column="UPDATED_BY" property="updatedBy" jdbcType="VARCHAR"/>
+        <result column="UPDATED_TIME" property="updatedTime" jdbcType="NUMERIC"/>
+        <result column="TENANT_ID" property="tenantId" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        A.NID,A.FILE_CODE,A.FILE_NAME,A.FILE_TYPE,A.FILE_SUFFIX,A.FILE_SIZE,A.FJ_STORED_MODE,A.FILE_ADDRESS,A.THUMB_URL,A.IMAGE_WIDTH,A.IMAGE_HEIGHT,A.FILE_TIME,A.FTABLE,A.FID,A.DISABLE_FLAG,A.DELETE_FLAG,A.SORT_NUM,A.REVISION,A.CREATED_BY,A.CREATED_TIME,A.UPDATED_BY,A.UPDATED_TIME,A.TENANT_ID
+    </sql>
+   
+   <!-- SELECT sql片段 -->  
+    <sql id="select_where">
+	   <if test="nid!=null">
+            and A.NID = #{nid} 
+        </if>
+	   <if test="fileCode!=null and fileCode!=''">
+            and A.FILE_CODE = #{fileCode} 
+        </if>
+	   <if test="fileName!=null and fileName!=''">
+            and A.FILE_NAME = #{fileName} 
+        </if>
+	   <if test="fileType!=null and fileType!=''">
+            and A.FILE_TYPE = #{fileType} 
+        </if>
+	   <if test="fileSuffix!=null and fileSuffix!=''">
+            and A.FILE_SUFFIX = #{fileSuffix} 
+        </if>
+	   <if test="fileSize!=null">
+            and A.FILE_SIZE = #{fileSize} 
+        </if>
+	   <if test="fjStoredMode!=null">
+            and A.FJ_STORED_MODE = #{fjStoredMode} 
+        </if>
+	   <if test="fileAddress!=null and fileAddress!=''">
+            and A.FILE_ADDRESS = #{fileAddress} 
+        </if>
+	   <if test="thumbUrl!=null and thumbUrl!=''">
+            and A.THUMB_URL = #{thumbUrl} 
+        </if>
+	   <if test="imageWidth!=null">
+            and A.IMAGE_WIDTH = #{imageWidth} 
+        </if>
+	   <if test="imageHeight!=null">
+            and A.IMAGE_HEIGHT = #{imageHeight} 
+        </if>
+	   <if test="fileTime!=null">
+            and A.FILE_TIME = #{fileTime} 
+        </if>
+	   <if test="ftable!=null and ftable!=''">
+            and A.FTABLE = #{ftable} 
+        </if>
+	   <if test="fid!=null and fid!=''">
+            and A.FID = #{fid} 
+        </if>
+	   <if test="disableFlag!=null">
+            and A.DISABLE_FLAG = #{disableFlag} 
+        </if>
+	   <if test="deleteFlag!=null">
+            and A.DELETE_FLAG = #{deleteFlag} 
+        </if>
+	   <if test="sortNum!=null">
+            and A.SORT_NUM = #{sortNum} 
+        </if>
+	   <if test="revision!=null and revision!=''">
+            and A.REVISION = #{revision} 
+        </if>
+	   <if test="createdBy!=null and createdBy!=''">
+            and A.CREATED_BY = #{createdBy} 
+        </if>
+	   <if test="createdTime!=null">
+            and A.CREATED_TIME = #{createdTime} 
+        </if>
+        <if test="map.createdTimeStart!=null and map.createdTimeStart!=''">
+            and A.CREATED_TIME &gt;= #{map.createdTimeStart} 
+        </if>
+        <if test="map.createdTimeEnd!=null and map.createdTimeEnd!=''">
+            and A.CREATED_TIME &lt;= #{map.createdTimeEnd} 
+        </if>
+	   <if test="updatedBy!=null and updatedBy!=''">
+            and A.UPDATED_BY = #{updatedBy} 
+        </if>
+	   <if test="updatedTime!=null">
+            and A.UPDATED_TIME = #{updatedTime} 
+        </if>
+        <if test="map.updatedTimeStart!=null and map.updatedTimeStart!=''">
+            and A.UPDATED_TIME &gt;= #{map.updatedTimeStart} 
+        </if>
+        <if test="map.updatedTimeEnd!=null and map.updatedTimeEnd!=''">
+            and A.UPDATED_TIME &lt;= #{map.updatedTimeEnd} 
+        </if>
+	   <if test="tenantId!=null and tenantId!=''">
+            and A.TENANT_ID = #{tenantId} 
+        </if>
+    </sql>
+   
+    <!-- 获取信息 -->
+    <select id="getModelByKey" resultMap="BaseResultMap" parameterType="java.lang.Long" useCache="true">
+        SELECT <include refid="Base_Column_List" /> FROM SYS_COMMON_FILE A WHERE A.NID = #{nid}
+    </select>
+  
+    <!-- 删除信息 -->
+    <delete id="delete" parameterType="java.lang.Long" flushCache="true">
+        DELETE FROM SYS_COMMON_FILE WHERE NID = #{nid}
+    </delete>
+  
+    <!-- 插入信息,插入后获取自增主键值(适配mysql) -->
+    <insert id="insert" parameterType="com.lcxbs.sys.model.SysCommonFile" flushCache="true" databaseId="mysql">
+        <selectKey keyProperty="nid" resultType="java.lang.Long" order="AFTER">
+            SELECT @@IDENTITY
+        </selectKey>
+            INSERT INTO SYS_COMMON_FILE (FILE_CODE,FILE_NAME,FILE_TYPE,FILE_SUFFIX,FILE_SIZE,FJ_STORED_MODE,FILE_ADDRESS,THUMB_URL,IMAGE_WIDTH,IMAGE_HEIGHT,FILE_TIME,FTABLE,FID,DISABLE_FLAG,DELETE_FLAG,SORT_NUM,REVISION,CREATED_BY,CREATED_TIME,UPDATED_BY,UPDATED_TIME,TENANT_ID)
+                VALUES (
+                    #{fileCode,jdbcType=VARCHAR},
+                    #{fileName,jdbcType=VARCHAR},
+                    #{fileType,jdbcType=VARCHAR},
+                    #{fileSuffix,jdbcType=VARCHAR},
+                    #{fileSize,jdbcType=NUMERIC},
+                    #{fjStoredMode,jdbcType=NUMERIC},
+                    #{fileAddress,jdbcType=VARCHAR},
+                    #{thumbUrl,jdbcType=VARCHAR},
+                    #{imageWidth,jdbcType=NUMERIC},
+                    #{imageHeight,jdbcType=NUMERIC},
+                    #{fileTime,jdbcType=NUMERIC},
+                    #{ftable,jdbcType=VARCHAR},
+                    #{fid,jdbcType=VARCHAR},
+                    #{disableFlag,jdbcType=NUMERIC},
+                    #{deleteFlag,jdbcType=NUMERIC},
+                    #{sortNum,jdbcType=NUMERIC},
+                    #{revision,jdbcType=VARCHAR},
+                    #{createdBy,jdbcType=VARCHAR},
+                    #{createdTime,jdbcType=NUMERIC},
+                    #{updatedBy,jdbcType=VARCHAR},
+                    #{updatedTime,jdbcType=NUMERIC},
+                    #{tenantId,jdbcType=VARCHAR})
+    </insert>
+	
+	 <!-- 插入信息,插入后获取自增主键值(适配oracle) -->
+    <insert id="insert" parameterType="com.lcxbs.sys.model.SysCommonFile" flushCache="true" databaseId="oracle">
+        <selectKey keyProperty="nid" resultType="java.lang.Long" order="BEFORE">
+            SELECT SEQ_SYS_COMMON_FILE.NEXTVAL from dual
+        </selectKey>
+            INSERT INTO SYS_COMMON_FILE (NID,FILE_CODE,FILE_NAME,FILE_TYPE,FILE_SUFFIX,FILE_SIZE,FJ_STORED_MODE,FILE_ADDRESS,THUMB_URL,IMAGE_WIDTH,IMAGE_HEIGHT,FILE_TIME,FTABLE,FID,DISABLE_FLAG,DELETE_FLAG,SORT_NUM,REVISION,CREATED_BY,CREATED_TIME,UPDATED_BY,UPDATED_TIME,TENANT_ID)
+                VALUES (
+                    #{nid,jdbcType=NUMERIC},
+                    #{fileCode,jdbcType=VARCHAR},
+                    #{fileName,jdbcType=VARCHAR},
+                    #{fileType,jdbcType=VARCHAR},
+                    #{fileSuffix,jdbcType=VARCHAR},
+                    #{fileSize,jdbcType=NUMERIC},
+                    #{fjStoredMode,jdbcType=NUMERIC},
+                    #{fileAddress,jdbcType=VARCHAR},
+                    #{thumbUrl,jdbcType=VARCHAR},
+                    #{imageWidth,jdbcType=NUMERIC},
+                    #{imageHeight,jdbcType=NUMERIC},
+                    #{fileTime,jdbcType=NUMERIC},
+                    #{ftable,jdbcType=VARCHAR},
+                    #{fid,jdbcType=VARCHAR},
+                    #{disableFlag,jdbcType=NUMERIC},
+                    #{deleteFlag,jdbcType=NUMERIC},
+                    #{sortNum,jdbcType=NUMERIC},
+                    #{revision,jdbcType=VARCHAR},
+                    #{createdBy,jdbcType=VARCHAR},
+                    #{createdTime,jdbcType=NUMERIC},
+                    #{updatedBy,jdbcType=VARCHAR},
+                    #{updatedTime,jdbcType=NUMERIC},
+                    #{tenantId,jdbcType=VARCHAR})
+    </insert>
+  
+    <!-- 精确更新 -->
+    <update id="updateSelective" parameterType="com.lcxbs.sys.model.SysCommonFile" flushCache="true">
+        UPDATE SYS_COMMON_FILE A
+        <set>
+            <if test="fileCode != null" >
+                A.FILE_CODE = #{fileCode},
+            </if>
+            <if test="fileName != null" >
+                A.FILE_NAME = #{fileName},
+            </if>
+            <if test="fileType != null" >
+                A.FILE_TYPE = #{fileType},
+            </if>
+            <if test="fileSuffix != null" >
+                A.FILE_SUFFIX = #{fileSuffix},
+            </if>
+            <if test="fileSize != null" >
+                A.FILE_SIZE = #{fileSize},
+            </if>
+            <if test="fjStoredMode != null" >
+                A.FJ_STORED_MODE = #{fjStoredMode},
+            </if>
+            <if test="fileAddress != null" >
+                A.FILE_ADDRESS = #{fileAddress},
+            </if>
+            <if test="thumbUrl != null" >
+                A.THUMB_URL = #{thumbUrl},
+            </if>
+            <if test="imageWidth != null" >
+                A.IMAGE_WIDTH = #{imageWidth},
+            </if>
+            <if test="imageHeight != null" >
+                A.IMAGE_HEIGHT = #{imageHeight},
+            </if>
+            <if test="fileTime != null" >
+                A.FILE_TIME = #{fileTime},
+            </if>
+            <if test="ftable != null" >
+                A.FTABLE = #{ftable},
+            </if>
+            <if test="fid != null" >
+                A.FID = #{fid},
+            </if>
+            <if test="disableFlag != null" >
+                A.DISABLE_FLAG = #{disableFlag},
+            </if>
+            <if test="deleteFlag != null" >
+                A.DELETE_FLAG = #{deleteFlag},
+            </if>
+            <if test="sortNum != null" >
+                A.SORT_NUM = #{sortNum},
+            </if>
+            <if test="revision != null" >
+                A.REVISION = #{revision},
+            </if>
+            <if test="createdBy != null" >
+                A.CREATED_BY = #{createdBy},
+            </if>
+            <if test="createdTime != null" >
+                A.CREATED_TIME = #{createdTime},
+            </if>
+            <if test="updatedBy != null" >
+                A.UPDATED_BY = #{updatedBy},
+            </if>
+            <if test="updatedTime != null" >
+                A.UPDATED_TIME = #{updatedTime},
+            </if>
+            <if test="tenantId != null" >
+                A.TENANT_ID = #{tenantId}
+            </if>
+        </set>
+        WHERE A.NID = #{nid}
+    </update>
+  
+    <!-- 更新所有 -->
+    <update id="updateByPrimaryKey" parameterType="com.lcxbs.sys.model.SysCommonFile" flushCache="true">
+        UPDATE SYS_COMMON_FILE A
+        <set> 
+	        <if test="fileCode != null" >
+                  A.FILE_CODE = #{fileCode},
+	        </if>
+	        <if test="fileName != null" >
+                  A.FILE_NAME = #{fileName},
+	        </if>
+	        <if test="fileType != null" >
+                  A.FILE_TYPE = #{fileType},
+	        </if>
+	        <if test="fileSuffix != null" >
+                  A.FILE_SUFFIX = #{fileSuffix},
+	        </if>
+	        <if test="fileSize != null" >
+                  A.FILE_SIZE = #{fileSize},
+	        </if>
+	        <if test="fjStoredMode != null" >
+                  A.FJ_STORED_MODE = #{fjStoredMode},
+	        </if>
+	        <if test="fileAddress != null" >
+                  A.FILE_ADDRESS = #{fileAddress},
+	        </if>
+	        <if test="thumbUrl != null" >
+                  A.THUMB_URL = #{thumbUrl},
+	        </if>
+	        <if test="imageWidth != null" >
+                  A.IMAGE_WIDTH = #{imageWidth},
+	        </if>
+	        <if test="imageHeight != null" >
+                  A.IMAGE_HEIGHT = #{imageHeight},
+	        </if>
+	        <if test="fileTime != null" >
+                  A.FILE_TIME = #{fileTime},
+	        </if>
+	        <if test="ftable != null" >
+                  A.FTABLE = #{ftable},
+	        </if>
+	        <if test="fid != null" >
+                  A.FID = #{fid},
+	        </if>
+	        <if test="disableFlag != null" >
+                  A.DISABLE_FLAG = #{disableFlag},
+	        </if>
+	        <if test="deleteFlag != null" >
+                  A.DELETE_FLAG = #{deleteFlag},
+	        </if>
+	        <if test="sortNum != null" >
+                  A.SORT_NUM = #{sortNum},
+	        </if>
+	        <if test="revision != null" >
+                  A.REVISION = #{revision},
+	        </if>
+	        <if test="createdBy != null" >
+                  A.CREATED_BY = #{createdBy},
+	        </if>
+	        <if test="createdTime != null" >
+                  A.CREATED_TIME = #{createdTime},
+	        </if>
+	        <if test="updatedBy != null" >
+                  A.UPDATED_BY = #{updatedBy},
+	        </if>
+	        <if test="updatedTime != null" >
+                  A.UPDATED_TIME = #{updatedTime},
+	        </if>
+	        <if test="tenantId != null" >
+                  A.TENANT_ID = #{tenantId}
+	        </if>
+	    </set>
+        WHERE A.NID = #{nid}
+    </update>
+    
+    <!-- 根据Map集合参数选择更新 -->
+    <update id="updateByMap" parameterType="com.lcxbs.sys.model.SysCommonFile" flushCache="true">
+        UPDATE SYS_COMMON_FILE A
+        <set> 
+	        <if test="fileCode != null" >
+                  A.FILE_CODE = #{fileCode},
+	        </if>
+	        <if test="fileName != null" >
+                  A.FILE_NAME = #{fileName},
+	        </if>
+	        <if test="fileType != null" >
+                  A.FILE_TYPE = #{fileType},
+	        </if>
+	        <if test="fileSuffix != null" >
+                  A.FILE_SUFFIX = #{fileSuffix},
+	        </if>
+	        <if test="fileSize != null" >
+                  A.FILE_SIZE = #{fileSize},
+	        </if>
+	        <if test="fjStoredMode != null" >
+                  A.FJ_STORED_MODE = #{fjStoredMode},
+	        </if>
+	        <if test="fileAddress != null" >
+                  A.FILE_ADDRESS = #{fileAddress},
+	        </if>
+	        <if test="thumbUrl != null" >
+                  A.THUMB_URL = #{thumbUrl},
+	        </if>
+	        <if test="imageWidth != null" >
+                  A.IMAGE_WIDTH = #{imageWidth},
+	        </if>
+	        <if test="imageHeight != null" >
+                  A.IMAGE_HEIGHT = #{imageHeight},
+	        </if>
+	        <if test="fileTime != null" >
+                  A.FILE_TIME = #{fileTime},
+	        </if>
+	        <if test="ftable != null" >
+                  A.FTABLE = #{ftable},
+	        </if>
+	        <if test="fid != null" >
+                  A.FID = #{fid},
+	        </if>
+	        <if test="disableFlag != null" >
+                  A.DISABLE_FLAG = #{disableFlag},
+	        </if>
+	        <if test="deleteFlag != null" >
+                  A.DELETE_FLAG = #{deleteFlag},
+	        </if>
+	        <if test="sortNum != null" >
+                  A.SORT_NUM = #{sortNum},
+	        </if>
+	        <if test="revision != null" >
+                  A.REVISION = #{revision},
+	        </if>
+	        <if test="createdBy != null" >
+                  A.CREATED_BY = #{createdBy},
+	        </if>
+	        <if test="createdTime != null" >
+                  A.CREATED_TIME = #{createdTime},
+	        </if>
+	        <if test="updatedBy != null" >
+                  A.UPDATED_BY = #{updatedBy},
+	        </if>
+	        <if test="updatedTime != null" >
+                  A.UPDATED_TIME = #{updatedTime},
+	        </if>
+	        <if test="tenantId != null" >
+                  A.TENANT_ID = #{tenantId}
+	        </if>
+	    </set>
+        <where> 
+            <if test="map.nid!=null">
+                and A.NID = #{map.nid} 
+            </if>
+            <if test="map.fileCode!=null and map.fileCode!=''">
+                and A.FILE_CODE = #{map.fileCode} 
+            </if>
+            <if test="map.fileName!=null and map.fileName!=''">
+                and A.FILE_NAME = #{map.fileName} 
+            </if>
+            <if test="map.fileType!=null and map.fileType!=''">
+                and A.FILE_TYPE = #{map.fileType} 
+            </if>
+            <if test="map.fileSuffix!=null and map.fileSuffix!=''">
+                and A.FILE_SUFFIX = #{map.fileSuffix} 
+            </if>
+            <if test="map.fileSize!=null">
+                and A.FILE_SIZE = #{map.fileSize} 
+            </if>
+            <if test="map.fjStoredMode!=null">
+                and A.FJ_STORED_MODE = #{map.fjStoredMode} 
+            </if>
+            <if test="map.fileAddress!=null and map.fileAddress!=''">
+                and A.FILE_ADDRESS = #{map.fileAddress} 
+            </if>
+            <if test="map.thumbUrl!=null and map.thumbUrl!=''">
+                and A.THUMB_URL = #{map.thumbUrl} 
+            </if>
+            <if test="map.imageWidth!=null">
+                and A.IMAGE_WIDTH = #{map.imageWidth} 
+            </if>
+            <if test="map.imageHeight!=null">
+                and A.IMAGE_HEIGHT = #{map.imageHeight} 
+            </if>
+            <if test="map.fileTime!=null">
+                and A.FILE_TIME = #{map.fileTime} 
+            </if>
+            <if test="map.ftable!=null and map.ftable!=''">
+                and A.FTABLE = #{map.ftable} 
+            </if>
+            <if test="map.fid!=null and map.fid!=''">
+                and A.FID = #{map.fid} 
+            </if>
+            <if test="map.disableFlag!=null">
+                and A.DISABLE_FLAG = #{map.disableFlag} 
+            </if>
+            <if test="map.deleteFlag!=null">
+                and A.DELETE_FLAG = #{map.deleteFlag} 
+            </if>
+            <if test="map.sortNum!=null">
+                and A.SORT_NUM = #{map.sortNum} 
+            </if>
+            <if test="map.revision!=null and map.revision!=''">
+                and A.REVISION = #{map.revision} 
+            </if>
+            <if test="map.createdBy!=null and map.createdBy!=''">
+                and A.CREATED_BY = #{map.createdBy} 
+            </if>
+            <if test="map.createdTime!=null">
+                and A.CREATED_TIME = #{map.createdTime} 
+            </if>
+            <if test="map.updatedBy!=null and map.updatedBy!=''">
+                and A.UPDATED_BY = #{map.updatedBy} 
+            </if>
+            <if test="map.updatedTime!=null">
+                and A.UPDATED_TIME = #{map.updatedTime} 
+            </if>
+            <if test="map.tenantId!=null and map.tenantId!=''">
+                and A.TENANT_ID = #{map.tenantId} 
+            </if>
+        </where>
+    </update>
+  
+    <!-- 统计记录 -->
+    <select id="countAll" resultType="java.lang.Long" parameterType="com.lcxbs.sys.model.SysCommonFile" flushCache="true">
+        SELECT COUNT(NID) FROM SYS_COMMON_FILE A <where> <include refid="select_where"></include> </where>
+    </select>
+  
+    <!-- 查询所有的ID -->
+    <select id="getAllIds" resultType="java.lang.String" parameterType="com.lcxbs.sys.model.SysCommonFile" flushCache="true">
+        SELECT NID FROM SYS_COMMON_FILE A 
+        <where> <include refid="select_where"></include> </where>
+        <if test="map!=null">
+            <if test="map.groupBy!=null and map.groupBy!=''">
+                ${map.groupBy}
+            </if>
+            <if test="map.orderBy!=null and map.orderBy!=''">
+                ${map.orderBy}
+            </if>
+        </if>
+    </select>
+  
+    <!-- 分页获取数据 -->
+    <select id="getListByPage" resultMap="BaseResultMap" parameterType="com.lcxbs.sys.model.SysCommonFile" flushCache="true">
+        SELECT <include refid="Base_Column_List" /> FROM SYS_COMMON_FILE A
+        <where> 
+            <include refid="select_where"></include>  
+        </where>
+        <if test="map!=null">
+			<if test="map.groupBy!=null and map.groupBy!=''">
+                ${map.groupBy}
+            </if>
+            <if test="map.orderBy!=null and map.orderBy!=''">
+                ${map.orderBy}
+            </if>
+        </if>
+    </select>
+  
+    <!-- 按条件获取 -->
+    <select id="getListByWhere" resultMap="BaseResultMap" parameterType="com.lcxbs.sys.model.SysCommonFile" flushCache="true">
+        SELECT <include refid="Base_Column_List" /> FROM SYS_COMMON_FILE A 
+        <where> <include refid="select_where"></include>  </where>
+        <if test="map!=null">
+            <if test="map.groupBy!=null and map.groupBy!=''">
+                ${map.groupBy}
+            </if>
+            <if test="map.orderBy!=null and map.orderBy!=''">
+                ${map.orderBy}
+            </if>
+            <if test="map.orderBy==null or map.orderBy==''">
+            	ORDER BY A.NID ASC
+            </if>
+        </if>
+    </select>
+	
+    <!-- 按条件获取信息 -->
+    <select id="getModelByWhere" resultMap="BaseResultMap" parameterType="com.lcxbs.sys.model.SysCommonFile" useCache="true">
+        SELECT <include refid="Base_Column_List" /> FROM SYS_COMMON_FILE A
+        <where> <include refid="select_where"></include>  </where>
+        ORDER BY A.NID ASC
+    </select>
+
+    <!-- 按条件删除信息-->
+    <delete id="deleteByWhere" parameterType="com.lcxbs.sys.model.SysCommonFile" flushCache="true">
+        DELETE FROM SYS_COMMON_FILE 
+        <where>
+            <if test="nid!=null">
+                and NID = #{nid} 
+            </if>
+            <if test="fileCode!=null and fileCode!=''">
+                and FILE_CODE = #{fileCode} 
+            </if>
+            <if test="fileName!=null and fileName!=''">
+                and FILE_NAME = #{fileName} 
+            </if>
+            <if test="fileType!=null and fileType!=''">
+                and FILE_TYPE = #{fileType} 
+            </if>
+            <if test="fileSuffix!=null and fileSuffix!=''">
+                and FILE_SUFFIX = #{fileSuffix} 
+            </if>
+            <if test="fileSize!=null">
+                and FILE_SIZE = #{fileSize} 
+            </if>
+            <if test="fjStoredMode!=null">
+                and FJ_STORED_MODE = #{fjStoredMode} 
+            </if>
+            <if test="fileAddress!=null and fileAddress!=''">
+                and FILE_ADDRESS = #{fileAddress} 
+            </if>
+            <if test="thumbUrl!=null and thumbUrl!=''">
+                and THUMB_URL = #{thumbUrl} 
+            </if>
+            <if test="imageWidth!=null">
+                and IMAGE_WIDTH = #{imageWidth} 
+            </if>
+            <if test="imageHeight!=null">
+                and IMAGE_HEIGHT = #{imageHeight} 
+            </if>
+            <if test="fileTime!=null">
+                and FILE_TIME = #{fileTime} 
+            </if>
+            <if test="ftable!=null and ftable!=''">
+                and FTABLE = #{ftable} 
+            </if>
+            <if test="fid!=null and fid!=''">
+                and FID = #{fid} 
+            </if>
+            <if test="disableFlag!=null">
+                and DISABLE_FLAG = #{disableFlag} 
+            </if>
+            <if test="deleteFlag!=null">
+                and DELETE_FLAG = #{deleteFlag} 
+            </if>
+            <if test="sortNum!=null">
+                and SORT_NUM = #{sortNum} 
+            </if>
+            <if test="revision!=null and revision!=''">
+                and REVISION = #{revision} 
+            </if>
+            <if test="createdBy!=null and createdBy!=''">
+                and CREATED_BY = #{createdBy} 
+            </if>
+            <if test="createdTime!=null">
+                and CREATED_TIME = #{createdTime} 
+            </if>
+            <if test="updatedBy!=null and updatedBy!=''">
+                and UPDATED_BY = #{updatedBy} 
+            </if>
+            <if test="updatedTime!=null">
+                and UPDATED_TIME = #{updatedTime} 
+            </if>
+            <if test="tenantId!=null and tenantId!=''">
+                and TENANT_ID = #{tenantId} 
+            </if>
+        </where>
+    </delete>
+	
+</mapper>

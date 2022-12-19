@@ -1,0 +1,36 @@
+# Created by .ignore support plugin (hsz.mobi)
+### Example user template template
+### Example user template
+# 此文件用于控制Git上传
+# IntelliJ project files
+.idea
+*.iml
+out
+gen
+.settings/
+*.classpath
+*.project
+.externalToolBuilders
+.settings/*.*
+.settings
+target/*
+target/*.*
+*.JSCompress
+*.jscompress
+*.lnk
+*.bat
+Servers/
+.metadata/
+RemoteSystemsTempFiles/
+.settings/
+*.classpath
+*.project
+*.externalToolBuilders/
+target/
+.recommenders/
+.idea
+node_modules/
+*./logs/*
+
+logs/
+/*/*/*/*/*/*/rebel.xml

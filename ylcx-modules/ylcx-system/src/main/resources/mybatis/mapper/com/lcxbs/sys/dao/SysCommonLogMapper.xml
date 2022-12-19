@@ -1,0 +1,440 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lcxbs.sys.dao.SysCommonLogMapper">
+    <resultMap id="BaseResultMap" type="com.lcxbs.sys.model.SysCommonLog">
+        <id column="NID" property="nid" jdbcType="NUMERIC" />
+        <result column="USER_LOGIN" property="userLogin" jdbcType="VARCHAR"/>
+        <result column="IP_ADDRESS" property="ipAddress" jdbcType="VARCHAR"/>
+        <result column="LOGIN_LOCATION" property="loginLocation" jdbcType="VARCHAR"/>
+        <result column="BROWSER" property="browser" jdbcType="VARCHAR"/>
+        <result column="OS_TYPE" property="osType" jdbcType="VARCHAR"/>
+        <result column="LOGIN_STATE" property="loginState" jdbcType="NUMERIC"/>
+        <result column="LOG_MSG" property="logMsg" jdbcType="VARCHAR"/>
+        <result column="PLATFORM" property="platform" jdbcType="VARCHAR"/>
+        <result column="LOGIN_TIME" property="loginTime" jdbcType="NUMERIC"/>
+        <result column="LOGOUT_TIME" property="logoutTime" jdbcType="NUMERIC"/>
+        <result column="ONLINE_DURATION" property="onlineDuration" jdbcType="NUMERIC"/>
+        <result column="SESSION_ID" property="sessionId" jdbcType="VARCHAR"/>
+        <result column="TENANT_ID" property="tenantId" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        A.NID,A.USER_LOGIN,A.IP_ADDRESS,A.LOGIN_LOCATION,A.BROWSER,A.OS_TYPE,A.LOGIN_STATE,A.LOG_MSG,A.PLATFORM,A.LOGIN_TIME,A.LOGOUT_TIME,A.ONLINE_DURATION,A.SESSION_ID,A.TENANT_ID
+    </sql>
+
+    <!-- SELECT sql片段 -->
+    <sql id="select_where">
+        <if test="nid!=null">
+            and A.NID = #{nid}
+        </if>
+        <if test="userLogin!=null and userLogin!=''">
+            and A.USER_LOGIN = #{userLogin}
+        </if>
+        <if test="ipAddress!=null and ipAddress!=''">
+            and A.IP_ADDRESS = #{ipAddress}
+        </if>
+        <if test="loginLocation!=null and loginLocation!=''">
+            and A.LOGIN_LOCATION = #{loginLocation}
+        </if>
+        <if test="browser!=null and browser!=''">
+            and A.BROWSER = #{browser}
+        </if>
+        <if test="osType!=null and osType!=''">
+            and A.OS_TYPE = #{osType}
+        </if>
+        <if test="loginState!=null">
+            and A.LOGIN_STATE = #{loginState}
+        </if>
+        <if test="logMsg!=null and logMsg!=''">
+            and A.LOG_MSG = #{logMsg}
+        </if>
+        <if test="platform!=null and platform!=''">
+            and A.PLATFORM = #{platform}
+        </if>
+        <if test="loginTime!=null">
+            and A.LOGIN_TIME = #{loginTime}
+        </if>
+        <if test="map.loginTimeStart!=null and map.loginTimeStart!=''">
+            and A.LOGIN_TIME &gt;= #{map.loginTimeStart}
+        </if>
+        <if test="map.loginTimeEnd!=null and map.loginTimeEnd!=''">
+            and A.LOGIN_TIME &lt;= #{map.loginTimeEnd}
+        </if>
+        <if test="logoutTime!=null">
+            and A.LOGOUT_TIME = #{logoutTime}
+        </if>
+        <if test="map.logoutTimeStart!=null and map.logoutTimeStart!=''">
+            and A.LOGOUT_TIME &gt;= #{map.logoutTimeStart}
+        </if>
+        <if test="map.logoutTimeEnd!=null and map.logoutTimeEnd!=''">
+            and A.LOGOUT_TIME &lt;= #{map.logoutTimeEnd}
+        </if>
+        <if test="onlineDuration!=null">
+            and A.ONLINE_DURATION = #{onlineDuration}
+        </if>
+        <if test="sessionId!=null and sessionId!=''">
+            and A.SESSION_ID = #{sessionId}
+        </if>
+        <if test="tenantId!=null and tenantId!=''">
+            and A.TENANT_ID = #{tenantId}
+        </if>
+    </sql>
+
+    <!-- 获取信息 -->
+    <select id="getModelByKey" resultMap="BaseResultMap" parameterType="java.lang.Long" useCache="true">
+        SELECT <include refid="Base_Column_List" /> FROM SYS_COMMON_LOG A WHERE A.NID = #{nid}
+    </select>
+
+    <!-- 删除信息 -->
+    <delete id="delete" parameterType="java.lang.Long" flushCache="true">
+        DELETE FROM SYS_COMMON_LOG WHERE NID = #{nid}
+    </delete>
+
+    <!-- 插入信息,插入后获取自增主键值(适配mysql) -->
+    <insert id="insert" parameterType="com.lcxbs.sys.model.SysCommonLog" flushCache="true" databaseId="mysql">
+        <selectKey keyProperty="nid" resultType="java.lang.Long" order="AFTER">
+            SELECT @@IDENTITY
+        </selectKey>
+        INSERT INTO SYS_COMMON_LOG (USER_LOGIN,IP_ADDRESS,LOGIN_LOCATION,BROWSER,OS_TYPE,LOGIN_STATE,LOG_MSG,PLATFORM,LOGIN_TIME,LOGOUT_TIME,ONLINE_DURATION,SESSION_ID,TENANT_ID)
+        VALUES (
+        #{userLogin,jdbcType=VARCHAR},
+        #{ipAddress,jdbcType=VARCHAR},
+        #{loginLocation,jdbcType=VARCHAR},
+        #{browser,jdbcType=VARCHAR},
+        #{osType,jdbcType=VARCHAR},
+        #{loginState,jdbcType=NUMERIC},
+        #{logMsg,jdbcType=VARCHAR},
+        #{platform,jdbcType=VARCHAR},
+        #{loginTime,jdbcType=NUMERIC},
+        #{logoutTime,jdbcType=NUMERIC},
+        #{onlineDuration,jdbcType=NUMERIC},
+        #{sessionId,jdbcType=VARCHAR},
+        #{tenantId,jdbcType=VARCHAR})
+    </insert>
+
+    <!-- 插入信息,插入后获取自增主键值(适配oracle) -->
+    <insert id="insert" parameterType="com.lcxbs.sys.model.SysCommonLog" flushCache="true" databaseId="oracle">
+        <selectKey keyProperty="nid" resultType="java.lang.Long" order="BEFORE">
+            SELECT SEQ_SYS_COMMON_LOG.NEXTVAL from dual
+        </selectKey>
+        INSERT INTO SYS_COMMON_LOG (NID,USER_LOGIN,IP_ADDRESS,LOGIN_LOCATION,BROWSER,OS_TYPE,LOGIN_STATE,LOG_MSG,PLATFORM,LOGIN_TIME,LOGOUT_TIME,ONLINE_DURATION,SESSION_ID,TENANT_ID)
+        VALUES (
+        #{nid,jdbcType=NUMERIC},
+        #{userLogin,jdbcType=VARCHAR},
+        #{ipAddress,jdbcType=VARCHAR},
+        #{loginLocation,jdbcType=VARCHAR},
+        #{browser,jdbcType=VARCHAR},
+        #{osType,jdbcType=VARCHAR},
+        #{loginState,jdbcType=NUMERIC},
+        #{logMsg,jdbcType=VARCHAR},
+        #{platform,jdbcType=VARCHAR},
+        #{loginTime,jdbcType=NUMERIC},
+        #{logoutTime,jdbcType=NUMERIC},
+        #{onlineDuration,jdbcType=NUMERIC},
+        #{sessionId,jdbcType=VARCHAR},
+        #{tenantId,jdbcType=VARCHAR})
+    </insert>
+
+    <!-- 精确更新 -->
+    <update id="updateSelective" parameterType="com.lcxbs.sys.model.SysCommonLog" flushCache="true">
+        UPDATE SYS_COMMON_LOG A
+        <set>
+            <if test="userLogin != null" >
+                A.USER_LOGIN = #{userLogin},
+            </if>
+            <if test="ipAddress != null" >
+                A.IP_ADDRESS = #{ipAddress},
+            </if>
+            <if test="loginLocation != null" >
+                A.LOGIN_LOCATION = #{loginLocation},
+            </if>
+            <if test="browser != null" >
+                A.BROWSER = #{browser},
+            </if>
+            <if test="osType != null" >
+                A.OS_TYPE = #{osType},
+            </if>
+            <if test="loginState != null" >
+                A.LOGIN_STATE = #{loginState},
+            </if>
+            <if test="logMsg != null" >
+                A.LOG_MSG = #{logMsg},
+            </if>
+            <if test="platform != null" >
+                A.PLATFORM = #{platform},
+            </if>
+            <if test="loginTime != null" >
+                A.LOGIN_TIME = #{loginTime},
+            </if>
+            <if test="logoutTime != null" >
+                A.LOGOUT_TIME = #{logoutTime},
+            </if>
+            <if test="onlineDuration != null" >
+                A.ONLINE_DURATION = #{onlineDuration},
+            </if>
+            <if test="sessionId != null" >
+                A.SESSION_ID = #{sessionId},
+            </if>
+            <if test="tenantId != null" >
+                A.TENANT_ID = #{tenantId}
+            </if>
+        </set>
+        WHERE A.NID = #{nid}
+    </update>
+
+    <!-- 更新所有 -->
+    <update id="updateByPrimaryKey" parameterType="com.lcxbs.sys.model.SysCommonLog" flushCache="true">
+        UPDATE SYS_COMMON_LOG A
+        <set>
+            <if test="userLogin != null" >
+                A.USER_LOGIN = #{userLogin},
+            </if>
+            <if test="ipAddress != null" >
+                A.IP_ADDRESS = #{ipAddress},
+            </if>
+            <if test="loginLocation != null" >
+                A.LOGIN_LOCATION = #{loginLocation},
+            </if>
+            <if test="browser != null" >
+                A.BROWSER = #{browser},
+            </if>
+            <if test="osType != null" >
+                A.OS_TYPE = #{osType},
+            </if>
+            <if test="loginState != null" >
+                A.LOGIN_STATE = #{loginState},
+            </if>
+            <if test="logMsg != null" >
+                A.LOG_MSG = #{logMsg},
+            </if>
+            <if test="platform != null" >
+                A.PLATFORM = #{platform},
+            </if>
+            <if test="loginTime != null" >
+                A.LOGIN_TIME = #{loginTime},
+            </if>
+            <if test="logoutTime != null" >
+                A.LOGOUT_TIME = #{logoutTime},
+            </if>
+            <if test="onlineDuration != null" >
+                A.ONLINE_DURATION = #{onlineDuration},
+            </if>
+            <if test="sessionId != null" >
+                A.SESSION_ID = #{sessionId},
+            </if>
+            <if test="tenantId != null" >
+                A.TENANT_ID = #{tenantId}
+            </if>
+        </set>
+        WHERE A.NID = #{nid}
+    </update>
+
+    <!-- 根据Map集合参数选择更新 -->
+    <update id="updateByMap" parameterType="com.lcxbs.sys.model.SysCommonLog" flushCache="true">
+        UPDATE SYS_COMMON_LOG A
+        <set>
+            <if test="userLogin != null" >
+                A.USER_LOGIN = #{userLogin},
+            </if>
+            <if test="ipAddress != null" >
+                A.IP_ADDRESS = #{ipAddress},
+            </if>
+            <if test="loginLocation != null" >
+                A.LOGIN_LOCATION = #{loginLocation},
+            </if>
+            <if test="browser != null" >
+                A.BROWSER = #{browser},
+            </if>
+            <if test="osType != null" >
+                A.OS_TYPE = #{osType},
+            </if>
+            <if test="loginState != null" >
+                A.LOGIN_STATE = #{loginState},
+            </if>
+            <if test="logMsg != null" >
+                A.LOG_MSG = #{logMsg},
+            </if>
+            <if test="platform != null" >
+                A.PLATFORM = #{platform},
+            </if>
+            <if test="loginTime != null" >
+                A.LOGIN_TIME = #{loginTime},
+            </if>
+            <if test="logoutTime != null" >
+                A.LOGOUT_TIME = #{logoutTime},
+            </if>
+            <if test="onlineDuration != null" >
+                A.ONLINE_DURATION = #{onlineDuration},
+            </if>
+            <if test="sessionId != null" >
+                A.SESSION_ID = #{sessionId},
+            </if>
+            <if test="tenantId != null" >
+                A.TENANT_ID = #{tenantId}
+            </if>
+        </set>
+        <where>
+            <if test="map.nid!=null">
+                and A.NID = #{map.nid}
+            </if>
+            <if test="map.userLogin!=null and map.userLogin!=''">
+                and A.USER_LOGIN = #{map.userLogin}
+            </if>
+            <if test="map.ipAddress!=null and map.ipAddress!=''">
+                and A.IP_ADDRESS = #{map.ipAddress}
+            </if>
+            <if test="map.loginLocation!=null and map.loginLocation!=''">
+                and A.LOGIN_LOCATION = #{map.loginLocation}
+            </if>
+            <if test="map.browser!=null and map.browser!=''">
+                and A.BROWSER = #{map.browser}
+            </if>
+            <if test="map.osType!=null and map.osType!=''">
+                and A.OS_TYPE = #{map.osType}
+            </if>
+            <if test="map.loginState!=null">
+                and A.LOGIN_STATE = #{map.loginState}
+            </if>
+            <if test="map.logMsg!=null and map.logMsg!=''">
+                and A.LOG_MSG = #{map.logMsg}
+            </if>
+            <if test="map.platform!=null and map.platform!=''">
+                and A.PLATFORM = #{map.platform}
+            </if>
+            <if test="map.loginTime!=null">
+                and A.LOGIN_TIME = #{map.loginTime}
+            </if>
+            <if test="map.logoutTime!=null">
+                and A.LOGOUT_TIME = #{map.logoutTime}
+            </if>
+            <if test="map.onlineDuration!=null">
+                and A.ONLINE_DURATION = #{map.onlineDuration}
+            </if>
+            <if test="map.sessionId!=null and map.sessionId!=''">
+                and A.SESSION_ID = #{map.sessionId}
+            </if>
+            <if test="map.tenantId!=null and map.tenantId!=''">
+                and A.TENANT_ID = #{map.tenantId}
+            </if>
+        </where>
+    </update>
+
+    <!-- 统计记录 -->
+    <select id="countAll" resultType="java.lang.Long" parameterType="com.lcxbs.sys.model.SysCommonLog" flushCache="true">
+        SELECT COUNT(NID) FROM SYS_COMMON_LOG A <where> <include refid="select_where"></include> </where>
+    </select>
+
+    <!-- 查询所有的ID -->
+    <select id="getAllIds" resultType="java.lang.String" parameterType="com.lcxbs.sys.model.SysCommonLog" flushCache="true">
+        SELECT NID FROM SYS_COMMON_LOG A
+        <where> <include refid="select_where"></include> </where>
+        <if test="map!=null">
+            <if test="map.groupBy!=null and map.groupBy!=''">
+                ${map.groupBy}
+            </if>
+            <if test="map.orderBy!=null and map.orderBy!=''">
+                ${map.orderBy}
+            </if>
+        </if>
+    </select>
+
+    <!-- 分页获取数据 -->
+    <select id="getListByPage" resultMap="BaseResultMap" parameterType="com.lcxbs.sys.model.SysCommonLog" flushCache="true">
+        SELECT <include refid="Base_Column_List" /> FROM SYS_COMMON_LOG A
+        <where>
+            <include refid="select_where"></include>
+        </where>
+        <if test="map!=null">
+            <if test="map.groupBy!=null and map.groupBy!=''">
+                ${map.groupBy}
+            </if>
+            <if test="map.orderBy!=null and map.orderBy!=''">
+                ${map.orderBy}
+            </if>
+        </if>
+    </select>
+
+    <!-- 按条件获取 -->
+    <select id="getListByWhere" resultMap="BaseResultMap" parameterType="com.lcxbs.sys.model.SysCommonLog" flushCache="true">
+        SELECT <include refid="Base_Column_List" /> FROM SYS_COMMON_LOG A
+        <where> <include refid="select_where"></include>  </where>
+        <if test="map!=null">
+            <if test="map.groupBy!=null and map.groupBy!=''">
+                ${map.groupBy}
+            </if>
+            <if test="map.orderBy!=null and map.orderBy!=''">
+                ${map.orderBy}
+            </if>
+            <if test="map.orderBy==null or map.orderBy==''">
+                ORDER BY A.NID ASC
+            </if>
+        </if>
+    </select>
+
+    <!-- 按条件获取信息 -->
+    <select id="getModelByWhere" resultMap="BaseResultMap" parameterType="com.lcxbs.sys.model.SysCommonLog" useCache="true">
+        SELECT <include refid="Base_Column_List" /> FROM SYS_COMMON_LOG A
+        <where> <include refid="select_where"></include>  </where>
+        ORDER BY A.NID ASC
+    </select>
+
+    <!-- 按条件删除信息-->
+    <delete id="deleteByWhere" parameterType="com.lcxbs.sys.model.SysCommonLog" flushCache="true">
+        DELETE FROM SYS_COMMON_LOG
+        <where>
+            <if test="nid!=null">
+                and NID = #{nid}
+            </if>
+            <if test="userLogin!=null and userLogin!=''">
+                and USER_LOGIN = #{userLogin}
+            </if>
+            <if test="ipAddress!=null and ipAddress!=''">
+                and IP_ADDRESS = #{ipAddress}
+            </if>
+            <if test="loginLocation!=null and loginLocation!=''">
+                and LOGIN_LOCATION = #{loginLocation}
+            </if>
+            <if test="browser!=null and browser!=''">
+                and BROWSER = #{browser}
+            </if>
+            <if test="osType!=null and osType!=''">
+                and OS_TYPE = #{osType}
+            </if>
+            <if test="loginState!=null">
+                and LOGIN_STATE = #{loginState}
+            </if>
+            <if test="logMsg!=null and logMsg!=''">
+                and LOG_MSG = #{logMsg}
+            </if>
+            <if test="platform!=null and platform!=''">
+                and PLATFORM = #{platform}
+            </if>
+            <if test="loginTime!=null">
+                and LOGIN_TIME = #{loginTime}
+            </if>
+            <if test="logoutTime!=null">
+                and LOGOUT_TIME = #{logoutTime}
+            </if>
+            <if test="onlineDuration!=null">
+                and ONLINE_DURATION = #{onlineDuration}
+            </if>
+            <if test="sessionId!=null and sessionId!=''">
+                and SESSION_ID = #{sessionId}
+            </if>
+            <if test="tenantId!=null and tenantId!=''">
+                and TENANT_ID = #{tenantId}
+            </if>
+        </where>
+    </delete>
+    <!-- 根据Map集合参数选择更新 -->
+    <update id="updateBySessionId" parameterType="com.lcxbs.sys.model.SysCommonLog" flushCache="true">
+        UPDATE SYS_COMMON_LOG A
+        <set>
+                A.LOGOUT_TIME = #{logoutTime},
+                A.ONLINE_DURATION = #{logoutTime}-A.LOGIN_TIME,
+        </set>
+        <where>
+                A.SESSION_ID = #{sessionId}
+                and A.ONLINE_DURATION is null
+        </where>
+    </update>
+</mapper>

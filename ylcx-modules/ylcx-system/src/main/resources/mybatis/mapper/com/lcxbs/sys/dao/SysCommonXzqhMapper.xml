@@ -1,0 +1,534 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lcxbs.sys.dao.SysCommonXzqhMapper">
+    <resultMap id="BaseResultMap" type="com.lcxbs.sys.model.SysCommonXzqh">
+  	   <id column="NID" property="nid" jdbcType="NUMERIC" />
+        <result column="XZQH_NAME" property="xzqhName" jdbcType="VARCHAR"/>
+        <result column="XZQH_CODE" property="xzqhCode" jdbcType="VARCHAR"/>
+        <result column="PARENT_CODE" property="parentCode" jdbcType="VARCHAR"/>
+        <result column="FULL_SPELL" property="fullSpell" jdbcType="VARCHAR"/>
+        <result column="SHORT_SPELL" property="shortSpell" jdbcType="VARCHAR"/>
+        <result column="SEARCH_STRING" property="searchString" jdbcType="VARCHAR"/>
+        <result column="DEFAULT_LONGITUDE" property="defaultLongitude" jdbcType="NUMERIC"/>
+        <result column="DEFAULT_LATITUDE" property="defaultLatitude" jdbcType="NUMERIC"/>
+        <result column="DEFAULT_SCALE" property="defaultScale" jdbcType="NUMERIC"/>
+        <result column="DISABLE_FLAG" property="disableFlag" jdbcType="NUMERIC"/>
+        <result column="DELETE_FLAG" property="deleteFlag" jdbcType="NUMERIC"/>
+        <result column="SORT_NUM" property="sortNum" jdbcType="NUMERIC"/>
+        <result column="REVISION" property="revision" jdbcType="VARCHAR"/>
+        <result column="CREATED_BY" property="createdBy" jdbcType="VARCHAR"/>
+        <result column="CREATED_TIME" property="createdTime" jdbcType="NUMERIC"/>
+        <result column="UPDATED_BY" property="updatedBy" jdbcType="VARCHAR"/>
+        <result column="UPDATED_TIME" property="updatedTime" jdbcType="NUMERIC"/>
+        <result column="TENANT_ID" property="tenantId" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        A.NID,A.XZQH_NAME,A.XZQH_CODE,A.PARENT_CODE,A.FULL_SPELL,A.SHORT_SPELL,A.SEARCH_STRING,A.DEFAULT_LONGITUDE,A.DEFAULT_LATITUDE,A.DEFAULT_SCALE,A.DISABLE_FLAG,A.DELETE_FLAG,A.SORT_NUM,A.REVISION,A.CREATED_BY,A.CREATED_TIME,A.UPDATED_BY,A.UPDATED_TIME,A.TENANT_ID
+    </sql>
+   
+   <!-- SELECT sql片段 -->  
+    <sql id="select_where">
+	   <if test="nid!=null">
+            and A.NID = #{nid} 
+        </if>
+	   <if test="xzqhName!=null and xzqhName!=''">
+            and A.XZQH_NAME = #{xzqhName} 
+        </if>
+	   <if test="xzqhCode!=null and xzqhCode!=''">
+            and A.XZQH_CODE = #{xzqhCode} 
+        </if>
+	   <if test="parentCode!=null and parentCode!=''">
+            and A.PARENT_CODE = #{parentCode} 
+        </if>
+	   <if test="fullSpell!=null and fullSpell!=''">
+            and A.FULL_SPELL = #{fullSpell} 
+        </if>
+	   <if test="shortSpell!=null and shortSpell!=''">
+            and A.SHORT_SPELL = #{shortSpell} 
+        </if>
+	   <if test="searchString!=null and searchString!=''">
+            and A.SEARCH_STRING = #{searchString} 
+        </if>
+	   <if test="defaultLongitude!=null">
+            and A.DEFAULT_LONGITUDE = #{defaultLongitude} 
+        </if>
+	   <if test="defaultLatitude!=null">
+            and A.DEFAULT_LATITUDE = #{defaultLatitude} 
+        </if>
+	   <if test="defaultScale!=null">
+            and A.DEFAULT_SCALE = #{defaultScale} 
+        </if>
+	   <if test="disableFlag!=null">
+            and A.DISABLE_FLAG = #{disableFlag} 
+        </if>
+	   <if test="deleteFlag!=null">
+            and A.DELETE_FLAG = #{deleteFlag} 
+        </if>
+	   <if test="sortNum!=null">
+            and A.SORT_NUM = #{sortNum} 
+        </if>
+	   <if test="revision!=null and revision!=''">
+            and A.REVISION = #{revision} 
+        </if>
+	   <if test="createdBy!=null and createdBy!=''">
+            and A.CREATED_BY = #{createdBy} 
+        </if>
+	   <if test="createdTime!=null">
+            and A.CREATED_TIME = #{createdTime} 
+        </if>
+        <if test="map.createdTimeStart!=null and map.createdTimeStart!=''">
+            and A.CREATED_TIME &gt;= #{map.createdTimeStart} 
+        </if>
+        <if test="map.createdTimeEnd!=null and map.createdTimeEnd!=''">
+            and A.CREATED_TIME &lt;= #{map.createdTimeEnd} 
+        </if>
+	   <if test="updatedBy!=null and updatedBy!=''">
+            and A.UPDATED_BY = #{updatedBy} 
+        </if>
+	   <if test="updatedTime!=null">
+            and A.UPDATED_TIME = #{updatedTime} 
+        </if>
+        <if test="map.updatedTimeStart!=null and map.updatedTimeStart!=''">
+            and A.UPDATED_TIME &gt;= #{map.updatedTimeStart} 
+        </if>
+        <if test="map.updatedTimeEnd!=null and map.updatedTimeEnd!=''">
+            and A.UPDATED_TIME &lt;= #{map.updatedTimeEnd} 
+        </if>
+	   <if test="tenantId!=null and tenantId!=''">
+            and A.TENANT_ID = #{tenantId} 
+        </if>
+    </sql>
+   
+    <!-- 获取信息 -->
+    <select id="getModelByKey" resultMap="BaseResultMap" parameterType="java.lang.Long" useCache="true">
+        SELECT <include refid="Base_Column_List" /> FROM SYS_COMMON_XZQH A WHERE A.NID = #{nid}
+    </select>
+  
+    <!-- 删除信息 -->
+    <delete id="delete" parameterType="java.lang.Long" flushCache="true">
+        DELETE FROM SYS_COMMON_XZQH WHERE NID = #{nid}
+    </delete>
+  
+    <!-- 插入信息,插入后获取自增主键值(适配mysql) -->
+    <insert id="insert" parameterType="com.lcxbs.sys.model.SysCommonXzqh" flushCache="true" databaseId="mysql">
+        <selectKey keyProperty="nid" resultType="java.lang.Long" order="AFTER">
+            SELECT @@IDENTITY
+        </selectKey>
+            INSERT INTO SYS_COMMON_XZQH (XZQH_NAME,XZQH_CODE,PARENT_CODE,FULL_SPELL,SHORT_SPELL,SEARCH_STRING,DEFAULT_LONGITUDE,DEFAULT_LATITUDE,DEFAULT_SCALE,DISABLE_FLAG,DELETE_FLAG,SORT_NUM,REVISION,CREATED_BY,CREATED_TIME,UPDATED_BY,UPDATED_TIME,TENANT_ID)
+                VALUES (
+                    #{xzqhName,jdbcType=VARCHAR},
+                    #{xzqhCode,jdbcType=VARCHAR},
+                    #{parentCode,jdbcType=VARCHAR},
+                    #{fullSpell,jdbcType=VARCHAR},
+                    #{shortSpell,jdbcType=VARCHAR},
+                    #{searchString,jdbcType=VARCHAR},
+                    #{defaultLongitude,jdbcType=NUMERIC},
+                    #{defaultLatitude,jdbcType=NUMERIC},
+                    #{defaultScale,jdbcType=NUMERIC},
+                    #{disableFlag,jdbcType=NUMERIC},
+                    #{deleteFlag,jdbcType=NUMERIC},
+                    #{sortNum,jdbcType=NUMERIC},
+                    #{revision,jdbcType=VARCHAR},
+                    #{createdBy,jdbcType=VARCHAR},
+                    #{createdTime,jdbcType=NUMERIC},
+                    #{updatedBy,jdbcType=VARCHAR},
+                    #{updatedTime,jdbcType=NUMERIC},
+                    #{tenantId,jdbcType=VARCHAR})
+    </insert>
+	
+	 <!-- 插入信息,插入后获取自增主键值(适配oracle) -->
+    <insert id="insert" parameterType="com.lcxbs.sys.model.SysCommonXzqh" flushCache="true" databaseId="oracle">
+        <selectKey keyProperty="nid" resultType="java.lang.Long" order="BEFORE">
+            SELECT SEQ_SYS_COMMON_XZQH.NEXTVAL from dual
+        </selectKey>
+            INSERT INTO SYS_COMMON_XZQH (NID,XZQH_NAME,XZQH_CODE,PARENT_CODE,FULL_SPELL,SHORT_SPELL,SEARCH_STRING,DEFAULT_LONGITUDE,DEFAULT_LATITUDE,DEFAULT_SCALE,DISABLE_FLAG,DELETE_FLAG,SORT_NUM,REVISION,CREATED_BY,CREATED_TIME,UPDATED_BY,UPDATED_TIME,TENANT_ID)
+                VALUES (
+                    #{nid,jdbcType=NUMERIC},
+                    #{xzqhName,jdbcType=VARCHAR},
+                    #{xzqhCode,jdbcType=VARCHAR},
+                    #{parentCode,jdbcType=VARCHAR},
+                    #{fullSpell,jdbcType=VARCHAR},
+                    #{shortSpell,jdbcType=VARCHAR},
+                    #{searchString,jdbcType=VARCHAR},
+                    #{defaultLongitude,jdbcType=NUMERIC},
+                    #{defaultLatitude,jdbcType=NUMERIC},
+                    #{defaultScale,jdbcType=NUMERIC},
+                    #{disableFlag,jdbcType=NUMERIC},
+                    #{deleteFlag,jdbcType=NUMERIC},
+                    #{sortNum,jdbcType=NUMERIC},
+                    #{revision,jdbcType=VARCHAR},
+                    #{createdBy,jdbcType=VARCHAR},
+                    #{createdTime,jdbcType=NUMERIC},
+                    #{updatedBy,jdbcType=VARCHAR},
+                    #{updatedTime,jdbcType=NUMERIC},
+                    #{tenantId,jdbcType=VARCHAR})
+    </insert>
+  
+    <!-- 精确更新 -->
+    <update id="updateSelective" parameterType="com.lcxbs.sys.model.SysCommonXzqh" flushCache="true">
+        UPDATE SYS_COMMON_XZQH A
+        <set>
+            <if test="xzqhName != null" >
+                A.XZQH_NAME = #{xzqhName},
+            </if>
+            <if test="xzqhCode != null" >
+                A.XZQH_CODE = #{xzqhCode},
+            </if>
+            <if test="parentCode != null" >
+                A.PARENT_CODE = #{parentCode},
+            </if>
+            <if test="fullSpell != null" >
+                A.FULL_SPELL = #{fullSpell},
+            </if>
+            <if test="shortSpell != null" >
+                A.SHORT_SPELL = #{shortSpell},
+            </if>
+            <if test="searchString != null" >
+                A.SEARCH_STRING = #{searchString},
+            </if>
+            <if test="defaultLongitude != null" >
+                A.DEFAULT_LONGITUDE = #{defaultLongitude},
+            </if>
+            <if test="defaultLatitude != null" >
+                A.DEFAULT_LATITUDE = #{defaultLatitude},
+            </if>
+            <if test="defaultScale != null" >
+                A.DEFAULT_SCALE = #{defaultScale},
+            </if>
+            <if test="disableFlag != null" >
+                A.DISABLE_FLAG = #{disableFlag},
+            </if>
+            <if test="deleteFlag != null" >
+                A.DELETE_FLAG = #{deleteFlag},
+            </if>
+            <if test="sortNum != null" >
+                A.SORT_NUM = #{sortNum},
+            </if>
+            <if test="revision != null" >
+                A.REVISION = #{revision},
+            </if>
+            <if test="createdBy != null" >
+                A.CREATED_BY = #{createdBy},
+            </if>
+            <if test="createdTime != null" >
+                A.CREATED_TIME = #{createdTime},
+            </if>
+            <if test="updatedBy != null" >
+                A.UPDATED_BY = #{updatedBy},
+            </if>
+            <if test="updatedTime != null" >
+                A.UPDATED_TIME = #{updatedTime},
+            </if>
+            <if test="tenantId != null" >
+                A.TENANT_ID = #{tenantId}
+            </if>
+        </set>
+        WHERE A.NID = #{nid}
+    </update>
+  
+    <!-- 更新所有 -->
+    <update id="updateByPrimaryKey" parameterType="com.lcxbs.sys.model.SysCommonXzqh" flushCache="true">
+        UPDATE SYS_COMMON_XZQH A
+        <set> 
+	        <if test="xzqhName != null" >
+                  A.XZQH_NAME = #{xzqhName},
+	        </if>
+	        <if test="xzqhCode != null" >
+                  A.XZQH_CODE = #{xzqhCode},
+	        </if>
+	        <if test="parentCode != null" >
+                  A.PARENT_CODE = #{parentCode},
+	        </if>
+	        <if test="fullSpell != null" >
+                  A.FULL_SPELL = #{fullSpell},
+	        </if>
+	        <if test="shortSpell != null" >
+                  A.SHORT_SPELL = #{shortSpell},
+	        </if>
+	        <if test="searchString != null" >
+                  A.SEARCH_STRING = #{searchString},
+	        </if>
+	        <if test="defaultLongitude != null" >
+                  A.DEFAULT_LONGITUDE = #{defaultLongitude},
+	        </if>
+	        <if test="defaultLatitude != null" >
+                  A.DEFAULT_LATITUDE = #{defaultLatitude},
+	        </if>
+	        <if test="defaultScale != null" >
+                  A.DEFAULT_SCALE = #{defaultScale},
+	        </if>
+	        <if test="disableFlag != null" >
+                  A.DISABLE_FLAG = #{disableFlag},
+	        </if>
+	        <if test="deleteFlag != null" >
+                  A.DELETE_FLAG = #{deleteFlag},
+	        </if>
+	        <if test="sortNum != null" >
+                  A.SORT_NUM = #{sortNum},
+	        </if>
+	        <if test="revision != null" >
+                  A.REVISION = #{revision},
+	        </if>
+	        <if test="createdBy != null" >
+                  A.CREATED_BY = #{createdBy},
+	        </if>
+	        <if test="createdTime != null" >
+                  A.CREATED_TIME = #{createdTime},
+	        </if>
+	        <if test="updatedBy != null" >
+                  A.UPDATED_BY = #{updatedBy},
+	        </if>
+	        <if test="updatedTime != null" >
+                  A.UPDATED_TIME = #{updatedTime},
+	        </if>
+	        <if test="tenantId != null" >
+                  A.TENANT_ID = #{tenantId}
+	        </if>
+	    </set>
+        WHERE A.NID = #{nid}
+    </update>
+    
+    <!-- 根据Map集合参数选择更新 -->
+    <update id="updateByMap" parameterType="com.lcxbs.sys.model.SysCommonXzqh" flushCache="true">
+        UPDATE SYS_COMMON_XZQH A
+        <set> 
+	        <if test="xzqhName != null" >
+                  A.XZQH_NAME = #{xzqhName},
+	        </if>
+	        <if test="xzqhCode != null" >
+                  A.XZQH_CODE = #{xzqhCode},
+	        </if>
+	        <if test="parentCode != null" >
+                  A.PARENT_CODE = #{parentCode},
+	        </if>
+	        <if test="fullSpell != null" >
+                  A.FULL_SPELL = #{fullSpell},
+	        </if>
+	        <if test="shortSpell != null" >
+                  A.SHORT_SPELL = #{shortSpell},
+	        </if>
+	        <if test="searchString != null" >
+                  A.SEARCH_STRING = #{searchString},
+	        </if>
+	        <if test="defaultLongitude != null" >
+                  A.DEFAULT_LONGITUDE = #{defaultLongitude},
+	        </if>
+	        <if test="defaultLatitude != null" >
+                  A.DEFAULT_LATITUDE = #{defaultLatitude},
+	        </if>
+	        <if test="defaultScale != null" >
+                  A.DEFAULT_SCALE = #{defaultScale},
+	        </if>
+	        <if test="disableFlag != null" >
+                  A.DISABLE_FLAG = #{disableFlag},
+	        </if>
+	        <if test="deleteFlag != null" >
+                  A.DELETE_FLAG = #{deleteFlag},
+	        </if>
+	        <if test="sortNum != null" >
+                  A.SORT_NUM = #{sortNum},
+	        </if>
+	        <if test="revision != null" >
+                  A.REVISION = #{revision},
+	        </if>
+	        <if test="createdBy != null" >
+                  A.CREATED_BY = #{createdBy},
+	        </if>
+	        <if test="createdTime != null" >
+                  A.CREATED_TIME = #{createdTime},
+	        </if>
+	        <if test="updatedBy != null" >
+                  A.UPDATED_BY = #{updatedBy},
+	        </if>
+	        <if test="updatedTime != null" >
+                  A.UPDATED_TIME = #{updatedTime},
+	        </if>
+	        <if test="tenantId != null" >
+                  A.TENANT_ID = #{tenantId}
+	        </if>
+	    </set>
+        <where> 
+            <if test="map.nid!=null">
+                and A.NID = #{map.nid} 
+            </if>
+            <if test="map.xzqhName!=null and map.xzqhName!=''">
+                and A.XZQH_NAME = #{map.xzqhName} 
+            </if>
+            <if test="map.xzqhCode!=null and map.xzqhCode!=''">
+                and A.XZQH_CODE = #{map.xzqhCode} 
+            </if>
+            <if test="map.parentCode!=null and map.parentCode!=''">
+                and A.PARENT_CODE = #{map.parentCode} 
+            </if>
+            <if test="map.fullSpell!=null and map.fullSpell!=''">
+                and A.FULL_SPELL = #{map.fullSpell} 
+            </if>
+            <if test="map.shortSpell!=null and map.shortSpell!=''">
+                and A.SHORT_SPELL = #{map.shortSpell} 
+            </if>
+            <if test="map.searchString!=null and map.searchString!=''">
+                and A.SEARCH_STRING = #{map.searchString} 
+            </if>
+            <if test="map.defaultLongitude!=null">
+                and A.DEFAULT_LONGITUDE = #{map.defaultLongitude} 
+            </if>
+            <if test="map.defaultLatitude!=null">
+                and A.DEFAULT_LATITUDE = #{map.defaultLatitude} 
+            </if>
+            <if test="map.defaultScale!=null">
+                and A.DEFAULT_SCALE = #{map.defaultScale} 
+            </if>
+            <if test="map.disableFlag!=null">
+                and A.DISABLE_FLAG = #{map.disableFlag} 
+            </if>
+            <if test="map.deleteFlag!=null">
+                and A.DELETE_FLAG = #{map.deleteFlag} 
+            </if>
+            <if test="map.sortNum!=null">
+                and A.SORT_NUM = #{map.sortNum} 
+            </if>
+            <if test="map.revision!=null and map.revision!=''">
+                and A.REVISION = #{map.revision} 
+            </if>
+            <if test="map.createdBy!=null and map.createdBy!=''">
+                and A.CREATED_BY = #{map.createdBy} 
+            </if>
+            <if test="map.createdTime!=null">
+                and A.CREATED_TIME = #{map.createdTime} 
+            </if>
+            <if test="map.updatedBy!=null and map.updatedBy!=''">
+                and A.UPDATED_BY = #{map.updatedBy} 
+            </if>
+            <if test="map.updatedTime!=null">
+                and A.UPDATED_TIME = #{map.updatedTime} 
+            </if>
+            <if test="map.tenantId!=null and map.tenantId!=''">
+                and A.TENANT_ID = #{map.tenantId} 
+            </if>
+        </where>
+    </update>
+  
+    <!-- 统计记录 -->
+    <select id="countAll" resultType="java.lang.Long" parameterType="com.lcxbs.sys.model.SysCommonXzqh" flushCache="true">
+        SELECT COUNT(NID) FROM SYS_COMMON_XZQH A <where> <include refid="select_where"></include> </where>
+    </select>
+  
+    <!-- 查询所有的ID -->
+    <select id="getAllIds" resultType="java.lang.String" parameterType="com.lcxbs.sys.model.SysCommonXzqh" flushCache="true">
+        SELECT NID FROM SYS_COMMON_XZQH A 
+        <where> <include refid="select_where"></include> </where>
+        <if test="map!=null">
+            <if test="map.groupBy!=null and map.groupBy!=''">
+                ${map.groupBy}
+            </if>
+            <if test="map.orderBy!=null and map.orderBy!=''">
+                ${map.orderBy}
+            </if>
+        </if>
+    </select>
+  
+    <!-- 分页获取数据 -->
+    <select id="getListByPage" resultMap="BaseResultMap" parameterType="com.lcxbs.sys.model.SysCommonXzqh" flushCache="true">
+        SELECT <include refid="Base_Column_List" /> FROM SYS_COMMON_XZQH A
+        <where> 
+            <include refid="select_where"></include>  
+        </where>
+        <if test="map!=null">
+			<if test="map.groupBy!=null and map.groupBy!=''">
+                ${map.groupBy}
+            </if>
+            <if test="map.orderBy!=null and map.orderBy!=''">
+                ${map.orderBy}
+            </if>
+        </if>
+    </select>
+  
+    <!-- 按条件获取 -->
+    <select id="getListByWhere" resultMap="BaseResultMap" parameterType="com.lcxbs.sys.model.SysCommonXzqh" flushCache="true">
+        SELECT <include refid="Base_Column_List" /> FROM SYS_COMMON_XZQH A 
+        <where> <include refid="select_where"></include>  </where>
+        <if test="map!=null">
+            <if test="map.groupBy!=null and map.groupBy!=''">
+                ${map.groupBy}
+            </if>
+            <if test="map.orderBy!=null and map.orderBy!=''">
+                ${map.orderBy}
+            </if>
+            <if test="map.orderBy==null or map.orderBy==''">
+            	ORDER BY A.NID ASC
+            </if>
+        </if>
+    </select>
+	
+    <!-- 按条件获取信息 -->
+    <select id="getModelByWhere" resultMap="BaseResultMap" parameterType="com.lcxbs.sys.model.SysCommonXzqh" useCache="true">
+        SELECT <include refid="Base_Column_List" /> FROM SYS_COMMON_XZQH A
+        <where> <include refid="select_where"></include>  </where>
+        ORDER BY A.NID ASC
+    </select>
+
+    <!-- 按条件删除信息-->
+    <delete id="deleteByWhere" parameterType="com.lcxbs.sys.model.SysCommonXzqh" flushCache="true">
+        DELETE FROM SYS_COMMON_XZQH 
+        <where>
+            <if test="nid!=null">
+                and NID = #{nid} 
+            </if>
+            <if test="xzqhName!=null and xzqhName!=''">
+                and XZQH_NAME = #{xzqhName} 
+            </if>
+            <if test="xzqhCode!=null and xzqhCode!=''">
+                and XZQH_CODE = #{xzqhCode} 
+            </if>
+            <if test="parentCode!=null and parentCode!=''">
+                and PARENT_CODE = #{parentCode} 
+            </if>
+            <if test="fullSpell!=null and fullSpell!=''">
+                and FULL_SPELL = #{fullSpell} 
+            </if>
+            <if test="shortSpell!=null and shortSpell!=''">
+                and SHORT_SPELL = #{shortSpell} 
+            </if>
+            <if test="searchString!=null and searchString!=''">
+                and SEARCH_STRING = #{searchString} 
+            </if>
+            <if test="defaultLongitude!=null">
+                and DEFAULT_LONGITUDE = #{defaultLongitude} 
+            </if>
+            <if test="defaultLatitude!=null">
+                and DEFAULT_LATITUDE = #{defaultLatitude} 
+            </if>
+            <if test="defaultScale!=null">
+                and DEFAULT_SCALE = #{defaultScale} 
+            </if>
+            <if test="disableFlag!=null">
+                and DISABLE_FLAG = #{disableFlag} 
+            </if>
+            <if test="deleteFlag!=null">
+                and DELETE_FLAG = #{deleteFlag} 
+            </if>
+            <if test="sortNum!=null">
+                and SORT_NUM = #{sortNum} 
+            </if>
+            <if test="revision!=null and revision!=''">
+                and REVISION = #{revision} 
+            </if>
+            <if test="createdBy!=null and createdBy!=''">
+                and CREATED_BY = #{createdBy} 
+            </if>
+            <if test="createdTime!=null">
+                and CREATED_TIME = #{createdTime} 
+            </if>
+            <if test="updatedBy!=null and updatedBy!=''">
+                and UPDATED_BY = #{updatedBy} 
+            </if>
+            <if test="updatedTime!=null">
+                and UPDATED_TIME = #{updatedTime} 
+            </if>
+            <if test="tenantId!=null and tenantId!=''">
+                and TENANT_ID = #{tenantId} 
+            </if>
+        </where>
+    </delete>
+	
+</mapper>
