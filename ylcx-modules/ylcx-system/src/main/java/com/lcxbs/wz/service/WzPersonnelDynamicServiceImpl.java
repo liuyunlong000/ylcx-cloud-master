@@ -92,17 +92,7 @@ public class WzPersonnelDynamicServiceImpl extends BaseService<WzPersonnelDynami
         }
         return count;
     }
-	
-	/**
-     * 逻辑删除
-     * @throws Exception
-     */
-    @Override
-    public int delete(Long id) {
-        WzPersonnelDynamic model=new WzPersonnelDynamic(id);
-        model.setDeleteFlag(1L);
-        return this.updateSelective(model);
-    }
+
 }
 
 

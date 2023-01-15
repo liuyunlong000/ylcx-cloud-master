@@ -92,17 +92,6 @@ public class WzNoticeServiceImpl extends BaseService<WzNotice, Long> implements 
         }
         return count;
     }
-	
-	/**
-     * 逻辑删除
-     * @throws Exception
-     */
-    @Override
-    public int delete(Long id) {
-        WzNotice model=new WzNotice(id);
-        model.setDeleteFlag(1L);
-        return this.updateSelective(model);
-    }
 }
 
 

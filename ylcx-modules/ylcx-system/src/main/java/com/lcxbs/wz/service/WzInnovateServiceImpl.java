@@ -94,17 +94,6 @@ public class WzInnovateServiceImpl extends BaseService<WzInnovate, Long> impleme
         }
         return count;
     }
-	
-	/**
-     * 逻辑删除
-     * @throws Exception
-     */
-    @Override
-    public int delete(Long id) {
-        WzInnovate model=new WzInnovate(id);
-        model.setDeleteFlag(1L);
-        return this.updateSelective(model);
-    }
 }
 
 

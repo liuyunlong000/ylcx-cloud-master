@@ -46,7 +46,7 @@ public class WzNews extends WzNewsEntity {
     @Override
     @Range(min = 0,max = 9223372036854775806L,groups ={Default.class,UpdateGroup.class}, message = "发布时间应该在{min}-{max}之间")
     @ApiModelProperty(value = "发布时间",hidden=false,required=false,example = "")
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone="GMT+8")
     public Date getReleaseTime(){return super.getReleaseTime();}
 
     @Override
@@ -55,9 +55,9 @@ public class WzNews extends WzNewsEntity {
     public String getSource(){return super.getSource();}
 
     @Override
-    @Range(min = 0,max = 9223372036854775806L,groups ={Default.class,UpdateGroup.class}, message = "排序编号应该在{min}-{max}之间")
-    @ApiModelProperty(value = "排序编号",hidden=false,required=false,example = "")
-    public Long getSortNum(){return super.getSortNum();}
+    @Length(groups ={Default.class,UpdateGroup.class}, message = "")
+    @ApiModelProperty(value = "是否轮播",hidden=false,required=false,example = "")
+    public String getHome(){return super.getHome();}
 
     @Override
     @Range(min = 0,max = 9223372036854775806L,groups ={Default.class,UpdateGroup.class}, message = "是否启用标识;字典：1启用，0禁用应该在{min}-{max}之间")

@@ -92,17 +92,6 @@ public class WzInnovatePlateFormServiceImpl extends BaseService<WzInnovatePlateF
         }
         return count;
     }
-	
-	/**
-     * 逻辑删除
-     * @throws Exception
-     */
-    @Override
-    public int delete(Long id) {
-        WzInnovatePlateForm model=new WzInnovatePlateForm(id);
-        model.setDeleteFlag(1L);
-        return this.updateSelective(model);
-    }
 }
 
 

@@ -94,17 +94,6 @@ public class WzLeaderServiceImpl extends BaseService<WzLeader, Long> implements 
         }
         return count;
     }
-	
-	/**
-     * 逻辑删除
-     * @throws Exception
-     */
-    @Override
-    public int delete(Long id) {
-        WzLeader model=new WzLeader(id);
-        model.setDeleteFlag(1L);
-        return this.updateSelective(model);
-    }
 }
 
 

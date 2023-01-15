@@ -36,7 +36,7 @@ public class WzNotice extends WzNoticeEntity {
     @Override
     @Range(min = 0,max = 9223372036854775806L,groups ={Default.class,UpdateGroup.class}, message = "发布时间应该在{min}-{max}之间")
     @ApiModelProperty(value = "发布时间",hidden=false,required=false,example = "")
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd",timezone="GMT+8")
     public Date getReleaseTime(){return super.getReleaseTime();}
 
     @Override

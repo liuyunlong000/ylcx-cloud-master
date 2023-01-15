@@ -28,8 +28,8 @@
 	   <if test="nid!=null">
             and A.NID = #{nid} 
         </if>
-       <if test="name!=null">
-            and A.NAME = #{name}
+        <if test="name!=null and name!=''">
+            and A.NAME like CONCAT('%',#{name},'%')
         </if>
         <if test="post!=null">
             and A.POST = #{post}
@@ -87,12 +87,6 @@
         </if>
         <if test="map.updatedTimeEnd!=null and map.updatedTimeEnd!=''">
             and A.UPDATED_TIME &lt;= #{map.updatedTimeEnd} 
-        </if>
-        <if test="sortField!=null">
-            order by ${sortField}
-        </if>
-        <if test="sortOrder!=null">
-            ${sortOrder}
         </if>
     </sql>
    
@@ -387,7 +381,7 @@
   
     <!-- 分页获取数据 -->
     <select id="getListByPage" resultMap="BaseResultMap" parameterType="com.lcxbs.wz.model.WzPersonnelOverview" flushCache="true">
-        SELECT <include refid="Base_Column_List" /> FROM WZ_LEADER A
+        SELECT <include refid="Base_Column_List" /> FROM WZ_PERSONNEL_OVERVIEW A
         <where> 
             <include refid="select_where"></include>  
         </where>
@@ -405,6 +399,17 @@
     <select id="getListByWhere" resultMap="BaseResultMap" parameterType="com.lcxbs.wz.model.WzPersonnelOverview" flushCache="true">
         SELECT <include refid="Base_Column_List" /> FROM WZ_PERSONNEL_OVERVIEW A
         <where> <include refid="select_where"></include>  </where>
+        <if test="map!=null">
+            <if test="map.groupBy!=null and map.groupBy!=''">
+                ${map.groupBy}
+            </if>
+            <if test="map.orderBy!=null and map.orderBy!=''">
+                ${map.orderBy}
+            </if>
+            <if test="map.orderBy==null or map.orderBy==''">
+                ORDER BY A.NID ASC
+            </if>
+        </if>
     </select>
 	
     <!-- 按条件获取信息 -->

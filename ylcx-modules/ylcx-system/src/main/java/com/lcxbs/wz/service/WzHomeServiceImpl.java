@@ -92,17 +92,6 @@ public class WzHomeServiceImpl extends BaseService<WzHome, Long> implements WzHo
         }
         return count;
     }
-	
-	/**
-     * 逻辑删除
-     * @throws Exception
-     */
-    @Override
-    public int delete(Long id) {
-        WzHome model=new WzHome(id);
-        model.setDeleteFlag(1L);
-        return this.updateSelective(model);
-    }
 }
 
 

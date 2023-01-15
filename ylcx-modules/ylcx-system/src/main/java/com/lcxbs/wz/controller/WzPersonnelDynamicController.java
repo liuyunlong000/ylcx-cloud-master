@@ -1,23 +1,26 @@
 package com.lcxbs.wz.controller;
 
 
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.lcxbs.core.BaseController;
 import com.lcxbs.json.annotation.JSON;
 import com.lcxbs.protocol.RespMsgBean;
+import com.lcxbs.utils.TreeUtil;
+import com.lcxbs.wz.model.WzNotice;
 import com.lcxbs.wz.model.WzPersonnelDynamic;
 import com.lcxbs.wz.service.WzPersonnelDynamicService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/wzPersonnelDynamic")
@@ -32,18 +35,43 @@ public class WzPersonnelDynamicController extends BaseController {
     public RespMsgBean findById(@ApiParam(value = "id", required = true) @RequestParam("id") Long id,HttpServletRequest request) {
         return success(FIND_SUCCESS, this.wzPersonnelDynamicService.getModelByKey(id));
     }
+    @PostMapping("/save")
+    @PreAuthorize("@ps.hasAuthority('wzPersonnelDynamic:save',true,#request)")
+    @ApiOperation("添加暂无信息")
+    public RespMsgBean save(@RequestBody WzPersonnelDynamic dynamic, HttpServletRequest request) {
+        int result = wzPersonnelDynamicService.insert(dynamic);
+        if (result > 0) {
+            Map<String, Object> map = new HashMap<>();
+            return success(SAVE_SUCCESS, map);
+        } else {
+            return success(SAVE_FAILURE);
+        }
+    }
 
-    @GetMapping("/find_list")
-    @ApiOperation("获取人才动态列表")
+    @PutMapping("/update")
+    @PreAuthorize("@ps.hasAuthority('wzPersonnelDynamic:update',true,#request)")
+    @ApiOperation("编辑暂无信息")
+    public RespMsgBean update(@RequestBody WzPersonnelDynamic dynamic,HttpServletRequest request) {
+        return success(UPDATE_SUCCESS, wzPersonnelDynamicService.updateSelective(dynamic));
+    }
+
+    @DeleteMapping("/delete")
+    @PreAuthorize("@ps.hasAuthority('wzPersonnelDynamic:delete',true,#request)")
+    @ApiOperation("按id删除暂无信息")
+    public RespMsgBean delete(@ApiParam(value = "id", required = true) @RequestParam("id") Long id,HttpServletRequest request) {
+        return success(DELETE_SUCCESS, wzPersonnelDynamicService.delete(id));
+    }
+
+    @PostMapping("/find_list_by_page")
+    @ApiOperation("获取暂无信息列表（分页）")
     @JSON(type = WzPersonnelDynamic.class,include = "nid,title,content,releaseTime,source")
-    public RespMsgBean findList(@ApiParam(value = "count", required = true) @RequestParam("count") Integer count,HttpServletRequest request) throws Exception{
-        WzPersonnelDynamic entity=new WzPersonnelDynamic();
-        entity.setSortField("RELEASE_TIME");
-        entity.setSortOrder("desc");
-        entity.setDeleteFlag(0L);
-        entity.setPageNum(1);
-        entity.setPageSize(count);
-        PageInfo<WzPersonnelDynamic> page=this.wzPersonnelDynamicService.getListByPage(entity);
-        return success(FIND_SUCCESS, page.getList());
+    @JSON(type = PageInfo.class,include = "pageNum,pageSize,size,pages,list,total")
+    public RespMsgBean findListByPage(@RequestBody(required = false) WzPersonnelDynamic dynamic,HttpServletRequest request) throws  Exception{
+        PageHelper.startPage(dynamic.getPageNum(), dynamic.getPageSize());
+        wzPersonnelDynamicService.setupOrderByAndGroupBy(dynamic);
+        PageInfo<WzPersonnelDynamic> list = wzPersonnelDynamicService.getListByPage(dynamic);
+        List<WzPersonnelDynamic> treeList = TreeUtil.buildTree(list.getList());
+        list.setList(treeList);
+        return success(FIND_SUCCESS,list);
     }
 }

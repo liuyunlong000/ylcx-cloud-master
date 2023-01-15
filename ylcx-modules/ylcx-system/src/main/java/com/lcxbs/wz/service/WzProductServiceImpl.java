@@ -92,17 +92,7 @@ public class WzProductServiceImpl extends BaseService<WzProduct, Long> implement
         }
         return count;
     }
-	
-	/**
-     * 逻辑删除
-     * @throws Exception
-     */
-    @Override
-    public int delete(Long id) {
-        WzProduct model=new WzProduct(id);
-        model.setDeleteFlag(1L);
-        return this.updateSelective(model);
-    }
+
 }
 
 

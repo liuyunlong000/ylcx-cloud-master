@@ -50,9 +50,6 @@ public class WzNewsServiceImpl extends BaseService<WzNews, Long> implements WzNe
 	@Override
     public int insert(WzNews model) {
         SysUser currentUser=this.sysUserService.getCurrentUser();
-        if(model.getSortNum()==null) {
-            model.setSortNum(Long.valueOf(DateUtil.format(new Date(),"yyMMddHHmmss")));
-        }
         if (model.getDisableFlag() == null) {
             model.setDisableFlag(1L);
         }
@@ -93,17 +90,6 @@ public class WzNewsServiceImpl extends BaseService<WzNews, Long> implements WzNe
             count = count + this.updateSelective(model);
         }
         return count;
-    }
-	
-	/**
-     * 逻辑删除
-     * @throws Exception
-     */
-    @Override
-    public int delete(Long id) {
-        WzNews model=new WzNews(id);
-        model.setDeleteFlag(1L);
-        return this.updateSelective(model);
     }
 }
 

@@ -94,17 +94,7 @@ public class WzScientificServiceImpl extends BaseService<WzScientific, Long> imp
         }
         return count;
     }
-	
-	/**
-     * 逻辑删除
-     * @throws Exception
-     */
-    @Override
-    public int delete(Long id) {
-        WzScientific model=new WzScientific(id);
-        model.setDeleteFlag(1L);
-        return this.updateSelective(model);
-    }
+
 }
 
 

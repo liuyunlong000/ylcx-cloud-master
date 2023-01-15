@@ -20,8 +20,8 @@ public class WzNewsEntity extends AbstractBaseObject{
     private Date releaseTime;
     /** 文章来源 */
     private String source;
-	/** 排序编号 */
-    private Long sortNum;
+	/** 是否轮播 */
+    private String home;
 	/** 是否启用标识;字典：1启用，0禁用 */
     private Long disableFlag;
 	/** 是否删除标识;字典：1删除，0未删除 */
@@ -105,16 +105,16 @@ public class WzNewsEntity extends AbstractBaseObject{
     * 获取排序编号
     * @return
     */
-    public Long getSortNum(){
-        return this.sortNum;
+    public String getHome(){
+        return this.home;
     }
 
     /**
     * 设置排序编号
-    * @param sortNum
+    * @param home
     */
-    public void setSortNum(Long sortNum){
-        this.sortNum=sortNum;
+    public void setHome(String home){
+        this.home=home;
     }
     /**
     * 获取是否启用标识;字典：1启用，0禁用

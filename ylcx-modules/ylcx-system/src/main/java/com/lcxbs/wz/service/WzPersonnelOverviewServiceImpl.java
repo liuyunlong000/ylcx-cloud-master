@@ -92,17 +92,6 @@ public class WzPersonnelOverviewServiceImpl extends BaseService<WzPersonnelOverv
         }
         return count;
     }
-	
-	/**
-     * 逻辑删除
-     * @throws Exception
-     */
-    @Override
-    public int delete(Long id) {
-        WzPersonnelOverview model=new WzPersonnelOverview(id);
-        model.setDeleteFlag(1L);
-        return this.updateSelective(model);
-    }
 }
 
 

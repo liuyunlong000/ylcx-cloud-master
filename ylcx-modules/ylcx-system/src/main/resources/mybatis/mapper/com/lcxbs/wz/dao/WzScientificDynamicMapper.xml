@@ -24,8 +24,8 @@
 	   <if test="nid!=null">
             and A.NID = #{nid} 
         </if>
-       <if test="title!=null">
-            and A.TITLE = #{title}
+        <if test="title!=null and title!=''">
+            and A.TITLE like CONCAT('%',#{title},'%')
         </if>
        <if test="content!=null">
             and A.CONTENT = #{content}
@@ -72,12 +72,6 @@
         <if test="map.updatedTimeEnd!=null and map.updatedTimeEnd!=''">
             and A.UPDATED_TIME &lt;= #{map.updatedTimeEnd} 
         </if>
-        <if test="sortField!=null">
-            order by ${sortField}
-        </if>
-        <if test="sortOrder!=null">
-            ${sortOrder}
-        </if>
     </sql>
    
     <!-- 获取信息 -->
@@ -91,7 +85,7 @@
     </delete>
   
     <!-- 插入信息,插入后获取自增主键值(适配mysql) -->
-    <insert id="insert" parameterType="com.lcxbs.wz.model.WzNotice" flushCache="true" databaseId="mysql">
+    <insert id="insert" parameterType="com.lcxbs.wz.model.WzScientificDynamic" flushCache="true" databaseId="mysql">
         <selectKey keyProperty="nid" resultType="java.lang.Long" order="AFTER">
             SELECT @@IDENTITY
         </selectKey>
@@ -111,7 +105,7 @@
     </insert>
 	
 	 <!-- 插入信息,插入后获取自增主键值(适配oracle) -->
-    <insert id="insert" parameterType="com.lcxbs.wz.model.WzNotice" flushCache="true" databaseId="oracle">
+    <insert id="insert" parameterType="com.lcxbs.wz.model.WzScientificDynamic" flushCache="true" databaseId="oracle">
         <selectKey keyProperty="nid" resultType="java.lang.Long" order="BEFORE">
             SELECT SEQ_WZ_NOTICE.NEXTVAL from dual
         </selectKey>
@@ -132,7 +126,7 @@
     </insert>
   
     <!-- 精确更新 -->
-    <update id="updateSelective" parameterType="com.lcxbs.wz.model.WzNotice" flushCache="true">
+    <update id="updateSelective" parameterType="com.lcxbs.wz.model.WzScientificDynamic" flushCache="true">
         UPDATE WZ_SCIENTIFIC_DYNAMIC A
         <set>
             <if test="title != null" >
@@ -176,7 +170,7 @@
     </update>
   
     <!-- 更新所有 -->
-    <update id="updateByPrimaryKey" parameterType="com.lcxbs.wz.model.WzNotice" flushCache="true">
+    <update id="updateByPrimaryKey" parameterType="com.lcxbs.wz.model.WzScientificDynamic" flushCache="true">
         UPDATE WZ_SCIENTIFIC_DYNAMIC A
         <set>
             <if test="title != null" >
@@ -220,7 +214,7 @@
     </update>
     
     <!-- 根据Map集合参数选择更新 -->
-    <update id="updateByMap" parameterType="com.lcxbs.wz.model.WzNotice" flushCache="true">
+    <update id="updateByMap" parameterType="com.lcxbs.wz.model.WzScientificDynamic" flushCache="true">
         UPDATE WZ_SCIENTIFIC_DYNAMIC A
         <set>
             <if test="title != null" >
@@ -304,12 +298,12 @@
     </update>
   
     <!-- 统计记录 -->
-    <select id="countAll" resultType="java.lang.Long" parameterType="com.lcxbs.wz.model.WzNotice" flushCache="true">
+    <select id="countAll" resultType="java.lang.Long" parameterType="com.lcxbs.wz.model.WzScientificDynamic" flushCache="true">
         SELECT COUNT(NID) FROM WZ_SCIENTIFIC_DYNAMIC A <where> <include refid="select_where"></include> </where>
     </select>
   
     <!-- 查询所有的ID -->
-    <select id="getAllIds" resultType="java.lang.String" parameterType="com.lcxbs.wz.model.WzNotice" flushCache="true">
+    <select id="getAllIds" resultType="java.lang.String" parameterType="com.lcxbs.wz.model.WzScientificDynamic" flushCache="true">
         SELECT NID FROM WZ_SCIENTIFIC_DYNAMIC A
         <where> <include refid="select_where"></include> </where>
         <if test="map!=null">
@@ -323,16 +317,23 @@
     </select>
   
     <!-- 分页获取数据 -->
-    <select id="getListByPage" resultMap="BaseResultMap" parameterType="com.lcxbs.wz.model.WzNotice" flushCache="true">
+    <select id="getListByPage" resultMap="BaseResultMap" parameterType="com.lcxbs.wz.model.WzScientificDynamic" flushCache="true">
         SELECT <include refid="Base_Column_List" /> FROM WZ_SCIENTIFIC_DYNAMIC A
         <where> 
             <include refid="select_where"></include>  
         </where>
-        LIMIT ${(pageNum-1)*pageSize},${pageSize}
+        <if test="map!=null">
+            <if test="map.groupBy!=null and map.groupBy!=''">
+                ${map.groupBy}
+            </if>
+            <if test="map.orderBy!=null and map.orderBy!=''">
+                ${map.orderBy}
+            </if>
+        </if>
     </select>
   
     <!-- 按条件获取 -->
-    <select id="getListByWhere" resultMap="BaseResultMap" parameterType="com.lcxbs.wz.model.WzNotice" flushCache="true">
+    <select id="getListByWhere" resultMap="BaseResultMap" parameterType="com.lcxbs.wz.model.WzScientificDynamic" flushCache="true">
         SELECT <include refid="Base_Column_List" /> FROM WZ_SCIENTIFIC_DYNAMIC A
         <where> <include refid="select_where"></include>  </where>
         <if test="map!=null">
@@ -349,14 +350,14 @@
     </select>
 	
     <!-- 按条件获取信息 -->
-    <select id="getModelByWhere" resultMap="BaseResultMap" parameterType="com.lcxbs.wz.model.WzNotice" useCache="true">
+    <select id="getModelByWhere" resultMap="BaseResultMap" parameterType="com.lcxbs.wz.model.WzScientificDynamic" useCache="true">
         SELECT <include refid="Base_Column_List" /> FROM WZ_SCIENTIFIC_DYNAMIC A
         <where> <include refid="select_where"></include>  </where>
         ORDER BY A.NID ASC
     </select>
 
     <!-- 按条件删除信息-->
-    <delete id="deleteByWhere" parameterType="com.lcxbs.wz.model.WzNotice" flushCache="true">
+    <delete id="deleteByWhere" parameterType="com.lcxbs.wz.model.WzScientificDynamic" flushCache="true">
         DELETE FROM WZ_SCIENTIFIC_DYNAMIC
         <where>
             <if test="nid!=null">

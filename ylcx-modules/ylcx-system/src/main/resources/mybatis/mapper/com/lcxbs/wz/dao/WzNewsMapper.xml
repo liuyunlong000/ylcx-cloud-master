@@ -9,7 +9,7 @@
         <result column="CONTENT" property="content" jdbcType="VARCHAR"/>
         <result column="RELEASE_TIME" property="releaseTime" jdbcType="DATE"/>
         <result column="SOURCE" property="source" jdbcType="VARCHAR"/>
-        <result column="SORT_NUM" property="sortNum" jdbcType="NUMERIC"/>
+        <result column="HOME" property="home" jdbcType="VARCHAR"/>
         <result column="DISABLE_FLAG" property="disableFlag" jdbcType="NUMERIC"/>
         <result column="DELETE_FLAG" property="deleteFlag" jdbcType="NUMERIC"/>
         <result column="CREATED_BY" property="createdBy" jdbcType="VARCHAR"/>
@@ -18,7 +18,7 @@
         <result column="UPDATED_TIME" property="updatedTime" jdbcType="TIMESTAMP"/>
     </resultMap>
     <sql id="Base_Column_List">
-        A.NID,A.TITLE,A.PHOTO,A.RESUME,A.CONTENT,A.RELEASE_TIME,A.SOURCE,A.SORT_NUM,A.DISABLE_FLAG,A.DELETE_FLAG,A.CREATED_BY,A.CREATED_TIME,A.UPDATED_BY,A.UPDATED_TIME
+        A.NID,A.TITLE,A.PHOTO,A.RESUME,A.CONTENT,A.RELEASE_TIME,A.SOURCE,A.HOME,A.DISABLE_FLAG,A.DELETE_FLAG,A.CREATED_BY,A.CREATED_TIME,A.UPDATED_BY,A.UPDATED_TIME
     </sql>
    
    <!-- SELECT sql片段 -->  
@@ -26,8 +26,8 @@
 	   <if test="nid!=null">
             and A.NID = #{nid} 
         </if>
-       <if test="title!=null">
-            and A.TITLE = #{title}
+        <if test="title!=null and title!=''">
+            and A.TITLE like CONCAT('%',#{title},'%')
         </if>
         <if test="photo!=null">
             and A.PHOTO = #{photo}
@@ -47,8 +47,8 @@
        <if test="source!=null">
             and A.SOURCE = #{source}
         </if>
-	   <if test="sortNum!=null">
-            and A.SORT_NUM = #{sortNum} 
+	   <if test="home!=null">
+            and A.HOME= #{home}
         </if>
 	   <if test="disableFlag!=null">
             and A.DISABLE_FLAG = #{disableFlag} 
@@ -80,12 +80,6 @@
         <if test="map.updatedTimeEnd!=null and map.updatedTimeEnd!=''">
             and A.UPDATED_TIME &lt;= #{map.updatedTimeEnd} 
         </if>
-        <if test="sortField!=null">
-            order by ${sortField}
-        </if>
-        <if test="sortOrder!=null">
-            ${sortOrder}
-        </if>
     </sql>
    
     <!-- 获取信息 -->
@@ -103,7 +97,7 @@
         <selectKey keyProperty="nid" resultType="java.lang.Long" order="AFTER">
             SELECT @@IDENTITY
         </selectKey>
-            INSERT INTO WZ_NEWS (TITLE,PHOTO,RESUME,CONTENT,RELEASE_TIME,SOURCE,SORT_NUM,DISABLE_FLAG,DELETE_FLAG,CREATED_BY,CREATED_TIME,UPDATED_BY,UPDATED_TIME)
+            INSERT INTO WZ_NEWS (TITLE,PHOTO,RESUME,CONTENT,RELEASE_TIME,SOURCE,HOME,DISABLE_FLAG,DELETE_FLAG,CREATED_BY,CREATED_TIME,UPDATED_BY,UPDATED_TIME)
                 VALUES (
                     #{title,jdbcType=VARCHAR},
                     #{photo,jdbcType=VARCHAR},
@@ -111,7 +105,7 @@
                     #{content,jdbcType=VARCHAR},
                     #{releaseTime,jdbcType=NUMERIC},
                     #{source,jdbcType=VARCHAR},
-                    #{sortNum,jdbcType=NUMERIC},
+                    #{home,jdbcType=VARCHAR},
                     #{disableFlag,jdbcType=NUMERIC},
                     #{deleteFlag,jdbcType=NUMERIC},
                     #{createdBy,jdbcType=VARCHAR},
@@ -125,7 +119,7 @@
         <selectKey keyProperty="nid" resultType="java.lang.Long" order="BEFORE">
             SELECT SEQ_WZ_NEWS.NEXTVAL from dual
         </selectKey>
-            INSERT INTO WZ_NEWS (NID,TITLE,PHOTO,RESUME,CONTENT,RELEASE_TIME,SOURCE,SORT_NUM,DISABLE_FLAG,DELETE_FLAG,CREATED_BY,CREATED_TIME,UPDATED_BY,UPDATED_TIME)
+            INSERT INTO WZ_NEWS (NID,TITLE,PHOTO,RESUME,CONTENT,RELEASE_TIME,SOURCE,HOME,DISABLE_FLAG,DELETE_FLAG,CREATED_BY,CREATED_TIME,UPDATED_BY,UPDATED_TIME)
                 VALUES (
                     #{nid,jdbcType=NUMERIC},
                     #{title,jdbcType=VARCHAR},
@@ -134,7 +128,7 @@
                     #{content,jdbcType=VARCHAR},
                     #{releaseTime,jdbcType=NUMERIC},
                     #{source,jdbcType=VARCHAR},
-                    #{sortNum,jdbcType=NUMERIC},
+                    #{home,jdbcType=VARCHAR},
                     #{disableFlag,jdbcType=NUMERIC},
                     #{deleteFlag,jdbcType=NUMERIC},
                     #{createdBy,jdbcType=VARCHAR},
@@ -165,8 +159,8 @@
             <if test="source != null" >
                 A.SOURCE = #{source},
             </if>
-            <if test="sortNum != null" >
-                A.SORT_NUM = #{sortNum},
+            <if test="home != null" >
+                A.HOME = #{home},
             </if>
             <if test="disableFlag != null" >
                 A.DISABLE_FLAG = #{disableFlag},
@@ -215,8 +209,8 @@
             <if test="source != null" >
                 A.SOURCE = #{source},
             </if>
-	        <if test="sortNum != null" >
-                  A.SORT_NUM = #{sortNum},
+	        <if test="home != null" >
+                  A.HOME = #{home},
 	        </if>
 	        <if test="disableFlag != null" >
                   A.DISABLE_FLAG = #{disableFlag},
@@ -265,8 +259,8 @@
             <if test="source != null" >
                 A.SOURCE = #{source},
             </if>
-	        <if test="sortNum != null" >
-                  A.SORT_NUM = #{sortNum},
+	        <if test="home != null" >
+                  A.HOME = #{home},
 	        </if>
 	        <if test="disableFlag != null" >
                   A.DISABLE_FLAG = #{disableFlag},
@@ -306,8 +300,8 @@
             <if test="map.source != null" >
                 and A.SOURCE = #{map.source}
             </if>
-            <if test="map.sortNum!=null">
-                and A.SORT_NUM = #{map.sortNum} 
+            <if test="map.home!=null">
+                and A.HOME = #{home}
             </if>
             <if test="map.disableFlag!=null">
                 and A.DISABLE_FLAG = #{map.disableFlag} 
@@ -358,7 +352,15 @@
         <where> 
             <include refid="select_where"></include>  
         </where>
-        LIMIT ${(pageNum-1)*pageSize},${pageSize}
+        <if test="map!=null">
+            <if test="map.groupBy!=null and map.groupBy!=''">
+                ${map.groupBy}
+            </if>
+            <if test="map.orderBy!=null and map.orderBy!=''">
+                ${map.orderBy}
+            </if>
+        </if>
+
     </select>
   
     <!-- 按条件获取 -->
@@ -404,8 +406,8 @@
             <if test="source != null" >
                 and A.SOURCE = #{source}
             </if>
-            <if test="sortNum!=null">
-                and SORT_NUM = #{sortNum} 
+            <if test="home!=null">
+                and HOME = #{home}
             </if>
             <if test="disableFlag!=null">
                 and DISABLE_FLAG = #{disableFlag} 
