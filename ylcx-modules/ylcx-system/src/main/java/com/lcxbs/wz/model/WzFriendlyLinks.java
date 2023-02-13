@@ -2,6 +2,7 @@ package com.lcxbs.wz.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.lcxbs.validate.UpdateGroup;
+import com.lcxbs.wz.entity.WzFriendlyLinksEntity;
 import com.lcxbs.wz.entity.WzPersonnelOverviewEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -13,8 +14,8 @@ import javax.validation.groups.Default;
 import java.util.Date;
 
 
-@ApiModel("人才概况")
-public class WzPersonnelOverview extends WzPersonnelOverviewEntity {
+@ApiModel("友情链接")
+public class WzFriendlyLinks extends WzFriendlyLinksEntity {
 
 
 	//region Get和Set方法
@@ -29,40 +30,14 @@ public class WzPersonnelOverview extends WzPersonnelOverviewEntity {
     public String getName(){return super.getName();}
 
     @Override
-    @Length(max = 100,groups ={Default.class,UpdateGroup.class}, message = "标题长度不能超过 {max}")
-    @ApiModelProperty(value = "职务",hidden=false,required=false,example = "")
-    public String getPost(){return super.getPost();}
-
-    @Override
-    @Length(groups ={Default.class,UpdateGroup.class}, message = "")
-    @ApiModelProperty(value = "照片",hidden=false,required=false,example = "")
-    public String getPhoto(){return super.getPhoto();}
-
-    @Override
     @Length(groups ={Default.class,UpdateGroup.class}, message = "")
     @ApiModelProperty(value = "人才类型",hidden=false,required=false,example = "")
     public String getType(){return super.getType();}
 
     @Override
     @Length(groups ={Default.class,UpdateGroup.class}, message = "")
-    @ApiModelProperty(value = "简介",hidden=false,required=false,example = "")
-    public String getResume(){return super.getResume();}
-
-    @Override
-    @Length(groups ={Default.class,UpdateGroup.class}, message = "")
     @ApiModelProperty(value = "内容",hidden=false,required=false,example = "")
     public String getContent(){return super.getContent();}
-
-    @Override
-    @Range(min = 0,max = 9223372036854775806L,groups ={Default.class,UpdateGroup.class}, message = "发布时间应该在{min}-{max}之间")
-    @ApiModelProperty(value = "发布时间",hidden=false,required=false,example = "")
-    @JsonFormat(pattern = "yyyy-MM-dd", timezone="GMT+8")
-    public Date getReleaseTime(){return super.getReleaseTime();}
-
-    @Override
-    @Length(max = 100,groups ={Default.class,UpdateGroup.class}, message = "文章来源长度不能超过 {max}")
-    @ApiModelProperty(value = "文章来源",hidden=false,required=false,example = "")
-    public String getSource(){return super.getSource();}
 
     @Override
     @Range(min = 0,max = 9223372036854775806L,groups ={Default.class,UpdateGroup.class}, message = "排序编号应该在{min}-{max}之间")
@@ -110,8 +85,8 @@ public class WzPersonnelOverview extends WzPersonnelOverviewEntity {
 
 	//region 构造方法
 	/**无参构造函数*/
-    public WzPersonnelOverview(){super();}
+    public WzFriendlyLinks(){super();}
     /**带主键构造函数*/
-    public WzPersonnelOverview(Long id){super(id);}
+    public WzFriendlyLinks(Long id){super(id);}
 	//endregion
 }

@@ -6,8 +6,8 @@ import com.lcxbs.core.BaseService;
 import com.lcxbs.core.DynamicDataSource;
 import com.lcxbs.sys.model.SysUser;
 import com.lcxbs.sys.service.SysUserService;
-import com.lcxbs.wz.dao.WzComplanyOrgMapper;
-import com.lcxbs.wz.model.WzComplanyOrg;
+import com.lcxbs.wz.dao.WzFriendlyLinksMapper;
+import com.lcxbs.wz.model.WzFriendlyLinks;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -18,35 +18,35 @@ import java.util.Date;
 import java.util.List;
 
 
-@Service("wzComplanyOrgService")
-public class WzComplanyOrgServiceImpl extends BaseService<WzComplanyOrg, Long> implements WzComplanyOrgService {
+@Service("wzFriendlyLinksService")
+public class WzFriendlyLinksServiceImpl extends BaseService<WzFriendlyLinks, Long> implements WzFriendlyLinksService {
 
     protected static Logger logger = null;
 
     @Resource
-    private WzComplanyOrgMapper wzComplanyOrgMapper;
+    private WzFriendlyLinksMapper mapper;
 
 	@Resource
     private SysUserService sysUserService;
 
-    public WzComplanyOrgServiceImpl() {
+    public WzFriendlyLinksServiceImpl() {
         super();
         logger = Logger.getLogger(this.getClass());
     }
     
     @Override
-    public BaseMapper<WzComplanyOrg, Long> getMapper() {
+    public BaseMapper<WzFriendlyLinks, Long> getMapper() {
     	DynamicDataSource.setDataSource(DynamicDataSource.DEFAULT_DATA_SOURCE_NAME);//设置为默认数据源
-        return wzComplanyOrgMapper;
+        return mapper;
     }
     
     @Override
     public SqlSessionFactory getSqlSessionFactory() {
-        return wzComplanyOrgMapper.getSqlSessionFactory();
+        return mapper.getSqlSessionFactory();
     }
 	
 	@Override
-    public int insert(WzComplanyOrg model) {
+    public int insert(WzFriendlyLinks model) {
         SysUser currentUser=this.sysUserService.getCurrentUser();
         if(model.getSortNum()==null) {
             model.setSortNum(Long.valueOf(DateUtil.format(new Date(),"yyMMddHHmmss")));
@@ -67,7 +67,7 @@ public class WzComplanyOrgServiceImpl extends BaseService<WzComplanyOrg, Long> i
     }
 	
 	@Override
-    public int updateSelective(WzComplanyOrg model) {
+    public int updateSelective(WzFriendlyLinks model) {
         SysUser currentUser=this.sysUserService.getCurrentUser();
         if(null!=currentUser) {
             model.setUpdatedBy(String.valueOf(currentUser.getNid()));
@@ -86,22 +86,11 @@ public class WzComplanyOrgServiceImpl extends BaseService<WzComplanyOrg, Long> i
     public int batchDelete(List<Long> ids) throws Exception {
         int count = 0;
         for (Long id : ids) {
-            WzComplanyOrg model=new WzComplanyOrg(id);
+            WzFriendlyLinks model=new WzFriendlyLinks(id);
             model.setDeleteFlag(1L);
             count = count + this.updateSelective(model);
         }
         return count;
-    }
-	
-	/**
-     * 逻辑删除
-     * @throws Exception
-     */
-    @Override
-    public int delete(Long id) {
-        WzComplanyOrg model=new WzComplanyOrg(id);
-        model.setDeleteFlag(1L);
-        return this.updateSelective(model);
     }
 }
 

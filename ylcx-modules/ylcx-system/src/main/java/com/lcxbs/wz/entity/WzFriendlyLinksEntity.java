@@ -4,14 +4,16 @@ import com.lcxbs.core.AbstractBaseObject;
 import java.util.Date;
 
 
-public class WzComplanyOrgEntity extends AbstractBaseObject{
+public class WzFriendlyLinksEntity extends AbstractBaseObject{
 
 	/** 自增ID */
     private Long nid;
-	/** 机构名称 */
+	/** 姓名 */
     private String name;
-	/** 父机构id */
-    private Long parentId;
+    /** 类型 */
+    private String type;
+    /** 个人简介 */
+    private String content;
 	/** 排序编号 */
     private Long sortNum;
 	/** 是否启用标识;字典：1启用，0禁用 */
@@ -32,7 +34,7 @@ public class WzComplanyOrgEntity extends AbstractBaseObject{
     /**
     *无参构造函数
     */
-    public WzComplanyOrgEntity(){
+    public WzFriendlyLinksEntity(){
         super();
     }
 
@@ -40,7 +42,7 @@ public class WzComplanyOrgEntity extends AbstractBaseObject{
     * 带主键构造函数
     * @param id
     */
-    public WzComplanyOrgEntity(Long id){
+    public WzFriendlyLinksEntity(Long id){
         super();
         this.nid=id;
     }
@@ -69,12 +71,12 @@ public class WzComplanyOrgEntity extends AbstractBaseObject{
         this.name = name;
     }
 
-    public Long getParentId() {
-        return parentId;
+    public String getContent() {
+        return content;
     }
 
-    public void setParentId(Long parentId) {
-        this.parentId = parentId;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     /**
@@ -152,21 +154,7 @@ public class WzComplanyOrgEntity extends AbstractBaseObject{
     public void setCreatedBy(String createdBy){
         this.createdBy=(createdBy == null ? null : createdBy.trim());
     }
-    /**
-    * 获取创建时间
-    * @return
-    */
-    public Date getCreatedTime(){
-        return this.createdTime;
-    }
 
-    /**
-    * 设置创建时间
-    * @param createdTime
-    */
-    public void setCreatedTime(Date createdTime){
-        this.createdTime=createdTime;
-    }
     /**
     * 获取更新人
     * @return
@@ -182,20 +170,33 @@ public class WzComplanyOrgEntity extends AbstractBaseObject{
     public void setUpdatedBy(String updatedBy){
         this.updatedBy=(updatedBy == null ? null : updatedBy.trim());
     }
+
+    public Date getCreatedTime() {
+        return createdTime;
+    }
+
+    public Date getUpdatedTime() {
+        return updatedTime;
+    }
+
+    public void setCreatedTime(Date createdTime) {
+        this.createdTime = createdTime;
+    }
+
+    public void setUpdatedTime(Date updatedTime) {
+        this.updatedTime = updatedTime;
+    }
+
     /**
     * 获取更新时间
     * @return
     */
-    public Date getUpdatedTime(){
-        return this.updatedTime;
+
+    public String getType() {
+        return type;
     }
 
-    /**
-    * 设置更新时间
-    * @param updatedTime
-    */
-    public void setUpdatedTime(Date updatedTime){
-        this.updatedTime=updatedTime;
+    public void setType(String type) {
+        this.type = type;
     }
-
 }

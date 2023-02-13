@@ -2,7 +2,8 @@ package com.lcxbs.wz.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.lcxbs.validate.UpdateGroup;
-import com.lcxbs.wz.entity.WzComplanyOrgEntity;
+
+import com.lcxbs.wz.entity.WzCompanyOrgEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.validator.constraints.Length;
@@ -13,10 +14,11 @@ import javax.validation.groups.Default;
 import java.util.Date;
 
 @ApiModel("组织机构")
-public class WzComplanyOrg extends WzComplanyOrgEntity {
+public class WzCompanyOrg extends WzCompanyOrgEntity {
 
 
 	//region Get和Set方法
+    //region Get和Set方法
     @Override
     @NotNull(groups = {UpdateGroup.class},message = "自增ID不能空")
     @ApiModelProperty(value = "自增ID",hidden=false,required=true,example = "")
@@ -24,13 +26,14 @@ public class WzComplanyOrg extends WzComplanyOrgEntity {
 
     @Override
     @Length(max = 100,groups ={Default.class,UpdateGroup.class}, message = "标题长度不能超过 {max}")
-    @ApiModelProperty(value = "机构名称",hidden=false,required=false,example = "")
-    public String getName(){return super.getName();}
+    @ApiModelProperty(value = "标题",hidden=false,required=false,example = "")
+    public String getTitle(){return super.getTitle();}
 
     @Override
-    @NotNull(groups = {UpdateGroup.class},message = "父ID不能空")
-    @ApiModelProperty(value = "父ID",hidden=false,required=true,example = "")
-    public Long getParentId(){return super.getParentId();}
+    @Length(groups ={Default.class,UpdateGroup.class}, message = "")
+    @ApiModelProperty(value = "内容",hidden=false,required=false,example = "")
+    public String getContent(){return super.getContent();}
+
 
     @Override
     @Range(min = 0,max = 9223372036854775806L,groups ={Default.class,UpdateGroup.class}, message = "排序编号应该在{min}-{max}之间")
@@ -78,8 +81,8 @@ public class WzComplanyOrg extends WzComplanyOrgEntity {
 
 	//region 构造方法
 	/**无参构造函数*/
-    public WzComplanyOrg(){super();}
+    public WzCompanyOrg(){super();}
     /**带主键构造函数*/
-    public WzComplanyOrg(Long id){super(id);}
+    public WzCompanyOrg(Long id){super(id);}
 	//endregion
 }

@@ -1,20 +1,20 @@
 package com.lcxbs.wz.dao;
 
 import com.lcxbs.core.BaseMapper;
-import com.lcxbs.wz.model.WzComplanyOrg;
+import com.lcxbs.wz.model.WzCompanyOrg;
 import org.springframework.stereotype.Repository;
 
 
 @SuppressWarnings("rawtypes")
 @Repository
-public class WzComplanyOrgMapper extends BaseMapper<WzComplanyOrg, Long> {
+public class WzCompanyOrgMapper extends BaseMapper<WzCompanyOrg, Long> {
 
-	public WzComplanyOrgMapper() {
+	public WzCompanyOrgMapper() {
 		super();
 	}
 
 	@Override
 	public Class getEntityClass() {
-		return WzComplanyOrgMapper.class;
+		return WzCompanyOrgMapper.class;
 	}
 }
