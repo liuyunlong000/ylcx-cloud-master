@@ -18,6 +18,8 @@ public class WzScientificDynamicEntity extends AbstractBaseObject{
     private String source;
 	/** 排序编号 */
     private Long sortNum;
+    /** 置顶 */
+    private String top;
 	/** 是否启用标识;字典：1启用，0禁用 */
     private Long disableFlag;
 	/** 是否删除标识;字典：1删除，0未删除 */
@@ -218,4 +220,11 @@ public class WzScientificDynamicEntity extends AbstractBaseObject{
         this.updatedTime=updatedTime;
     }
 
+    public String getTop() {
+        return top;
+    }
+
+    public void setTop(String top) {
+        this.top = top;
+    }
 }

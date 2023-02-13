@@ -16,9 +16,10 @@
         <result column="CREATED_TIME" property="createdTime" jdbcType="TIMESTAMP"/>
         <result column="UPDATED_BY" property="updatedBy" jdbcType="VARCHAR"/>
         <result column="UPDATED_TIME" property="updatedTime" jdbcType="TIMESTAMP"/>
+        <result column="TOP" property="top" jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="Base_Column_List">
-        A.NID,A.TITLE,A.PHOTO,A.RESUME,A.CONTENT,A.RELEASE_TIME,A.SOURCE,A.HOME,A.DISABLE_FLAG,A.DELETE_FLAG,A.CREATED_BY,A.CREATED_TIME,A.UPDATED_BY,A.UPDATED_TIME
+        A.NID,A.TITLE,A.PHOTO,A.RESUME,A.CONTENT,A.RELEASE_TIME,A.TOP,A.SOURCE,A.HOME,A.DISABLE_FLAG,A.DELETE_FLAG,A.CREATED_BY,A.CREATED_TIME,A.UPDATED_BY,A.UPDATED_TIME
     </sql>
    
    <!-- SELECT sql片段 -->  
@@ -80,6 +81,9 @@
         <if test="map.updatedTimeEnd!=null and map.updatedTimeEnd!=''">
             and A.UPDATED_TIME &lt;= #{map.updatedTimeEnd} 
         </if>
+        <if test="top!=null and top!=''">
+            and A.TOP = #{top}
+        </if>
     </sql>
    
     <!-- 获取信息 -->
@@ -97,13 +101,14 @@
         <selectKey keyProperty="nid" resultType="java.lang.Long" order="AFTER">
             SELECT @@IDENTITY
         </selectKey>
-            INSERT INTO WZ_NEWS (TITLE,PHOTO,RESUME,CONTENT,RELEASE_TIME,SOURCE,HOME,DISABLE_FLAG,DELETE_FLAG,CREATED_BY,CREATED_TIME,UPDATED_BY,UPDATED_TIME)
+            INSERT INTO WZ_NEWS (TITLE,PHOTO,RESUME,CONTENT,RELEASE_TIME,TOP,SOURCE,HOME,DISABLE_FLAG,DELETE_FLAG,CREATED_BY,CREATED_TIME,UPDATED_BY,UPDATED_TIME)
                 VALUES (
                     #{title,jdbcType=VARCHAR},
                     #{photo,jdbcType=VARCHAR},
                     #{resume,jdbcType=VARCHAR},
                     #{content,jdbcType=VARCHAR},
                     #{releaseTime,jdbcType=NUMERIC},
+                    #{top,jdbcType=VARCHAR},
                     #{source,jdbcType=VARCHAR},
                     #{home,jdbcType=VARCHAR},
                     #{disableFlag,jdbcType=NUMERIC},
@@ -119,7 +124,7 @@
         <selectKey keyProperty="nid" resultType="java.lang.Long" order="BEFORE">
             SELECT SEQ_WZ_NEWS.NEXTVAL from dual
         </selectKey>
-            INSERT INTO WZ_NEWS (NID,TITLE,PHOTO,RESUME,CONTENT,RELEASE_TIME,SOURCE,HOME,DISABLE_FLAG,DELETE_FLAG,CREATED_BY,CREATED_TIME,UPDATED_BY,UPDATED_TIME)
+            INSERT INTO WZ_NEWS (NID,TITLE,PHOTO,RESUME,CONTENT,RELEASE_TIME,TOP,SOURCE,HOME,DISABLE_FLAG,DELETE_FLAG,CREATED_BY,CREATED_TIME,UPDATED_BY,UPDATED_TIME)
                 VALUES (
                     #{nid,jdbcType=NUMERIC},
                     #{title,jdbcType=VARCHAR},
@@ -127,6 +132,7 @@
                     #{resume,jdbcType=VARCHAR},
                     #{content,jdbcType=VARCHAR},
                     #{releaseTime,jdbcType=NUMERIC},
+                    #{top,jdbcType=VARCHAR},
                     #{source,jdbcType=VARCHAR},
                     #{home,jdbcType=VARCHAR},
                     #{disableFlag,jdbcType=NUMERIC},
@@ -181,8 +187,9 @@
                 A.UPDATED_BY = #{updatedBy},
             </if>
             <if test="updatedTime != null" >
-                A.UPDATED_TIME = #{updatedTime}
+                A.UPDATED_TIME = #{updatedTime},
             </if>
+            A.TOP = #{top}
         </set>
         WHERE A.NID = #{nid}
     </update>
@@ -231,8 +238,9 @@
                   A.UPDATED_BY = #{updatedBy},
 	        </if>
 	        <if test="updatedTime != null" >
-                  A.UPDATED_TIME = #{updatedTime}
+                  A.UPDATED_TIME = #{updatedTime},
 	        </if>
+            A.TOP = #{top}
 	    </set>
         WHERE A.NID = #{nid}
     </update>
@@ -281,8 +289,11 @@
                   A.UPDATED_BY = #{updatedBy},
 	        </if>
 	        <if test="updatedTime != null" >
-                  A.UPDATED_TIME = #{updatedTime}
+                  A.UPDATED_TIME = #{updatedTime},
 	        </if>
+            <if test="top != null" >
+                A.TOP = #{top}
+            </if>
 	    </set>
         <where> 
             <if test="map.nid!=null">
@@ -323,6 +334,9 @@
             </if>
             <if test="map.updatedTime!=null">
                 and A.UPDATED_TIME = #{map.updatedTime} 
+            </if>
+            <if test="map.top!=null">
+                and A.TOP = #{top}
             </if>
         </where>
     </update>
@@ -395,16 +409,16 @@
                 and NID = #{nid} 
             </if>
             <if test="title != null" >
-                and A.TITLE = #{title}
+                and TITLE = #{title}
             </if>
             <if test="content != null" >
-                and A.CONTENT = #{content}
+                and CONTENT = #{content}
             </if>
             <if test="releaseTime != null" >
-                and A.RELEASE_TIME = #{releaseTime}
+                and RELEASE_TIME = #{releaseTime}
             </if>
             <if test="source != null" >
-                and A.SOURCE = #{source}
+                and SOURCE = #{source}
             </if>
             <if test="home!=null">
                 and HOME = #{home}
@@ -430,6 +444,10 @@
             <if test="updatedTime!=null">
                 and UPDATED_TIME = #{updatedTime} 
             </if>
+            <if test="top!=null">
+                and TOP = #{top}
+            </if>
+
         </where>
     </delete>
 	

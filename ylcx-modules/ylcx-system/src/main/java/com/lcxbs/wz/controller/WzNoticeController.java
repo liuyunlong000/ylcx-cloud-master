@@ -31,14 +31,29 @@ public class WzNoticeController extends BaseController {
 
     @GetMapping("/find_id")
     @ApiOperation("按id查询通知公告")
-    @JSON(type = WzNotice.class,include = "nid,title,content,releaseTime,source")
+    @JSON(type = WzNotice.class,include = "nid,title,content,releaseTime,top,source")
     public RespMsgBean findById(@ApiParam(value = "id", required = true) @RequestParam("id") Long id,HttpServletRequest request) {
         return success(FIND_SUCCESS, this.wsNoticeService.getModelByKey(id));
+    }
+    @PostMapping("/find_list_home")
+    @ApiOperation("获取暂无信息列表（分页）")
+    @JSON(type = WzNotice.class,include = "nid,title,content,releaseTime,top,source")
+    @JSON(type = PageInfo.class,include = "pageNum,pageSize,size,pages,list,total")
+    public RespMsgBean findListHome(@RequestBody(required = false) WzNotice wsNotice,HttpServletRequest request) throws  Exception{
+        PageHelper.startPage(wsNotice.getPageNum(), wsNotice.getPageSize());
+        wsNotice.getMap().put("orderBy","ORDER BY TOP DESC,RELEASE_TIME DESC");
+        PageInfo<WzNotice> list = wsNoticeService.getListByPage(wsNotice);
+        List<WzNotice> treeList = TreeUtil.buildTree(list.getList());
+        list.setList(treeList);
+        return success(FIND_SUCCESS,list);
     }
     @PostMapping("/save")
     @PreAuthorize("@ps.hasAuthority('wzNotice:save',true,#request)")
     @ApiOperation("添加暂无信息")
     public RespMsgBean save(@RequestBody WzNotice wsNotice, HttpServletRequest request) {
+        if(!"是".equals(wsNotice.getTop())){
+            wsNotice.setTop(null);
+        }
         int result = wsNoticeService.insert(wsNotice);
         if (result > 0) {
             Map<String, Object> map = new HashMap<>();
@@ -52,6 +67,9 @@ public class WzNoticeController extends BaseController {
     @PreAuthorize("@ps.hasAuthority('wzNotice:update',true,#request)")
     @ApiOperation("编辑暂无信息")
     public RespMsgBean update(@RequestBody WzNotice wsNotice,HttpServletRequest request) {
+        if(!"是".equals(wsNotice.getTop())){
+            wsNotice.setTop(null);
+        }
         return success(UPDATE_SUCCESS, wsNoticeService.updateSelective(wsNotice));
     }
 
@@ -64,11 +82,11 @@ public class WzNoticeController extends BaseController {
 
     @PostMapping("/find_list_by_page")
     @ApiOperation("获取暂无信息列表（分页）")
-    @JSON(type = WzNotice.class,include = "nid,title,content,releaseTime,source")
+    @JSON(type = WzNotice.class,include = "nid,title,content,releaseTime,top,source")
     @JSON(type = PageInfo.class,include = "pageNum,pageSize,size,pages,list,total")
     public RespMsgBean findListByPage(@RequestBody(required = false) WzNotice wsNotice,HttpServletRequest request) throws  Exception{
         PageHelper.startPage(wsNotice.getPageNum(), wsNotice.getPageSize());
-        wsNoticeService.setupOrderByAndGroupBy(wsNotice);
+        wsNotice.getMap().put("orderBy","ORDER BY TOP DESC,RELEASE_TIME DESC");
         PageInfo<WzNotice> list = wsNoticeService.getListByPage(wsNotice);
         List<WzNotice> treeList = TreeUtil.buildTree(list.getList());
         list.setList(treeList);

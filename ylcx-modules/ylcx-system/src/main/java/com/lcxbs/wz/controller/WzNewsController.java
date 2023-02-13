@@ -31,14 +31,14 @@ public class WzNewsController extends BaseController {
 
     @GetMapping("/find_id")
     @ApiOperation("按id查询新闻")
-    @JSON(type = WzNews.class,include = "nid,title,photo,resume,content,releaseTime,source,home")
+    @JSON(type = WzNews.class,include = "nid,title,photo,resume,content,releaseTime,source,home,top")
     public RespMsgBean findById(@ApiParam(value = "id", required = true) @RequestParam("id") Long id,HttpServletRequest request) {
         return success(FIND_SUCCESS, this.wzNewsService.getModelByKey(id));
     }
     @GetMapping("/find_list")
     @ApiOperation("获取首页新闻列表")
-    @JSON(type = WzNews.class,include = "nid,title,photo,resume,content,releaseTime,source")
-    public RespMsgBean findListHome(HttpServletRequest request) throws Exception{
+    @JSON(type = WzNews.class,include = "nid,title,photo,resume,content,releaseTime,source,top")
+    public RespMsgBean findList(HttpServletRequest request) throws Exception{
         WzNews wzNews=new WzNews();
         wzNews.setSortField("releaseTime");
         wzNews.setSortOrder("desc");
@@ -49,10 +49,29 @@ public class WzNewsController extends BaseController {
         return success(FIND_SUCCESS, page.getList());
     }
 
+    @PostMapping("/find_list_home")
+    @ApiOperation("获取暂无信息列表（分页）")
+    @JSON(type = WzNews.class,include = "nid,title,photo,resume,content,releaseTime,source,home,top")
+    @JSON(type = PageInfo.class,include = "pageNum,pageSize,size,pages,list,total")
+    public RespMsgBean findListHome(@RequestBody(required = false) WzNews wzNews,HttpServletRequest request) throws  Exception{
+        PageHelper.startPage(wzNews.getPageNum(), wzNews.getPageSize());
+        wzNews.getMap().put("orderBy","ORDER BY TOP DESC,RELEASE_TIME DESC");
+        PageInfo<WzNews> list = wzNewsService.getListByPage(wzNews);
+        List<WzNews> treeList = TreeUtil.buildTree(list.getList());
+        list.setList(treeList);
+        return success(FIND_SUCCESS,list);
+    }
+
     @PostMapping("/save")
     @PreAuthorize("@ps.hasAuthority('wzNews:save',true,#request)")
     @ApiOperation("添加暂无信息")
     public RespMsgBean save(@RequestBody WzNews wzNews, HttpServletRequest request) {
+        if(!"是".equals(wzNews.getTop())){
+            wzNews.setTop(null);
+        }
+        if(!"是".equals(wzNews.getHome())){
+            wzNews.setHome("");
+        }
         int result = wzNewsService.insert(wzNews);
         if (result > 0) {
             Map<String, Object> map = new HashMap<>();
@@ -66,6 +85,12 @@ public class WzNewsController extends BaseController {
     @PreAuthorize("@ps.hasAuthority('wzNews:update',true,#request)")
     @ApiOperation("编辑暂无信息")
     public RespMsgBean update(@RequestBody WzNews wzNews,HttpServletRequest request) {
+        if(!"是".equals(wzNews.getTop())){
+            wzNews.setTop(null);
+        }
+        if(!"是".equals(wzNews.getHome())){
+            wzNews.setHome("");
+        }
         return success(UPDATE_SUCCESS, wzNewsService.updateSelective(wzNews));
     }
 
@@ -78,11 +103,11 @@ public class WzNewsController extends BaseController {
 
     @PostMapping("/find_list_by_page")
     @ApiOperation("获取暂无信息列表（分页）")
-    @JSON(type = WzNews.class,include = "nid,title,photo,resume,content,releaseTime,source,home")
+    @JSON(type = WzNews.class,include = "nid,title,photo,resume,content,releaseTime,source,home,top")
     @JSON(type = PageInfo.class,include = "pageNum,pageSize,size,pages,list,total")
     public RespMsgBean findListByPage(@RequestBody(required = false) WzNews wzNews,HttpServletRequest request) throws  Exception{
         PageHelper.startPage(wzNews.getPageNum(), wzNews.getPageSize());
-        wzNewsService.setupOrderByAndGroupBy(wzNews);
+        wzNews.getMap().put("orderBy","ORDER BY TOP DESC,RELEASE_TIME DESC");
         PageInfo<WzNews> list = wzNewsService.getListByPage(wzNews);
         List<WzNews> treeList = TreeUtil.buildTree(list.getList());
         list.setList(treeList);

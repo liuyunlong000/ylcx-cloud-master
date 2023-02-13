@@ -32,28 +32,41 @@ public class WzScientificDynamicController extends BaseController {
 
     @GetMapping("/find_id")
     @ApiOperation("按id查询科研动态")
-    @JSON(type = WzScientificDynamic.class,include = "nid,title,content,releaseTime,source")
+    @JSON(type = WzScientificDynamic.class,include = "nid,title,content,top,releaseTime,source")
     public RespMsgBean findById(@ApiParam(value = "id", required = true) @RequestParam("id") Long id,HttpServletRequest request) {
         return success(FIND_SUCCESS, this.wzScientificDynamicService.getModelByKey(id));
     }
 
     @GetMapping("/find_list")
     @ApiOperation("获取科研动态列表")
-    @JSON(type = WzScientificDynamic.class,include = "nid,title,content,releaseTime,source")
+    @JSON(type = WzScientificDynamic.class,include = "nid,title,content,top,releaseTime,source")
     public RespMsgBean findList(@ApiParam(value = "count", required = true) @RequestParam("count") Integer count,HttpServletRequest request) throws Exception{
         WzScientificDynamic entity=new WzScientificDynamic();
-        entity.setSortField("releaseTime");
-        entity.setSortOrder("desc");
         entity.setDeleteFlag(0L);
         PageHelper.startPage(1, count);
-        wzScientificDynamicService.setupOrderByAndGroupBy(entity);
+        entity.getMap().put("orderBy","ORDER BY TOP DESC,RELEASE_TIME DESC");
         PageInfo<WzScientificDynamic> list = wzScientificDynamicService.getListByPage(entity);
         return success(FIND_SUCCESS,list.getList());
+    }
+    @PostMapping("/find_list_home")
+    @ApiOperation("获取暂无信息列表（分页）")
+    @JSON(type = WzScientificDynamic.class,include = "nid,title,content,top,releaseTime,source")
+    @JSON(type = PageInfo.class,include = "pageNum,pageSize,size,pages,list,total")
+    public RespMsgBean findListHome(@RequestBody(required = false) WzScientificDynamic dynamic,HttpServletRequest request) throws  Exception{
+        PageHelper.startPage(dynamic.getPageNum(), dynamic.getPageSize());
+        dynamic.getMap().put("orderBy","ORDER BY TOP DESC,RELEASE_TIME DESC");
+        PageInfo<WzScientificDynamic> list = wzScientificDynamicService.getListByPage(dynamic);
+        List<WzScientificDynamic> treeList = TreeUtil.buildTree(list.getList());
+        list.setList(treeList);
+        return success(FIND_SUCCESS,list);
     }
     @PostMapping("/save")
     @PreAuthorize("@ps.hasAuthority('wzScientificDynamic:save',true,#request)")
     @ApiOperation("添加暂无信息")
     public RespMsgBean save(@RequestBody WzScientificDynamic dynamic, HttpServletRequest request) {
+        if(!"是".equals(dynamic.getTop())){
+            dynamic.setTop(null);
+        }
         int result = wzScientificDynamicService.insert(dynamic);
         if (result > 0) {
             Map<String, Object> map = new HashMap<>();
@@ -67,6 +80,9 @@ public class WzScientificDynamicController extends BaseController {
     @PreAuthorize("@ps.hasAuthority('wzScientificDynamic:update',true,#request)")
     @ApiOperation("编辑暂无信息")
     public RespMsgBean update(@RequestBody WzScientificDynamic dynamic,HttpServletRequest request) {
+        if(!"是".equals(dynamic.getTop())){
+            dynamic.setTop(null);
+        }
         return success(UPDATE_SUCCESS, wzScientificDynamicService.updateSelective(dynamic));
     }
 
@@ -79,11 +95,11 @@ public class WzScientificDynamicController extends BaseController {
 
     @PostMapping("/find_list_by_page")
     @ApiOperation("获取暂无信息列表（分页）")
-    @JSON(type = WzScientificDynamic.class,include = "nid,title,content,releaseTime,source")
+    @JSON(type = WzScientificDynamic.class,include = "nid,title,content,top,releaseTime,source")
     @JSON(type = PageInfo.class,include = "pageNum,pageSize,size,pages,list,total")
     public RespMsgBean findListByPage(@RequestBody(required = false) WzScientificDynamic dynamic,HttpServletRequest request) throws  Exception{
         PageHelper.startPage(dynamic.getPageNum(), dynamic.getPageSize());
-        wzScientificDynamicService.setupOrderByAndGroupBy(dynamic);
+        dynamic.getMap().put("orderBy","ORDER BY TOP DESC,RELEASE_TIME DESC");
         PageInfo<WzScientificDynamic> list = wzScientificDynamicService.getListByPage(dynamic);
         List<WzScientificDynamic> treeList = TreeUtil.buildTree(list.getList());
         list.setList(treeList);

@@ -52,27 +52,81 @@ public class WzScientificController extends BaseController {
     @PreAuthorize("@ps.hasAuthority('wzScientific:save',true,#request)")
     @ApiOperation("添加暂无信息")
     public RespMsgBean save(@RequestBody WzScientific wzScientific, HttpServletRequest request) {
-        int result = wzScientificService.insert(wzScientific);
+        WzScientific entity=new WzScientific();
+        entity.getMap().put("orderBy","ORDER BY A.SORT_NUM ASC");
+        List<WzScientific> list=wzScientificService.getList(entity);
+        Long sort=wzScientific.getSortNum();
+        Boolean copy=true;
+        int result=0;
+        for(int i=0;i<list.size();i++){
+            if( sort!=null && i+1>=sort){
+                list.get(i).setSortNum(2L+i);
+                if(copy){
+                    copy=false;
+                    wzScientific.setSortNum(1L+i);
+                    result = wzScientificService.insert(wzScientific);
+                }
+            }else {
+                list.get(i).setSortNum(1L+i);
+            }
+            wzScientificService.updateSelective(list.get(i));
+        }
+        if(copy){
+            wzScientific.setSortNum(1L+list.size());
+            result = wzScientificService.insert(wzScientific);
+        }
         if (result > 0) {
             Map<String, Object> map = new HashMap<>();
             return success(SAVE_SUCCESS, map);
         } else {
             return success(SAVE_FAILURE);
         }
+
     }
 
     @PutMapping("/update")
     @PreAuthorize("@ps.hasAuthority('wzScientific:update',true,#request)")
     @ApiOperation("编辑暂无信息")
     public RespMsgBean update(@RequestBody WzScientific wzScientific,HttpServletRequest request) {
-        return success(UPDATE_SUCCESS, wzScientificService.updateSelective(wzScientific));
+        WzScientific entity=new WzScientific();
+        entity.getMap().put("orderBy","where A.NID<>"+wzScientific.getNid()+" ORDER BY A.SORT_NUM ASC");
+        List<WzScientific> list=wzScientificService.getList(entity);
+        Long sort=wzScientific.getSortNum();
+        Boolean copy=true;
+        int result=0;
+        for(int i=0;i<list.size();i++){
+            if( sort!=null && i+1>=sort){
+                list.get(i).setSortNum(2L+i);
+                if(copy){
+                    copy=false;
+                    wzScientific.setSortNum(1L+i);
+                    result = wzScientificService.updateSelective(wzScientific);
+                }
+            }else {
+                list.get(i).setSortNum(1L+i);
+            }
+            wzScientificService.updateSelective(list.get(i));
+        }
+        if(copy){
+            wzScientific.setSortNum(1L+list.size());
+            result = wzScientificService.updateSelective(wzScientific);
+        }
+        return success(UPDATE_SUCCESS, result);
     }
 
     @DeleteMapping("/delete")
     @PreAuthorize("@ps.hasAuthority('wzScientific:delete',true,#request)")
     @ApiOperation("按id删除暂无信息")
     public RespMsgBean delete(@ApiParam(value = "id", required = true) @RequestParam("id") Long id,HttpServletRequest request) {
-        return success(DELETE_SUCCESS, wzScientificService.delete(id));
+        int result =wzScientificService.delete(id);
+        WzScientific entity=new WzScientific();
+        entity.getMap().put("orderBy","ORDER BY A.SORT_NUM ASC");
+        List<WzScientific> list=wzScientificService.getList(entity);
+        for(int i=0;i<list.size();i++){
+            list.get(i).setSortNum(1L+i);
+            wzScientificService.updateSelective(list.get(i));
+        }
+        return success(DELETE_SUCCESS, result);
     }
 
     @PostMapping("/find_list_by_page")

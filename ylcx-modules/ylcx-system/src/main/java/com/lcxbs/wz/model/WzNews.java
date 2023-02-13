@@ -96,6 +96,11 @@ public class WzNews extends WzNewsEntity {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     public Date getUpdatedTime(){return super.getUpdatedTime();}
 
+    @Override
+    @Length(groups ={Default.class,UpdateGroup.class}, message = "")
+    @ApiModelProperty(value = "置顶",hidden=false,required=false,example = "")
+    public String getTop(){return super.getTop();}
+
 	//endregion
 
 	//region 构造方法

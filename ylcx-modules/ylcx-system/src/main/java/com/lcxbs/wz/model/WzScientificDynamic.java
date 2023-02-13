@@ -50,6 +50,11 @@ public class WzScientificDynamic extends WzScientificDynamicEntity {
     public Long getSortNum(){return super.getSortNum();}
 
     @Override
+    @Length(groups ={Default.class,UpdateGroup.class}, message = "")
+    @ApiModelProperty(value = "置顶",hidden=false,required=false,example = "")
+    public String getTop(){return super.getTop();}
+
+    @Override
     @Range(min = 0,max = 9223372036854775806L,groups ={Default.class,UpdateGroup.class}, message = "是否启用标识;字典：1启用，0禁用应该在{min}-{max}之间")
     @ApiModelProperty(value = "是否启用标识;字典：1启用，0禁用",hidden=false,required=false,example = "")
     public Long getDisableFlag(){return super.getDisableFlag();}

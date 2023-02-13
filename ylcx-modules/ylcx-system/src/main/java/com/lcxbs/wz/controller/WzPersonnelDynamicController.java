@@ -31,14 +31,29 @@ public class WzPersonnelDynamicController extends BaseController {
 
     @GetMapping("/find_id")
     @ApiOperation("按id查询人才动态")
-    @JSON(type = WzPersonnelDynamic.class,include = "nid,title,content,releaseTime,source")
+    @JSON(type = WzPersonnelDynamic.class,include = "nid,title,content,releaseTime,source,top")
     public RespMsgBean findById(@ApiParam(value = "id", required = true) @RequestParam("id") Long id,HttpServletRequest request) {
         return success(FIND_SUCCESS, this.wzPersonnelDynamicService.getModelByKey(id));
+    }
+    @PostMapping("/find_list_home")
+    @ApiOperation("获取暂无信息列表（分页）")
+    @JSON(type = WzPersonnelDynamic.class,include = "nid,title,content,releaseTime,source,top")
+    @JSON(type = PageInfo.class,include = "pageNum,pageSize,size,pages,list,total")
+    public RespMsgBean findListHome(@RequestBody(required = false) WzPersonnelDynamic dynamic,HttpServletRequest request) throws  Exception{
+        PageHelper.startPage(dynamic.getPageNum(), dynamic.getPageSize());
+        dynamic.getMap().put("orderBy","ORDER BY TOP DESC,RELEASE_TIME DESC");
+        PageInfo<WzPersonnelDynamic> list = wzPersonnelDynamicService.getListByPage(dynamic);
+        List<WzPersonnelDynamic> treeList = TreeUtil.buildTree(list.getList());
+        list.setList(treeList);
+        return success(FIND_SUCCESS,list);
     }
     @PostMapping("/save")
     @PreAuthorize("@ps.hasAuthority('wzPersonnelDynamic:save',true,#request)")
     @ApiOperation("添加暂无信息")
     public RespMsgBean save(@RequestBody WzPersonnelDynamic dynamic, HttpServletRequest request) {
+        if(!"是".equals(dynamic.getTop())){
+            dynamic.setTop(null);
+        }
         int result = wzPersonnelDynamicService.insert(dynamic);
         if (result > 0) {
             Map<String, Object> map = new HashMap<>();
@@ -52,6 +67,9 @@ public class WzPersonnelDynamicController extends BaseController {
     @PreAuthorize("@ps.hasAuthority('wzPersonnelDynamic:update',true,#request)")
     @ApiOperation("编辑暂无信息")
     public RespMsgBean update(@RequestBody WzPersonnelDynamic dynamic,HttpServletRequest request) {
+        if(!"是".equals(dynamic.getTop())){
+            dynamic.setTop(null);
+        }
         return success(UPDATE_SUCCESS, wzPersonnelDynamicService.updateSelective(dynamic));
     }
 
@@ -64,11 +82,11 @@ public class WzPersonnelDynamicController extends BaseController {
 
     @PostMapping("/find_list_by_page")
     @ApiOperation("获取暂无信息列表（分页）")
-    @JSON(type = WzPersonnelDynamic.class,include = "nid,title,content,releaseTime,source")
+    @JSON(type = WzPersonnelDynamic.class,include = "nid,title,content,releaseTime,source,top")
     @JSON(type = PageInfo.class,include = "pageNum,pageSize,size,pages,list,total")
     public RespMsgBean findListByPage(@RequestBody(required = false) WzPersonnelDynamic dynamic,HttpServletRequest request) throws  Exception{
         PageHelper.startPage(dynamic.getPageNum(), dynamic.getPageSize());
-        wzPersonnelDynamicService.setupOrderByAndGroupBy(dynamic);
+        dynamic.getMap().put("orderBy","ORDER BY TOP DESC,RELEASE_TIME DESC");
         PageInfo<WzPersonnelDynamic> list = wzPersonnelDynamicService.getListByPage(dynamic);
         List<WzPersonnelDynamic> treeList = TreeUtil.buildTree(list.getList());
         list.setList(treeList);

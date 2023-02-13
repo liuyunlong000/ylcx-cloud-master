@@ -32,14 +32,14 @@ public class WzPersonnelRecruitController extends BaseController {
 
     @GetMapping("/find_id")
     @ApiOperation("按id查询人才招聘")
-    @JSON(type = WzPersonnelRecruit.class,include = "nid,title,content,releaseTime,source")
+    @JSON(type = WzPersonnelRecruit.class,include = "nid,title,content,releaseTime,source,top")
     public RespMsgBean findById(@ApiParam(value = "id", required = true) @RequestParam("id") Long id,HttpServletRequest request) {
         return success(FIND_SUCCESS, this.wzPersonnelRecruitService.getModelByKey(id));
     }
 
     @GetMapping("/find_list")
     @ApiOperation("获取人才招聘列表")
-    @JSON(type = WzPersonnelRecruit.class,include = "nid,title,content,releaseTime,source")
+    @JSON(type = WzPersonnelRecruit.class,include = "nid,title,content,releaseTime,source,top")
     public RespMsgBean findList(@ApiParam(value = "count", required = true) @RequestParam("count") Integer count,HttpServletRequest request) throws Exception{
         WzPersonnelRecruit entity=new WzPersonnelRecruit();
         entity.setSortField("releaseTime");
@@ -50,10 +50,25 @@ public class WzPersonnelRecruitController extends BaseController {
         PageInfo<WzPersonnelRecruit> list = wzPersonnelRecruitService.getListByPage(entity);
         return success(FIND_SUCCESS,list.getList());
     }
+    @PostMapping("/find_list_home")
+    @ApiOperation("获取暂无信息列表（分页）")
+    @JSON(type = WzPersonnelRecruit.class,include = "nid,title,content,releaseTime,source,top")
+    @JSON(type = PageInfo.class,include = "pageNum,pageSize,size,pages,list,total")
+    public RespMsgBean findListHome(@RequestBody(required = false) WzPersonnelRecruit recruit,HttpServletRequest request) throws  Exception{
+        PageHelper.startPage(recruit.getPageNum(), recruit.getPageSize());
+        recruit.getMap().put("orderBy","ORDER BY TOP DESC,RELEASE_TIME DESC");
+        PageInfo<WzPersonnelRecruit> list = wzPersonnelRecruitService.getListByPage(recruit);
+        List<WzPersonnelRecruit> treeList = TreeUtil.buildTree(list.getList());
+        list.setList(treeList);
+        return success(FIND_SUCCESS,list);
+    }
     @PostMapping("/save")
     @PreAuthorize("@ps.hasAuthority('wzPersonnelRecruit:save',true,#request)")
     @ApiOperation("添加暂无信息")
     public RespMsgBean save(@RequestBody WzPersonnelRecruit recruit, HttpServletRequest request) {
+        if(!"是".equals(recruit.getTop())){
+            recruit.setTop(null);
+        }
         int result = wzPersonnelRecruitService.insert(recruit);
         if (result > 0) {
             Map<String, Object> map = new HashMap<>();
@@ -67,6 +82,9 @@ public class WzPersonnelRecruitController extends BaseController {
     @PreAuthorize("@ps.hasAuthority('wzPersonnelRecruit:update',true,#request)")
     @ApiOperation("编辑暂无信息")
     public RespMsgBean update(@RequestBody WzPersonnelRecruit recruit,HttpServletRequest request) {
+        if(!"是".equals(recruit.getTop())){
+            recruit.setTop(null);
+        }
         return success(UPDATE_SUCCESS, wzPersonnelRecruitService.updateSelective(recruit));
     }
 
@@ -79,11 +97,11 @@ public class WzPersonnelRecruitController extends BaseController {
 
     @PostMapping("/find_list_by_page")
     @ApiOperation("获取暂无信息列表（分页）")
-    @JSON(type = WzPersonnelRecruit.class,include = "nid,title,content,releaseTime,source")
+    @JSON(type = WzPersonnelRecruit.class,include = "nid,title,content,releaseTime,source,top")
     @JSON(type = PageInfo.class,include = "pageNum,pageSize,size,pages,list,total")
     public RespMsgBean findListByPage(@RequestBody(required = false) WzPersonnelRecruit recruit,HttpServletRequest request) throws  Exception{
         PageHelper.startPage(recruit.getPageNum(), recruit.getPageSize());
-        wzPersonnelRecruitService.setupOrderByAndGroupBy(recruit);
+        recruit.getMap().put("orderBy","ORDER BY TOP DESC,RELEASE_TIME DESC");
         PageInfo<WzPersonnelRecruit> list = wzPersonnelRecruitService.getListByPage(recruit);
         List<WzPersonnelRecruit> treeList = TreeUtil.buildTree(list.getList());
         list.setList(treeList);

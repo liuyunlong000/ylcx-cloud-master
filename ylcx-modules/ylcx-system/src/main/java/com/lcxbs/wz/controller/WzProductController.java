@@ -8,6 +8,7 @@ import com.lcxbs.json.annotation.JSON;
 import com.lcxbs.protocol.RespMsgBean;
 import com.lcxbs.utils.TreeUtil;
 import com.lcxbs.wz.model.WzInnovatePlateForm;
+import com.lcxbs.wz.model.WzLeader;
 import com.lcxbs.wz.model.WzProduct;
 import com.lcxbs.wz.service.WzProductService;
 import io.swagger.annotations.Api;
@@ -52,7 +53,29 @@ public class WzProductController extends BaseController {
     @PreAuthorize("@ps.hasAuthority('wzInnovatePlateForm:save',true,#request)")
     @ApiOperation("添加暂无信息")
     public RespMsgBean save(@RequestBody WzProduct wzProduct, HttpServletRequest request) {
-        int result = wzProductService.insert(wzProduct);
+        WzProduct entity=new WzProduct();
+        entity.getMap().put("orderBy","ORDER BY A.SORT_NUM ASC");
+        List<WzProduct> list=wzProductService.getList(entity);
+        Long sort=wzProduct.getSortNum();
+        Boolean copy=true;
+        int result=0;
+        for(int i=0;i<list.size();i++){
+            if( sort!=null && i+1>=sort){
+                list.get(i).setSortNum(2L+i);
+                if(copy){
+                    copy=false;
+                    wzProduct.setSortNum(1L+i);
+                    result = wzProductService.insert(wzProduct);
+                }
+            }else {
+                list.get(i).setSortNum(1L+i);
+            }
+            wzProductService.updateSelective(list.get(i));
+        }
+        if(copy){
+            wzProduct.setSortNum(1L+list.size());
+            result = wzProductService.insert(wzProduct);
+        }
         if (result > 0) {
             Map<String, Object> map = new HashMap<>();
             return success(SAVE_SUCCESS, map);
@@ -65,14 +88,45 @@ public class WzProductController extends BaseController {
     @PreAuthorize("@ps.hasAuthority('wzInnovatePlateForm:update',true,#request)")
     @ApiOperation("编辑暂无信息")
     public RespMsgBean update(@RequestBody WzProduct wzProduct,HttpServletRequest request) {
-        return success(UPDATE_SUCCESS, wzProductService.updateSelective(wzProduct));
+        WzProduct entity=new WzProduct();
+        entity.getMap().put("orderBy","where A.NID<>"+wzProduct.getNid()+" ORDER BY A.SORT_NUM ASC");
+        List<WzProduct> list=wzProductService.getList(entity);
+        Long sort=wzProduct.getSortNum();
+        Boolean copy=true;
+        int result=0;
+        for(int i=0;i<list.size();i++){
+            if( sort!=null && i+1>=sort){
+                list.get(i).setSortNum(2L+i);
+                if(copy){
+                    copy=false;
+                    wzProduct.setSortNum(1L+i);
+                    result = wzProductService.updateSelective(wzProduct);
+                }
+            }else {
+                list.get(i).setSortNum(1L+i);
+            }
+            wzProductService.updateSelective(list.get(i));
+        }
+        if(copy){
+            wzProduct.setSortNum(1L+list.size());
+            result = wzProductService.updateSelective(wzProduct);
+        }
+        return success(UPDATE_SUCCESS, result);
     }
 
     @DeleteMapping("/delete")
     @PreAuthorize("@ps.hasAuthority('wzInnovatePlateForm:delete',true,#request)")
     @ApiOperation("按id删除暂无信息")
     public RespMsgBean delete(@ApiParam(value = "id", required = true) @RequestParam("id") Long id, HttpServletRequest request) {
-        return success(DELETE_SUCCESS, wzProductService.delete(id));
+        int result =wzProductService.delete(id);
+        WzProduct entity=new WzProduct();
+        entity.getMap().put("orderBy","ORDER BY A.SORT_NUM ASC");
+        List<WzProduct> list=wzProductService.getList(entity);
+        for(int i=0;i<list.size();i++){
+            list.get(i).setSortNum(1L+i);
+            wzProductService.updateSelective(list.get(i));
+        }
+        return success(DELETE_SUCCESS, result);
     }
 
     @PostMapping("/find_list_by_page")

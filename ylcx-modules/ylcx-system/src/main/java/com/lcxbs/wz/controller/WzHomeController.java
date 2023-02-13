@@ -23,6 +23,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/wzHome")
 @Api(value = "/wzHome", tags = "首页轮播图")
+@CrossOrigin(origins = "*")
 public class WzHomeController extends BaseController {
     @Resource
     private WzHomeService wzHomeService;

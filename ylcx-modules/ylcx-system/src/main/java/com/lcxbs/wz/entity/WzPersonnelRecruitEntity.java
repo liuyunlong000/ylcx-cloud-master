@@ -31,6 +31,8 @@ public class WzPersonnelRecruitEntity extends AbstractBaseObject{
 	/** 更新时间 */
     private Date updatedTime;
 
+    private String top;
+
     /**
     *无参构造函数
     */
@@ -216,4 +218,11 @@ public class WzPersonnelRecruitEntity extends AbstractBaseObject{
         this.updatedTime=updatedTime;
     }
 
+    public String getTop() {
+        return top;
+    }
+
+    public void setTop(String top) {
+        this.top = top;
+    }
 }

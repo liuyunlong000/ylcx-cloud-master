@@ -10,6 +10,7 @@ import com.lcxbs.protocol.RespMsgBean;
 import com.lcxbs.utils.TreeUtil;
 import com.lcxbs.wz.model.WzLeader;
 import com.lcxbs.wz.model.WzNews;
+import com.lcxbs.wz.model.WzPersonnelOverview;
 import com.lcxbs.wz.service.WzLeaderService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -65,7 +66,29 @@ public class WzLeaderController extends BaseController {
     @PreAuthorize("@ps.hasAuthority('wzLeader:save',true,#request)")
     @ApiOperation("添加暂无信息")
     public RespMsgBean save(@RequestBody WzLeader wzLeader, HttpServletRequest request) {
-        int result = wzLeaderService.insert(wzLeader);
+        WzLeader entity=new WzLeader();
+        entity.getMap().put("orderBy","ORDER BY A.SORT_NUM ASC");
+        List<WzLeader> list=wzLeaderService.getList(entity);
+        Long sort=wzLeader.getSortNum();
+        Boolean copy=true;
+        int result=0;
+        for(int i=0;i<list.size();i++){
+            if( sort!=null && i+1>=sort){
+                list.get(i).setSortNum(2L+i);
+                if(copy){
+                    copy=false;
+                    wzLeader.setSortNum(1L+i);
+                    result = wzLeaderService.insert(wzLeader);
+                }
+            }else {
+                list.get(i).setSortNum(1L+i);
+            }
+            wzLeaderService.updateSelective(list.get(i));
+        }
+        if(copy){
+            wzLeader.setSortNum(1L+list.size());
+            result = wzLeaderService.insert(wzLeader);
+        }
         if (result > 0) {
             Map<String, Object> map = new HashMap<>();
             return success(SAVE_SUCCESS, map);
@@ -78,14 +101,45 @@ public class WzLeaderController extends BaseController {
     @PreAuthorize("@ps.hasAuthority('wzLeader:update',true,#request)")
     @ApiOperation("编辑暂无信息")
     public RespMsgBean update(@RequestBody WzLeader wzLeader,HttpServletRequest request) {
-        return success(UPDATE_SUCCESS, wzLeaderService.updateSelective(wzLeader));
+        WzLeader entity=new WzLeader();
+        entity.getMap().put("orderBy","where A.NID<>"+wzLeader.getNid()+" ORDER BY A.SORT_NUM ASC");
+        List<WzLeader> list=wzLeaderService.getList(entity);
+        Long sort=wzLeader.getSortNum();
+        Boolean copy=true;
+        int result=0;
+        for(int i=0;i<list.size();i++){
+            if( sort!=null && i+1>=sort){
+                list.get(i).setSortNum(2L+i);
+                if(copy){
+                    copy=false;
+                    wzLeader.setSortNum(1L+i);
+                    result = wzLeaderService.updateSelective(wzLeader);
+                }
+            }else {
+                list.get(i).setSortNum(1L+i);
+            }
+            wzLeaderService.updateSelective(list.get(i));
+        }
+        if(copy){
+            wzLeader.setSortNum(1L+list.size());
+            result = wzLeaderService.updateSelective(wzLeader);
+        }
+        return success(UPDATE_SUCCESS, result);
     }
 
     @DeleteMapping("/delete")
     @PreAuthorize("@ps.hasAuthority('wzLeader:delete',true,#request)")
     @ApiOperation("按id删除暂无信息")
     public RespMsgBean delete(@ApiParam(value = "id", required = true) @RequestParam("id") Long id,HttpServletRequest request) {
-        return success(DELETE_SUCCESS, wzLeaderService.delete(id));
+        int result =wzLeaderService.delete(id);
+        WzLeader entity=new WzLeader();
+        entity.getMap().put("orderBy","ORDER BY A.SORT_NUM ASC");
+        List<WzLeader> list=wzLeaderService.getList(entity);
+        for(int i=0;i<list.size();i++){
+            list.get(i).setSortNum(1L+i);
+            wzLeaderService.updateSelective(list.get(i));
+        }
+        return success(DELETE_SUCCESS, result);
     }
 
     @PostMapping("/find_list_by_page")

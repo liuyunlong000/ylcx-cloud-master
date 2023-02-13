@@ -65,7 +65,29 @@ public class WzPersonnelOverviewController extends BaseController {
     @PreAuthorize("@ps.hasAuthority('wzPersonnelOverview:save',true,#request)")
     @ApiOperation("添加暂无信息")
     public RespMsgBean save(@RequestBody WzPersonnelOverview wzPersonnelOverview, HttpServletRequest request) {
-        int result = wzPersonnelOverviewService.insert(wzPersonnelOverview);
+        WzPersonnelOverview entity=new WzPersonnelOverview();
+        entity.getMap().put("orderBy","ORDER BY A.SORT_NUM ASC");
+        List<WzPersonnelOverview> list=wzPersonnelOverviewService.getList(entity);
+        Long sort=wzPersonnelOverview.getSortNum();
+        Boolean copy=true;
+        int result=0;
+        for(int i=0;i<list.size();i++){
+            if( sort!=null && i+1>=sort){
+                list.get(i).setSortNum(2L+i);
+                if(copy){
+                    copy=false;
+                    wzPersonnelOverview.setSortNum(1L+i);
+                    result = wzPersonnelOverviewService.insert(wzPersonnelOverview);
+                }
+            }else {
+                list.get(i).setSortNum(1L+i);
+            }
+            wzPersonnelOverviewService.updateSelective(list.get(i));
+        }
+        if(copy){
+            wzPersonnelOverview.setSortNum(1L+list.size());
+            result = wzPersonnelOverviewService.insert(wzPersonnelOverview);
+        }
         if (result > 0) {
             Map<String, Object> map = new HashMap<>();
             return success(SAVE_SUCCESS, map);
@@ -78,14 +100,45 @@ public class WzPersonnelOverviewController extends BaseController {
     @PreAuthorize("@ps.hasAuthority('wzPersonnelOverview:update',true,#request)")
     @ApiOperation("编辑暂无信息")
     public RespMsgBean update(@RequestBody WzPersonnelOverview wzPersonnelOverview,HttpServletRequest request) {
-        return success(UPDATE_SUCCESS, wzPersonnelOverviewService.updateSelective(wzPersonnelOverview));
+        WzPersonnelOverview entity=new WzPersonnelOverview();
+        entity.getMap().put("orderBy","where A.NID<>"+wzPersonnelOverview.getNid()+" ORDER BY A.SORT_NUM ASC");
+        List<WzPersonnelOverview> list=wzPersonnelOverviewService.getList(entity);
+        Long sort=wzPersonnelOverview.getSortNum();
+        Boolean copy=true;
+        int result=0;
+        for(int i=0;i<list.size();i++){
+            if( sort!=null && i+1>=sort){
+                list.get(i).setSortNum(2L+i);
+                if(copy){
+                    copy=false;
+                    wzPersonnelOverview.setSortNum(1L+i);
+                    result = wzPersonnelOverviewService.updateSelective(wzPersonnelOverview);
+                }
+            }else {
+                list.get(i).setSortNum(1L+i);
+            }
+            wzPersonnelOverviewService.updateSelective(list.get(i));
+        }
+        if(copy){
+            wzPersonnelOverview.setSortNum(1L+list.size());
+            result = wzPersonnelOverviewService.updateSelective(wzPersonnelOverview);
+        }
+        return success(UPDATE_SUCCESS, result);
     }
 
     @DeleteMapping("/delete")
     @PreAuthorize("@ps.hasAuthority('wzPersonnelOverview:delete',true,#request)")
     @ApiOperation("按id删除暂无信息")
     public RespMsgBean delete(@ApiParam(value = "id", required = true) @RequestParam("id") Long id,HttpServletRequest request) {
-        return success(DELETE_SUCCESS, wzPersonnelOverviewService.delete(id));
+        int result =wzPersonnelOverviewService.delete(id);
+        WzPersonnelOverview entity=new WzPersonnelOverview();
+        entity.getMap().put("orderBy","ORDER BY A.SORT_NUM ASC");
+        List<WzPersonnelOverview> list=wzPersonnelOverviewService.getList(entity);
+        for(int i=0;i<list.size();i++){
+            list.get(i).setSortNum(1L+i);
+            wzPersonnelOverviewService.updateSelective(list.get(i));
+        }
+        return success(DELETE_SUCCESS, result);
     }
 
     @PostMapping("/find_list_by_page")
